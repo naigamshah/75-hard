@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="75 Hard">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#0f0f13">
+  <title>75 Hard Challenge</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    :root {
+      --sat: env(safe-area-inset-top, 0px); --sab: env(safe-area-inset-bottom, 0px);
+      --sal: env(safe-area-inset-left, 0px); --sar: env(safe-area-inset-right, 0px);
+      --bg: #0f0f13; --card: #1a1a24; --card2: #22222f;
+      --accent: #6c5ce7; --ag: rgba(108,92,231,.35);
+      --green: #00b894; --gg: rgba(0,184,148,.3);
+      --yellow: #fdcb6e; --red: #e17055;
+      --text: #e2e2e2; --dim: #8a8a9a;
+      --border: #2d2d3d; --radius: 14px;
+      color-scheme: dark;
+    }
+    html, body { background: var(--bg); }
+    body {
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+      font-size: 16px; line-height: 1.4;
+      padding: var(--sat) var(--sar) var(--sab) var(--sal);
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-y: contain;
+    }
+    .page { padding: 1rem 1rem 4rem; max-width: 780px; margin: 0 auto; }
+
+    .hdr { text-align: center; margin-bottom: .4rem; }
+    .hdr h1 {
+      font-size: 2.2rem; font-weight: 800;
+      background: -webkit-linear-gradient(135deg, var(--accent), #a29bfe, var(--green));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .hdr p { color: var(--dim); font-size: .85rem; }
+
+    /* Debug log */
+    .dbg {
+      display: none; background: rgba(225,112,85,.15); border: 1px solid var(--red);
+      border-radius: 10px; padding: .6rem .8rem; margin-bottom: .8rem;
+      font-size: .72rem; color: var(--red); font-family: monospace;
+      white-space: pre-wrap; word-break: break-all; max-height: 120px; overflow-y: auto;
+    }
+    .dbg.show { display: block; }
+
+    .moti {
+      background: -webkit-linear-gradient(135deg, rgba(108,92,231,.12), rgba(0,184,148,.08));
+      border: 1px solid rgba(108,92,231,.25); border-radius: var(--radius);
+      padding: .8rem 1rem; margin-bottom: 1rem; text-align: center;
+    }
+    .moti .qt { font-size: .9rem; font-style: italic; line-height: 1.5; }
+    .moti .au { font-size: .75rem; color: var(--accent); margin-top: .3rem; font-weight: 600; }
+
+    .stats { display: -webkit-flex; display: flex; -webkit-justify-content: center; justify-content: center; gap: .6rem; margin-bottom: 1rem; }
+    .st {
+      background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: .6rem .8rem; text-align: center; min-width: 85px; -webkit-flex: 1; flex: 1; max-width: 140px;
+    }
+    .st .n { font-size: 1.5rem; font-weight: 800; }
+    .st .l { font-size: .68rem; color: var(--dim); text-transform: uppercase; letter-spacing: .6px; }
+    .st.c1 .n { color: var(--green); }
+    .st.c2 .n { color: var(--accent); }
+    .st.c3 .n { color: var(--yellow); }
+
+    .prog { margin-bottom: 1.2rem; }
+    .progt { display: -webkit-flex; display: flex; -webkit-justify-content: space-between; justify-content: space-between; font-size: .78rem; color: var(--dim); margin-bottom: .3rem; }
+    .progb { height: 10px; background: var(--card); border-radius: 99px; overflow: hidden; border: 1px solid var(--border); }
+    .progf { height: 100%; background: -webkit-linear-gradient(left, var(--accent), var(--green)); border-radius: 99px; -webkit-transition: width .5s; transition: width .5s; }
+
+    /* Day Grid - FLEXBOX for max compat */
+    .grid {
+      display: -webkit-flex; display: flex;
+      -webkit-flex-wrap: wrap; flex-wrap: wrap;
+      gap: 6px; margin-bottom: 1.4rem;
+      -webkit-justify-content: flex-start; justify-content: flex-start;
+    }
+    .dbtn {
+      width: 46px; height: 46px;
+      display: -webkit-flex; display: flex;
+      -webkit-align-items: center; align-items: center;
+      -webkit-justify-content: center; justify-content: center;
+      border-radius: 10px; border: 2px solid var(--border);
+      background: var(--card); color: var(--text);
+      font-weight: 700; font-size: .85rem;
+      cursor: pointer; position: relative;
+      -webkit-user-select: none; user-select: none;
+      -webkit-appearance: none; appearance: none;
+      padding: 0;
+    }
+    .dbtn:active { opacity: .7; }
+    .dbtn.act { border-color: var(--accent); background: var(--card2); }
+    .dbtn.dn { border-color: var(--green); background: rgba(0,184,148,.12); }
+    .dbtn.pt { border-color: var(--yellow); background: rgba(253,203,110,.08); }
+
+    .dpanel { display: none; }
+    .dpanel.vis { display: block; }
+    .sec {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1rem; margin-bottom: .8rem;
+    }
+    .sec h3 { font-size: .95rem; margin-bottom: .7rem; }
+    .sec h3 .bg {
+      font-size: .7rem; background: var(--accent); color: #fff;
+      padding: 2px 7px; border-radius: 99px; font-weight: 600;
+    }
+    .dmoti {
+      background: rgba(253,203,110,.06); border: 1px solid rgba(253,203,110,.2);
+      border-radius: 12px; padding: .8rem 1rem; margin-bottom: .8rem; text-align: center;
+    }
+    .dmoti .q { font-size: .86rem; font-style: italic; color: var(--yellow); }
+    .dmoti .a { font-size: .7rem; color: var(--dim); margin-top: .2rem; }
+
+    .trow {
+      display: -webkit-flex; display: flex;
+      -webkit-align-items: center; align-items: center;
+      gap: .7rem; padding: .7rem .8rem; border-radius: 10px;
+      margin-bottom: .35rem; background: rgba(255,255,255,.02);
+      border: 1px solid transparent; cursor: pointer;
+      -webkit-user-select: none; user-select: none; min-height: 48px;
+    }
+    .trow:active { background: rgba(255,255,255,.06); }
+    .trow.chk { background: rgba(0,184,148,.06); border-color: rgba(0,184,148,.2); }
+    .tchk {
+      width: 24px; height: 24px; border-radius: 7px; border: 2px solid var(--border);
+      display: -webkit-flex; display: flex;
+      -webkit-align-items: center; align-items: center;
+      -webkit-justify-content: center; justify-content: center;
+      -webkit-flex-shrink: 0; flex-shrink: 0; font-size: .75rem;
+    }
+    .trow.chk .tchk { border-color: var(--green); background: var(--green); color: #fff; }
+    .tinf { -webkit-flex: 1; flex: 1; min-width: 0; }
+    .tinf .tn { font-weight: 600; font-size: .85rem; }
+    .tinf .td { font-size: .7rem; color: var(--dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    /* Calorie */
+    .calh { display: -webkit-flex; display: flex; -webkit-justify-content: space-between; justify-content: space-between; -webkit-align-items: center; align-items: center; margin-bottom: .5rem; gap: .5rem; -webkit-flex-wrap: wrap; flex-wrap: wrap; }
+    .call { display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; gap: .5rem; }
+    .cgi { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text); padding: 4px 6px; width: 65px; font-size: 16px; text-align: center; font-weight: 700; }
+    .vegt { font-size: .78rem; color: var(--dim); cursor: pointer; padding: 4px 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); }
+    .vegt.on { border-color: var(--green); color: var(--green); background: rgba(0,184,148,.08); }
+    .macs { display: -webkit-flex; display: flex; gap: .8rem; margin-bottom: .5rem; font-size: .78rem; color: var(--dim); -webkit-flex-wrap: wrap; flex-wrap: wrap; }
+    .macs b { font-weight: 700; }
+    .macs .mp { color: #74b9ff; } .macs .mc { color: var(--yellow); } .macs .mf { color: var(--red); }
+    .cbar { height: 8px; background: var(--bg); border-radius: 99px; overflow: hidden; margin-bottom: .7rem; }
+    .cbf { height: 100%; border-radius: 99px; -webkit-transition: width .4s; transition: width .4s; }
+    .csi { width: 100%; padding: .65rem .9rem; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-size: 16px; outline: none; }
+    .csi:focus { border-color: var(--accent); }
+    .shi { font-size: .7rem; color: var(--dim); margin: .3rem 0; }
+    .crl { background: var(--card2); border: 1px solid var(--border); border-radius: 10px; max-height: 260px; overflow-y: auto; -webkit-overflow-scrolling: touch; display: none; margin: .4rem 0 .5rem; }
+    .crl.show { display: block; }
+    .crl .sl { padding: .4rem .8rem; font-size: .7rem; color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: .5px; background: rgba(108,92,231,.06); border-bottom: 1px solid var(--border); }
+    .cri { padding: .6rem .8rem; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,.04); display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; gap: .5rem; min-height: 46px; }
+    .cri:active { background: rgba(108,92,231,.15); }
+    .cri:last-child { border-bottom: none; }
+    .cri .fd { -webkit-flex: 1; flex: 1; min-width: 0; }
+    .cri .fn { font-size: .82rem; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .cri .fm { font-size: .68rem; color: var(--dim); }
+    .cri .fc { font-size: .78rem; color: var(--green); font-weight: 700; white-space: nowrap; }
+    .cad { display: none; background: rgba(108,92,231,.08); border: 1px solid rgba(108,92,231,.25); border-radius: 10px; padding: .7rem; margin-bottom: .5rem; }
+    .cad.show { display: block; }
+    .cad .rl { font-size: .78rem; color: var(--accent); font-weight: 600; margin-bottom: .4rem; }
+    .cad .rm { font-size: .7rem; color: var(--dim); font-weight: 400; }
+    .cad .inps { display: -webkit-flex; display: flex; gap: .4rem; -webkit-align-items: center; align-items: center; -webkit-flex-wrap: wrap; flex-wrap: wrap; }
+    .cad input[type=number] { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text); padding: 6px 8px; font-size: 16px; width: 75px; text-align: center; }
+    .adb { background: var(--green); color: #fff; border: none; border-radius: 8px; padding: 6px 14px; font-weight: 700; font-size: .82rem; cursor: pointer; min-height: 36px; }
+    .xdb { background: none; border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; color: var(--dim); font-size: .82rem; cursor: pointer; min-height: 36px; }
+    .cli { display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; gap: .5rem; padding: .5rem 0; border-bottom: 1px solid rgba(255,255,255,.04); }
+    .cli .fn2 { -webkit-flex: 1; flex: 1; font-size: .82rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .cli .fg { font-size: .72rem; color: var(--dim); }
+    .cli .fmc { font-size: .68rem; color: var(--dim); }
+    .cli .fc2 { font-size: .82rem; font-weight: 700; color: var(--green); }
+    .cli .fdl { background: none; border: none; color: var(--red); cursor: pointer; font-size: 1rem; padding: 4px 6px; min-width: 32px; min-height: 32px; }
+    .ctt { display: none; padding: .6rem 0 0; font-weight: 800; font-size: .9rem; border-top: 1px solid var(--border); margin-top: .2rem; }
+    .ctt.show { display: -webkit-flex; display: flex; -webkit-justify-content: space-between; justify-content: space-between; }
+    .mab { background: none; border: 1px dashed var(--border); border-radius: 8px; color: var(--dim); padding: .45rem; width: 100%; font-size: .8rem; cursor: pointer; margin-top: .4rem; min-height: 44px; }
+
+    /* Photo */
+    .pha { text-align: center; }
+    .phbs { display: -webkit-flex; display: flex; gap: .5rem; -webkit-justify-content: center; justify-content: center; -webkit-flex-wrap: wrap; flex-wrap: wrap; margin-bottom: .7rem; }
+    .phb { position: relative; display: -webkit-inline-flex; display: inline-flex; -webkit-align-items: center; align-items: center; gap: .4rem; padding: .55rem 1rem; background: var(--card2); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-size: .82rem; font-weight: 600; cursor: pointer; min-height: 44px; }
+    .phb input[type=file] { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+    .phi { width: 100%; max-width: 280px; border-radius: 12px; border: 2px solid var(--border); margin: 0 auto; display: none; }
+    .phi.show { display: block; }
+    .phas { margin-top: .5rem; display: -webkit-flex; display: flex; gap: .5rem; -webkit-justify-content: center; justify-content: center; -webkit-flex-wrap: wrap; flex-wrap: wrap; }
+    .phd { background: none; border: 1px solid var(--red); color: var(--red); border-radius: 8px; padding: 5px 12px; font-size: .78rem; cursor: pointer; display: none; min-height: 34px; }
+    .phd.show { display: inline-block; }
+    .cpb { background: var(--accent); color: #fff; border: none; border-radius: 10px; padding: .55rem 1rem; font-weight: 700; font-size: .82rem; cursor: pointer; min-height: 44px; display: none; }
+    .cpb.show { display: inline-block; }
+    .tlb { background: var(--card2); border: 1px solid var(--border); color: var(--text); border-radius: 10px; padding: .55rem 1rem; font-weight: 600; font-size: .82rem; cursor: pointer; min-height: 44px; display: none; }
+    .tlb.show { display: inline-block; }
+
+    .nta textarea { width: 100%; min-height: 65px; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; color: var(--text); padding: .65rem; font-family: inherit; font-size: 16px; resize: vertical; outline: none; }
+    .nta textarea:focus { border-color: var(--accent); }
+    .nta label { font-size: .75rem; color: var(--dim); text-transform: uppercase; letter-spacing: .7px; display: block; margin-bottom: .25rem; }
+
+    .ctrls { display: -webkit-flex; display: flex; -webkit-justify-content: center; justify-content: center; gap: .5rem; -webkit-flex-wrap: wrap; flex-wrap: wrap; margin-top: 1.5rem; }
+    .btn { padding: .6rem 1.1rem; border-radius: 10px; border: 1px solid var(--border); background: var(--card); color: var(--text); font-size: .8rem; font-weight: 600; cursor: pointer; min-height: 44px; -webkit-appearance: none; }
+    .btn:active { background: var(--card2); border-color: var(--accent); }
+    .btn.dng:active { border-color: var(--red); color: var(--red); }
+
+    .modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,.93); z-index: 999; display: none; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 3.5rem 1rem 2rem; }
+    .modal.show { display: block; }
+    .mcl { position: fixed; top: 10px; right: 14px; background: rgba(255,255,255,.15); border: none; color: #fff; font-size: 1.2rem; width: 38px; height: 38px; border-radius: 99px; cursor: pointer; z-index: 1001; }
+    .mtt { color: #fff; font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; text-align: center; }
+    .cmpg { display: -webkit-flex; display: flex; gap: .8rem; -webkit-justify-content: center; justify-content: center; -webkit-flex-wrap: wrap; flex-wrap: wrap; }
+    .cmpc { text-align: center; }
+    .cmpc img { width: 42vw; max-width: 240px; border-radius: 12px; border: 2px solid var(--border); }
+    .cmpc .cl { font-size: .8rem; color: var(--dim); margin-top: .3rem; }
+    .tlg { display: -webkit-flex; display: flex; -webkit-flex-wrap: wrap; flex-wrap: wrap; gap: 7px; max-width: 600px; margin: 0 auto; padding: .5rem; }
+    .tc { width: 85px; text-align: center; }
+    .tc img { width: 100%; border-radius: 8px; border: 1px solid var(--border); }
+    .tc .tl { font-size: .7rem; color: var(--dim); margin-top: 2px; }
+
+    .toast { position: fixed; bottom: 1rem; left: 50%; -webkit-transform: translateX(-50%) translateY(10px); transform: translateX(-50%) translateY(10px); background: var(--green); color: #fff; padding: .55rem 1.1rem; border-radius: 10px; font-weight: 600; font-size: .8rem; opacity: 0; -webkit-transition: all .3s; transition: all .3s; pointer-events: none; z-index: 1002; white-space: nowrap; }
+    .toast.show { opacity: 1; -webkit-transform: translateX(-50%) translateY(0); transform: translateX(-50%) translateY(0); }
+
+    /* Login Screen */
+    .login-screen {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      min-height: 100vh; padding: 2rem 1rem;
+    }
+    .login-screen.hide { display: none; }
+    .login-box {
+      background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 2rem 1.5rem; width: 100%; max-width: 340px; text-align: center;
+    }
+    .login-box h1 {
+      font-size: 2rem; font-weight: 800; margin-bottom: .2rem;
+      background: -webkit-linear-gradient(135deg, var(--accent), #a29bfe, var(--green));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .login-box .sub { color: var(--dim); font-size: .82rem; margin-bottom: 1.5rem; }
+    .login-box input[type=text], .login-box input[type=password] {
+      width: 100%; padding: .7rem .9rem; background: var(--bg); border: 1px solid var(--border);
+      border-radius: 10px; color: var(--text); font-size: 16px; margin-bottom: .6rem; outline: none;
+    }
+    .login-box input:focus { border-color: var(--accent); }
+    .login-box .lbtns { display: flex; gap: .5rem; margin-top: .8rem; }
+    .login-box .lbtn {
+      flex: 1; padding: .65rem; border-radius: 10px; font-weight: 700; font-size: .88rem;
+      cursor: pointer; border: none; min-height: 44px;
+    }
+    .login-box .lbtn.primary { background: var(--accent); color: #fff; }
+    .login-box .lbtn.secondary { background: var(--card2); color: var(--text); border: 1px solid var(--border); }
+    .login-box .lbtn:active { opacity: .8; }
+    .login-box .lerr {
+      color: var(--red); font-size: .78rem; min-height: 1.2em; margin-top: .5rem;
+    }
+    .page.hide { display: none; }
+    .usr-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: .8rem; padding: .4rem .6rem; background: var(--card);
+      border: 1px solid var(--border); border-radius: 10px; font-size: .8rem;
+    }
+    .usr-bar .uname { color: var(--accent); font-weight: 700; }
+    .usr-bar .logout-btn {
+      background: none; border: 1px solid var(--border); color: var(--dim);
+      border-radius: 8px; padding: 4px 12px; font-size: .75rem; cursor: pointer; min-height: 30px;
+    }
+    .usr-bar .logout-btn:active { border-color: var(--red); color: var(--red); }
+
+    @media (max-width: 400px) {
+      .hdr h1 { font-size: 1.8rem; }
+      .dbtn { width: 40px; height: 40px; font-size: .78rem; }
+      .sec { padding: .8rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <h1>75 HARD</h1>
+    <div class="sub">Mental toughness. Zero compromises.</div>
+    <input type="text" id="lUser" placeholder="Username" autocomplete="off" autocapitalize="off">
+    <input type="password" id="lPass" placeholder="Password">
+    <div class="lbtns">
+      <button class="lbtn primary" id="loginBtn">Login</button>
+      <button class="lbtn secondary" id="regBtn">Register</button>
+    </div>
+    <div class="lerr" id="lErr"></div>
+  </div>
+</div>
+
+<div class="page hide" id="appPage">
+
+  <div class="usr-bar" id="usrBar">
+    <span>Logged in as <span class="uname" id="uName"></span></span>
+    <button class="logout-btn" id="logoutBtn">Logout</button>
+  </div>
+
+  <noscript>
+    <div style="background:#e17055;color:#fff;padding:1rem;border-radius:10px;text-align:center;margin-bottom:1rem;font-weight:700;">
+      JavaScript is disabled in this viewer. Open this file in Safari to use the app:<br>
+      <span style="font-weight:400;font-size:.85rem;">Files → Long-press file → Share → Open in Safari</span>
+    </div>
+  </noscript>
+  <div class="hdr"><h1>75 HARD</h1><p>Mental toughness. Zero compromises.</p></div>
+
+  <div class="dbg" id="dbg"></div>
+
+  <div class="moti"><div class="qt" id="tQ">Stay hard. Stay disciplined.</div><div class="au" id="tA">-- 75 Hard</div></div>
+
+  <div class="stats">
+    <div class="st c1"><div class="n" id="sDone">0</div><div class="l">Done</div></div>
+    <div class="st c2"><div class="n" id="sLeft">75</div><div class="l">Left</div></div>
+    <div class="st c3"><div class="n" id="sStrk">0</div><div class="l">Streak</div></div>
+  </div>
+
+  <div class="prog">
+    <div class="progt"><span>Progress</span><span id="pPct">0%</span></div>
+    <div class="progb"><div class="progf" id="pFill" style="width:0%"></div></div>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+  <div class="dpanel" id="dpanel">
+    <div class="dmoti"><div class="q" id="dQ"></div><div class="a" id="dA"></div></div>
+
+    <div class="sec">
+      <h3>Daily Tasks <span class="bg" id="tBg">0/6</span></h3>
+      <div id="tList"></div>
+    </div>
+
+    <div class="sec">
+      <h3>Calorie Tracker</h3>
+      <div class="calh">
+        <div class="call">
+          <span style="font-size:.78rem;color:var(--dim)">Goal:</span>
+          <input class="cgi" id="cGoal" type="number" inputmode="numeric" value="2000">
+          <span style="font-size:.75rem;color:var(--dim)">kcal</span>
+        </div>
+        <button class="vegt" id="vegT">Veg</button>
+      </div>
+      <div class="macs">
+        <span>P: <b class="mp" id="mP">0g</b></span>
+        <span>C: <b class="mc" id="mC">0g</b></span>
+        <span>F: <b class="mf" id="mF">0g</b></span>
+      </div>
+      <div class="cbar"><div class="cbf" id="cFill" style="width:0%;background:var(--green)"></div></div>
+      <input class="csi" id="cSrch" type="text" placeholder="Search food (paneer, dal, roti...)" autocomplete="off">
+      <div class="shi">150+ Indian and vegetarian foods built-in. Also searches USDA online.</div>
+      <div class="crl" id="cRes"></div>
+      <div class="cad" id="cAd">
+        <div class="rl" id="cAdL">Food <span class="rm" id="cAdM"></span></div>
+        <div class="inps">
+          <input id="cAdG" type="number" inputmode="numeric" placeholder="g" value="100">
+          <span style="font-size:.78rem;color:var(--dim)">g =</span>
+          <span id="cAdC" style="font-weight:700;color:var(--green);font-size:.88rem">0 kcal</span>
+          <button class="adb" id="cAdB">+ Add</button>
+          <button class="xdb" id="cAdX">Cancel</button>
+        </div>
+      </div>
+      <div id="cLog"></div>
+      <div class="ctt" id="cTot"><span>Total</span><span id="cTotV">0 kcal</span></div>
+      <button class="mab" id="mBtn">+ Add Custom Entry</button>
+    </div>
+
+    <div class="sec">
+      <h3>Progress Photo</h3>
+      <div class="pha">
+        <div class="phbs">
+          <label class="phb">Camera<input type="file" accept="image/*" capture="user" id="camI"></label>
+          <label class="phb">Library<input type="file" accept="image/*" id="libI"></label>
+        </div>
+        <img class="phi" id="phP" alt="Progress">
+        <div class="phas">
+          <button class="phd" id="phD">Remove</button>
+          <button class="cpb" id="cpB">Day 1 vs Now</button>
+          <button class="tlb" id="tlB">Timeline</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec nta">
+      <label>Daily Notes</label>
+      <textarea id="dNotes" placeholder="How did today go?"></textarea>
+    </div>
+  </div>
+
+  <div class="ctrls">
+    <button class="btn" id="expB">Export</button>
+    <button class="btn" id="impB">Import</button>
+    <button class="btn dng" id="rstB">Reset</button>
+  </div>
+</div>
+
+<div class="modal" id="modal"><button class="mcl" id="mCl">&times;</button><div class="mtt" id="mTt"></div><div id="mCt"></div></div>
+<div class="toast" id="toast"></div>
+<input type="file" id="fIn" accept=".json" style="display:none">
+
+<!-- ====== SCRIPT 1: Data & Food Database ====== -->
+<script>
+var FOODS_DB = [
+  {n:"Dal Tadka (Toor Dal)",cal:130,p:7,c:17,f:4,v:1,cat:"Dal"},
+  {n:"Chana Dal",cal:140,p:8,c:18,f:4,v:1,cat:"Dal"},
+  {n:"Moong Dal",cal:105,p:7,c:14,f:2,v:1,cat:"Dal"},
+  {n:"Masoor Dal (Red Lentil)",cal:116,p:8,c:16,f:2.5,v:1,cat:"Dal"},
+  {n:"Urad Dal",cal:130,p:8,c:15,f:3.5,v:1,cat:"Dal"},
+  {n:"Dal Makhani",cal:150,p:6,c:14,f:7,v:1,cat:"Dal"},
+  {n:"Dal Fry",cal:120,p:7,c:15,f:3.5,v:1,cat:"Dal"},
+  {n:"Rajma (Kidney Beans)",cal:130,p:7,c:17,f:3,v:1,cat:"Dal"},
+  {n:"Chole / Chana Masala",cal:140,p:7,c:18,f:4,v:1,cat:"Dal"},
+  {n:"Sambhar",cal:65,p:3,c:9,f:2,v:1,cat:"Dal"},
+  {n:"Rasam",cal:25,p:1,c:4,f:0.5,v:1,cat:"Dal"},
+  {n:"Lobia (Black Eyed Peas)",cal:115,p:7,c:16,f:2,v:1,cat:"Dal"},
+  {n:"Paneer (Raw)",cal:265,p:18,c:1.2,f:21,v:1,cat:"Paneer"},
+  {n:"Paneer Butter Masala",cal:200,p:10,c:8,f:14,v:1,cat:"Paneer"},
+  {n:"Palak Paneer",cal:170,p:9,c:6,f:12,v:1,cat:"Paneer"},
+  {n:"Shahi Paneer",cal:210,p:10,c:9,f:15,v:1,cat:"Paneer"},
+  {n:"Paneer Tikka",cal:250,p:16,c:5,f:18,v:1,cat:"Paneer"},
+  {n:"Matar Paneer",cal:155,p:8,c:10,f:9,v:1,cat:"Paneer"},
+  {n:"Kadhai Paneer",cal:220,p:11,c:7,f:16,v:1,cat:"Paneer"},
+  {n:"Paneer Bhurji",cal:230,p:13,c:5,f:17,v:1,cat:"Paneer"},
+  {n:"Roti / Chapati",cal:240,p:7,c:42,f:5,v:1,cat:"Breads"},
+  {n:"Naan",cal:290,p:8,c:48,f:7,v:1,cat:"Breads"},
+  {n:"Butter Naan",cal:320,p:8,c:46,f:12,v:1,cat:"Breads"},
+  {n:"Garlic Naan",cal:300,p:8,c:47,f:8,v:1,cat:"Breads"},
+  {n:"Paratha (Plain)",cal:300,p:7,c:40,f:13,v:1,cat:"Breads"},
+  {n:"Aloo Paratha",cal:210,p:5,c:30,f:8,v:1,cat:"Breads"},
+  {n:"Gobi Paratha",cal:200,p:5,c:28,f:8,v:1,cat:"Breads"},
+  {n:"Paneer Paratha",cal:250,p:8,c:28,f:12,v:1,cat:"Breads"},
+  {n:"Puri / Poori",cal:350,p:6,c:40,f:18,v:1,cat:"Breads"},
+  {n:"Bhatura",cal:330,p:7,c:42,f:15,v:1,cat:"Breads"},
+  {n:"Thepla",cal:280,p:7,c:35,f:12,v:1,cat:"Breads"},
+  {n:"Missi Roti",cal:260,p:9,c:38,f:8,v:1,cat:"Breads"},
+  {n:"Dosa (Plain)",cal:120,p:3,c:18,f:4,v:1,cat:"South Indian"},
+  {n:"Masala Dosa",cal:150,p:4,c:22,f:5,v:1,cat:"South Indian"},
+  {n:"Rava Dosa",cal:165,p:3,c:22,f:7,v:1,cat:"South Indian"},
+  {n:"Idli",cal:80,p:2,c:15,f:0.5,v:1,cat:"South Indian"},
+  {n:"Uttapam",cal:140,p:4,c:20,f:5,v:1,cat:"South Indian"},
+  {n:"Vada / Medu Vada",cal:200,p:5,c:20,f:11,v:1,cat:"South Indian"},
+  {n:"Upma",cal:120,p:3,c:18,f:4,v:1,cat:"South Indian"},
+  {n:"Pongal",cal:145,p:4,c:20,f:5,v:1,cat:"South Indian"},
+  {n:"Appam",cal:120,p:2,c:22,f:2,v:1,cat:"South Indian"},
+  {n:"Coconut Chutney",cal:110,p:2,c:5,f:9,v:1,cat:"South Indian"},
+  {n:"White Rice (Steamed)",cal:130,p:2.7,c:28,f:0.3,v:1,cat:"Rice"},
+  {n:"Brown Rice",cal:112,p:2.6,c:24,f:0.9,v:1,cat:"Rice"},
+  {n:"Jeera Rice",cal:160,p:3,c:28,f:4,v:1,cat:"Rice"},
+  {n:"Veg Pulao",cal:150,p:3,c:24,f:4,v:1,cat:"Rice"},
+  {n:"Veg Biryani",cal:170,p:4,c:25,f:6,v:1,cat:"Rice"},
+  {n:"Lemon Rice",cal:155,p:3,c:26,f:4,v:1,cat:"Rice"},
+  {n:"Curd Rice",cal:110,p:3,c:18,f:3,v:1,cat:"Rice"},
+  {n:"Khichdi",cal:120,p:4,c:18,f:3,v:1,cat:"Rice"},
+  {n:"Tamarind Rice",cal:160,p:3,c:27,f:4.5,v:1,cat:"Rice"},
+  {n:"Aloo Gobi",cal:100,p:3,c:12,f:5,v:1,cat:"Sabzi"},
+  {n:"Baingan Bharta",cal:90,p:2,c:8,f:6,v:1,cat:"Sabzi"},
+  {n:"Bhindi Masala (Okra)",cal:95,p:2,c:8,f:6,v:1,cat:"Sabzi"},
+  {n:"Aloo Matar",cal:110,p:3,c:14,f:5,v:1,cat:"Sabzi"},
+  {n:"Mixed Veg Curry",cal:85,p:3,c:10,f:4,v:1,cat:"Sabzi"},
+  {n:"Aloo Jeera",cal:115,p:2,c:15,f:5,v:1,cat:"Sabzi"},
+  {n:"Dum Aloo",cal:150,p:3,c:16,f:8,v:1,cat:"Sabzi"},
+  {n:"Malai Kofta",cal:220,p:7,c:12,f:16,v:1,cat:"Sabzi"},
+  {n:"Veg Korma",cal:130,p:4,c:12,f:7,v:1,cat:"Sabzi"},
+  {n:"Sarson Ka Saag",cal:80,p:3,c:6,f:5,v:1,cat:"Sabzi"},
+  {n:"Palak (Spinach)",cal:50,p:3,c:4,f:3,v:1,cat:"Sabzi"},
+  {n:"Mushroom Matar",cal:90,p:4,c:8,f:5,v:1,cat:"Sabzi"},
+  {n:"Cabbage Sabzi",cal:65,p:2,c:7,f:3,v:1,cat:"Sabzi"},
+  {n:"Samosa",cal:260,p:4,c:28,f:15,v:1,cat:"Snacks"},
+  {n:"Pakora / Bhajia",cal:250,p:5,c:22,f:15,v:1,cat:"Snacks"},
+  {n:"Dhokla",cal:160,p:5,c:24,f:5,v:1,cat:"Snacks"},
+  {n:"Khandvi",cal:140,p:5,c:18,f:5,v:1,cat:"Snacks"},
+  {n:"Poha",cal:130,p:3,c:22,f:4,v:1,cat:"Snacks"},
+  {n:"Pav Bhaji",cal:200,p:5,c:26,f:8,v:1,cat:"Snacks"},
+  {n:"Aloo Tikki",cal:180,p:3,c:22,f:9,v:1,cat:"Snacks"},
+  {n:"Pani Puri / Golgappa",cal:200,p:3,c:30,f:8,v:1,cat:"Snacks"},
+  {n:"Bhel Puri",cal:190,p:4,c:28,f:7,v:1,cat:"Snacks"},
+  {n:"Dahi Vada",cal:140,p:5,c:17,f:5,v:1,cat:"Snacks"},
+  {n:"Kachori",cal:300,p:5,c:32,f:17,v:1,cat:"Snacks"},
+  {n:"Sabudana Khichdi",cal:180,p:2,c:30,f:6,v:1,cat:"Snacks"},
+  {n:"Undhiyu",cal:150,p:5,c:15,f:8,v:1,cat:"Snacks"},
+  {n:"Dabeli",cal:200,p:4,c:28,f:8,v:1,cat:"Snacks"},
+  {n:"Gulab Jamun",cal:300,p:4,c:40,f:14,v:1,cat:"Sweets"},
+  {n:"Rasgulla",cal:190,p:5,c:35,f:3,v:1,cat:"Sweets"},
+  {n:"Jalebi",cal:370,p:2,c:60,f:14,v:1,cat:"Sweets"},
+  {n:"Kheer",cal:140,p:3,c:20,f:5,v:1,cat:"Sweets"},
+  {n:"Suji Halwa",cal:250,p:3,c:35,f:11,v:1,cat:"Sweets"},
+  {n:"Gajar Ka Halwa",cal:180,p:3,c:22,f:9,v:1,cat:"Sweets"},
+  {n:"Besan Ladoo",cal:400,p:7,c:40,f:24,v:1,cat:"Sweets"},
+  {n:"Barfi / Burfi",cal:350,p:7,c:42,f:17,v:1,cat:"Sweets"},
+  {n:"Shrikhand",cal:200,p:5,c:28,f:8,v:1,cat:"Sweets"},
+  {n:"Chai (Milk Tea)",cal:50,p:1.5,c:7,f:1.5,v:1,cat:"Drinks"},
+  {n:"Masala Chai",cal:45,p:1.5,c:6,f:1.5,v:1,cat:"Drinks"},
+  {n:"Coffee (Milk + Sugar)",cal:45,p:1.5,c:6,f:1.5,v:1,cat:"Drinks"},
+  {n:"Filter Coffee",cal:55,p:2,c:6,f:2,v:1,cat:"Drinks"},
+  {n:"Sweet Lassi",cal:90,p:3,c:14,f:2,v:1,cat:"Drinks"},
+  {n:"Mango Lassi",cal:120,p:3,c:20,f:3,v:1,cat:"Drinks"},
+  {n:"Chaas / Buttermilk",cal:25,p:1.5,c:3,f:0.5,v:1,cat:"Drinks"},
+  {n:"Nimbu Pani",cal:25,p:0,c:6,f:0,v:1,cat:"Drinks"},
+  {n:"Coconut Water",cal:19,p:0.7,c:3.7,f:0.2,v:1,cat:"Drinks"},
+  {n:"Raita",cal:40,p:2,c:4,f:2,v:1,cat:"Sides"},
+  {n:"Papad (Roasted)",cal:310,p:20,c:42,f:6,v:1,cat:"Sides"},
+  {n:"Tofu",cal:76,p:8,c:1.9,f:4.8,v:1,cat:"Protein"},
+  {n:"Soya Chunks (Dry)",cal:345,p:52,c:33,f:0.5,v:1,cat:"Protein"},
+  {n:"Soya Chunk Curry",cal:120,p:12,c:8,f:4,v:1,cat:"Protein"},
+  {n:"Sprouts (Raw)",cal:30,p:3,c:4,f:0.3,v:1,cat:"Protein"},
+  {n:"Peanuts",cal:567,p:26,c:16,f:49,v:1,cat:"Protein"},
+  {n:"Almonds",cal:579,p:21,c:22,f:50,v:1,cat:"Protein"},
+  {n:"Dahi / Curd",cal:60,p:3,c:5,f:3,v:1,cat:"Protein"},
+  {n:"Chickpeas (Boiled)",cal:164,p:9,c:27,f:2.6,v:1,cat:"Protein"},
+  {n:"Egg (Boiled)",cal:155,p:13,c:1.1,f:11,v:0,cat:"Protein"},
+  {n:"Greek Yogurt",cal:59,p:10,c:3.6,f:0.4,v:1,cat:"Protein"},
+  {n:"Banana",cal:89,p:1.1,c:23,f:0.3,v:1,cat:"Fruits"},
+  {n:"Apple",cal:52,p:0.3,c:14,f:0.2,v:1,cat:"Fruits"},
+  {n:"Mango",cal:60,p:0.8,c:15,f:0.4,v:1,cat:"Fruits"},
+  {n:"Watermelon",cal:30,p:0.6,c:7.6,f:0.2,v:1,cat:"Fruits"},
+  {n:"Orange",cal:47,p:0.9,c:12,f:0.1,v:1,cat:"Fruits"},
+  {n:"Guava",cal:68,p:2.6,c:14,f:1,v:1,cat:"Fruits"},
+  {n:"Grapes",cal:69,p:0.7,c:18,f:0.2,v:1,cat:"Fruits"},
+  {n:"Papaya",cal:43,p:0.5,c:11,f:0.3,v:1,cat:"Fruits"},
+  {n:"Oats Porridge",cal:71,p:3,c:12,f:1.5,v:1,cat:"Breakfast"},
+  {n:"Avocado",cal:160,p:2,c:9,f:15,v:1,cat:"Breakfast"},
+  {n:"Sweet Potato",cal:86,p:1.6,c:20,f:0.1,v:1,cat:"Breakfast"},
+  {n:"Quinoa (Cooked)",cal:120,p:4.4,c:21,f:1.9,v:1,cat:"Breakfast"},
+  {n:"Chicken Breast",cal:165,p:31,c:0,f:3.6,v:0,cat:"Non-Veg"},
+  {n:"Chicken Curry",cal:150,p:15,c:5,f:8,v:0,cat:"Non-Veg"},
+  {n:"Butter Chicken",cal:190,p:14,c:6,f:12,v:0,cat:"Non-Veg"},
+  {n:"Tandoori Chicken",cal:150,p:20,c:3,f:6,v:0,cat:"Non-Veg"},
+  {n:"Fish Curry",cal:120,p:14,c:4,f:5,v:0,cat:"Non-Veg"},
+  {n:"Chicken Biryani",cal:180,p:10,c:22,f:6,v:0,cat:"Non-Veg"},
+  {n:"Mutton Curry",cal:190,p:16,c:4,f:12,v:0,cat:"Non-Veg"}
+];
+
+var TASKS_DB = [
+  {id:"w1",name:"Workout #1 (45 min)",desc:"Any workout, 45 min minimum"},
+  {id:"w2",name:"Workout #2 (Outdoor)",desc:"Outdoor, 45 min, no excuses"},
+  {id:"diet",name:"Follow Your Diet",desc:"No alcohol, no cheat meals"},
+  {id:"water",name:"Drink 1 Gallon Water",desc:"Approx 3.8 liters"},
+  {id:"read",name:"Read 10 Pages",desc:"Non-fiction / self-improvement"},
+  {id:"photo",name:"Progress Photo",desc:"Document your transformation"}
+];
+
+var QUOTES_DB = [
+  {q:"The secret of getting ahead is getting started.",a:"Mark Twain"},
+  {q:"Day 2. You showed up again. That IS the habit forming.",a:""},
+  {q:"Discipline is choosing what you want most over what you want now.",a:"Abraham Lincoln"},
+  {q:"It does not matter how slowly you go, do not stop.",a:"Confucius"},
+  {q:"Motivation gets you started. Habit keeps you going.",a:"Jim Ryun"},
+  {q:"Day 6. Most people quit here. You did not.",a:""},
+  {q:"One week in. Building something nobody can take from you.",a:""},
+  {q:"The pain you feel today becomes the strength of tomorrow.",a:"Arnold Schwarzenegger"},
+  {q:"Success is small efforts repeated day in and day out.",a:"Robert Collier"},
+  {q:"10 days. Double digits. Keep stacking wins.",a:""},
+  {q:"We suffer more in imagination than in reality.",a:"Seneca"},
+  {q:"Hard choices, easy life. Easy choices, hard life.",a:"Jerzy Gregorek"},
+  {q:"Your body can stand anything. Convince your mind.",a:""},
+  {q:"The only bad workout is the one that did not happen.",a:""},
+  {q:"Two weeks strong. You are not the same person who started.",a:""},
+  {q:"Champions are merely recognized in the ring, not made there.",a:"Joe Louis"},
+  {q:"Be stronger than your excuses.",a:""},
+  {q:"The obstacle is the way.",a:"Marcus Aurelius"},
+  {q:"Not extreme, just consistent.",a:""},
+  {q:"Twenty days. What felt hard is becoming normal.",a:""},
+  {q:"Three weeks. The habit is forming.",a:""},
+  {q:"Fall seven times, stand up eight.",a:"Japanese Proverb"},
+  {q:"Do what is hard and your life will be easy.",a:"Les Brown"},
+  {q:"Mental toughness: heart and soul, not just muscle.",a:""},
+  {q:"25% complete. You are relentless.",a:""},
+  {q:"Everything you want is on the other side of fear.",a:"George Addair"},
+  {q:"Comfort is the enemy of progress.",a:"P.T. Barnum"},
+  {q:"Training the mind, not the body.",a:""},
+  {q:"Do not count the days. Make the days count.",a:"Muhammad Ali"},
+  {q:"30 days. A full month of choosing yourself.",a:""},
+  {q:"If it were easy, everyone would do it.",a:""},
+  {q:"The mind is everything. What you think, you become.",a:"Buddha"},
+  {q:"Stay hungry. Stay foolish. Stay disciplined.",a:""},
+  {q:"Proving to yourself that promises matter.",a:""},
+  {q:"Almost halfway. The summit is in sight.",a:""},
+  {q:"Perseverance: many short races, one after another.",a:"Walter Elliot"},
+  {q:"Halfway. Tougher than you think.",a:""},
+  {q:"The best project you will ever work on is you.",a:""},
+  {q:"Discipline feels less like a cage, more like freedom.",a:""},
+  {q:"Strength: overcoming what you thought you could not.",a:"Rikki Rogers"},
+  {q:"You did not come this far to only come this far.",a:""},
+  {q:"Ordinary to extraordinary: that little extra.",a:"Jimmy Johnson"},
+  {q:"Every day writing your comeback story.",a:""},
+  {q:"Your future self watches through memories. Make them proud.",a:""},
+  {q:"60%. The downhill stretch begins.",a:""},
+  {q:"The pain of discipline or the pain of regret.",a:"Jim Rohn"},
+  {q:"Winners love the discipline of hard work.",a:"Lou Holtz"},
+  {q:"Day 48. People are starting to see the change.",a:""},
+  {q:"Be so good they cannot ignore you.",a:"Steve Martin"},
+  {q:"50 days. Half a hundred. A force of nature.",a:""},
+  {q:"Character cannot be developed in ease and quiet.",a:"Helen Keller"},
+  {q:"Not just completing tasks. Becoming someone new.",a:""},
+  {q:"Feeling like quitting? Remember why you started.",a:""},
+  {q:"The last 25% is where champions are forged.",a:""},
+  {q:"Pain is temporary. Quitting lasts forever.",a:"Lance Armstrong"},
+  {q:"56 days of mental armor.",a:""},
+  {q:"It always seems impossible until it is done.",a:"Nelson Mandela"},
+  {q:"Trust the process.",a:""},
+  {q:"Greatness: small things done well, every day.",a:"Ray Lewis"},
+  {q:"60 days. Only 15 to go.",a:""},
+  {q:"Survived 100% of your worst days. Keep going.",a:""},
+  {q:"The final stretch is about who you have become.",a:""},
+  {q:"Dream big. Work hard. Stay focused.",a:""},
+  {q:"Day 64. Discipline is now your identity.",a:""},
+  {q:"Heroes are made by the paths they choose.",a:"Brodi Ashton"},
+  {q:"66 days. Permanence begins here.",a:""},
+  {q:"10 days left. Victory is close.",a:""},
+  {q:"Changed by example, not opinion.",a:"Paulo Coelho"},
+  {q:"Finishing what most will never start.",a:""},
+  {q:"Day 70. SEVENTY. Let that sink in.",a:""},
+  {q:"Nobody who gave their best regretted it.",a:"George Halas"},
+  {q:"72 down, 3 to go. Extraordinary.",a:""},
+  {q:"2 more days after today. Just 2.",a:""},
+  {q:"Tomorrow is the last day. 74 days. Legend.",a:""},
+  {q:"DAY 75. YOU DID IT. Anything is possible.",a:""}
+];
+
+var APP_SKEY = "75hard_v6";
+var APP_UKEY = "75hard_users";
+var APP_USER = null;
+var APP_DATA = { goal: 2000, days: {} };
+var APP_DAY = null;
+var APP_SEL = null;
+var APP_VEG = false;
+var APP_STM = null;
+</script>
+
+<!-- ====== SCRIPT 2: Core Logic (separate block = separate parse) ====== -->
+<script>
+function _$(id) { return document.getElementById(id); }
+function _log(msg) {
+  var d = _$("dbg");
+  d.className = "dbg show";
+  d.textContent = d.textContent + msg + "\n";
+}
+
+function _toast(m) {
+  var t = _$("toast");
+  t.textContent = m || "Saved";
+  t.className = "toast show";
+  clearTimeout(t._tt);
+  t._tt = setTimeout(function() { t.className = "toast"; }, 1500);
+}
+
+function _load() {
+  try {
+    var r = localStorage.getItem(APP_SKEY);
+    if (r) APP_DATA = JSON.parse(r);
+  } catch(e) {}
+  if (!APP_DATA.days) APP_DATA.days = {};
+  if (!APP_DATA.goal) APP_DATA.goal = 2000;
+}
+
+function _save() {
+  try { localStorage.setItem(APP_SKEY, JSON.stringify(APP_DATA)); }
+  catch(e) { _toast("Storage full!"); return; }
+  _toast("Saved");
+}
+
+function _ensD(d) {
+  if (!APP_DATA.days[d]) APP_DATA.days[d] = { tasks: {}, notes: "", foods: [] };
+  if (!APP_DATA.days[d].foods) APP_DATA.days[d].foods = [];
+}
+
+function _getQ(d) {
+  var i = d - 1;
+  if (i < 0) i = 0;
+  if (i >= QUOTES_DB.length) i = QUOTES_DB.length - 1;
+  return QUOTES_DB[i];
+}
+
+/* Stats */
+function _updateStats() {
+  var done = 0, streak = 0, brk = false;
+  for (var i = 1; i <= 75; i++) {
+    var d = APP_DATA.days[i];
+    var ok = true;
+    if (!d) ok = false;
+    else {
+      for (var j = 0; j < TASKS_DB.length; j++) {
+        if (!d.tasks[TASKS_DB[j].id]) { ok = false; break; }
+      }
+    }
+    if (ok) done++;
+    if (ok && !brk) streak++;
+    else brk = true;
+  }
+  var pct = Math.round(done / 75 * 100);
+  _$("sDone").textContent = String(done);
+  _$("sLeft").textContent = String(75 - done);
+  _$("sStrk").textContent = String(streak);
+  _$("pPct").textContent = pct + "%";
+  _$("pFill").style.width = pct + "%";
+}
+
+/* Grid colors */
+function _colorGrid() {
+  var btns = document.querySelectorAll(".dbtn");
+  for (var i = 0; i < btns.length; i++) {
+    var d = parseInt(btns[i].getAttribute("data-day"), 10);
+    var cls = "dbtn";
+    if (d === APP_DAY) cls += " act";
+    var x = APP_DATA.days[d];
+    if (x) {
+      var n = 0;
+      for (var j = 0; j < TASKS_DB.length; j++) {
+        if (x.tasks[TASKS_DB[j].id]) n++;
+      }
+      if (n === TASKS_DB.length) cls += " dn";
+      else if (n > 0) cls += " pt";
+    }
+    btns[i].className = cls;
+  }
+}
+
+/* Render tasks */
+function _renderTasks(d) {
+  var l = _$("tList");
+  l.innerHTML = "";
+  var dn = 0;
+  for (var i = 0; i < TASKS_DB.length; i++) {
+    (function(t) {
+      var ck = !!(APP_DATA.days[d] && APP_DATA.days[d].tasks[t.id]);
+      if (ck) dn++;
+      var row = document.createElement("div");
+      row.className = "trow" + (ck ? " chk" : "");
+      row.innerHTML = '<div class="tchk">' + (ck ? "\u2713" : "") + '</div><div class="tinf"><div class="tn">' + t.name + '</div><div class="td">' + t.desc + '</div></div>';
+      row.addEventListener("click", function() {
+        _ensD(d);
+        APP_DATA.days[d].tasks[t.id] = !APP_DATA.days[d].tasks[t.id];
+        _save(); _renderTasks(d); _colorGrid(); _updateStats();
+      });
+      l.appendChild(row);
+    })(TASKS_DB[i]);
+  }
+  _$("tBg").textContent = dn + "/" + TASKS_DB.length;
+}
+
+/* Render calories */
+function _renderCals(d) {
+  var foods = (APP_DATA.days[d] && APP_DATA.days[d].foods) ? APP_DATA.days[d].foods : [];
+  var log = _$("cLog");
+  log.innerHTML = "";
+  var tc = 0, tp = 0, tca = 0, tf = 0;
+  for (var i = 0; i < foods.length; i++) {
+    (function(fd, idx) {
+      tc += fd.totalCal || 0; tp += fd.totalP || 0; tca += fd.totalC || 0; tf += fd.totalF || 0;
+      var it = document.createElement("div");
+      it.className = "cli";
+      var h = '<span class="fn2">' + fd.name + '</span>';
+      if (fd.grams) h += '<span class="fg">' + fd.grams + 'g</span>';
+      h += '<span class="fc2">' + fd.totalCal + '</span>';
+      h += '<button class="fdl">\u00d7</button>';
+      it.innerHTML = h;
+      it.querySelector(".fdl").addEventListener("click", function(e) {
+        e.stopPropagation();
+        APP_DATA.days[d].foods.splice(idx, 1);
+        _save(); _renderCals(d);
+      });
+      log.appendChild(it);
+    })(foods[i], i);
+  }
+  var tot = _$("cTot");
+  if (foods.length > 0) {
+    tot.className = "ctt show";
+    _$("cTotV").textContent = tc + " kcal";
+  } else {
+    tot.className = "ctt";
+  }
+  _$("mP").textContent = Math.round(tp) + "g";
+  _$("mC").textContent = Math.round(tca) + "g";
+  _$("mF").textContent = Math.round(tf) + "g";
+  var goal = APP_DATA.goal || 2000;
+  var pct = Math.min((tc / goal) * 100, 100);
+  var fill = _$("cFill");
+  fill.style.width = pct + "%";
+  if (tc > goal) fill.style.background = "var(--red)";
+  else if (tc > goal * 0.85) fill.style.background = "var(--yellow)";
+  else fill.style.background = "var(--green)";
+}
+
+/* Select a day */
+function _selectDay(d) {
+  APP_DAY = d;
+  _ensD(d);
+  _colorGrid();
+  _$("dpanel").className = "dpanel vis";
+  var q = _getQ(d);
+  _$("dQ").textContent = '"' + q.q + '"';
+  _$("dA").textContent = q.a ? "Day " + d + " -- " + q.a : "Day " + d;
+  _renderTasks(d);
+  _renderCals(d);
+  _renderPhoto(d);
+  var notes = _$("dNotes");
+  notes.value = APP_DATA.days[d].notes || "";
+  notes.oninput = function() { APP_DATA.days[d].notes = notes.value; _save(); };
+  _$("cGoal").value = APP_DATA.goal;
+  _$("cAd").className = "cad";
+  _$("cSrch").value = "";
+  _$("cRes").className = "crl";
+  APP_SEL = null;
+  setTimeout(function() {
+    _$("dpanel").scrollIntoView(true);
+  }, 100);
+}
+</script>
+
+<!-- ====== SCRIPT 3: Photo handling ====== -->
+<script>
+var _pDB = null;
+function _pDBName() { return "75h_ph_" + (APP_USER || "default"); }
+function _openPDB(cb) {
+  if (_pDB) return cb(_pDB);
+  try {
+    var r = indexedDB.open(_pDBName(), 1);
+    r.onupgradeneeded = function(e) {
+      var db = e.target.result;
+      if (!db.objectStoreNames.contains("ph")) db.createObjectStore("ph", { keyPath: "day" });
+    };
+    r.onsuccess = function(e) { _pDB = e.target.result; _pDB.onclose = function() { _pDB = null; }; cb(_pDB); };
+    r.onerror = function() { cb(null); };
+  } catch(e) { cb(null); }
+}
+function _savePh(day, blob, cb) {
+  _openPDB(function(db) {
+    if (!db) return cb && cb();
+    try {
+      var tx = db.transaction("ph", "readwrite");
+      tx.objectStore("ph").put({ day: Number(day), blob: blob, ts: Date.now() });
+      tx.oncomplete = function() { cb && cb(); };
+      tx.onerror = function() { cb && cb(); };
+    } catch(e) { cb && cb(); }
+  });
+}
+function _getPh(day, cb) {
+  _openPDB(function(db) {
+    if (!db) return cb(null);
+    try {
+      var tx = db.transaction("ph", "readonly");
+      var r = tx.objectStore("ph").get(Number(day));
+      r.onsuccess = function() { cb(r.result || null); };
+      r.onerror = function() { cb(null); };
+    } catch(e) { cb(null); }
+  });
+}
+function _delPh(day, cb) {
+  _openPDB(function(db) {
+    if (!db) return cb && cb();
+    try {
+      var tx = db.transaction("ph", "readwrite");
+      tx.objectStore("ph").delete(Number(day));
+      tx.oncomplete = function() { cb && cb(); };
+      tx.onerror = function() { cb && cb(); };
+    } catch(e) { cb && cb(); }
+  });
+}
+function _allPhDays(cb) {
+  _openPDB(function(db) {
+    if (!db) return cb([]);
+    try {
+      var tx = db.transaction("ph", "readonly");
+      var r = tx.objectStore("ph").getAllKeys();
+      r.onsuccess = function() { var a = r.result || []; a.sort(function(x,y){return x-y;}); cb(a); };
+      r.onerror = function() { cb([]); };
+    } catch(e) { cb([]); }
+  });
+}
+function _compress(file, cb) {
+  try {
+    if (typeof createImageBitmap !== "function") {
+      /* iOS Safari fallback: use Image + canvas */
+      var url = URL.createObjectURL(file);
+      var img = new Image();
+      img.onload = function() {
+        var w = img.width, h = img.height, mx = 1200;
+        if (w <= mx && h <= mx) { URL.revokeObjectURL(url); return cb(file); }
+        var r = Math.min(mx / w, mx / h);
+        var c = document.createElement("canvas");
+        c.width = Math.round(w * r); c.height = Math.round(h * r);
+        c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+        URL.revokeObjectURL(url);
+        c.toBlob(function(b) { cb(b || file); }, "image/jpeg", 0.82);
+      };
+      img.onerror = function() { URL.revokeObjectURL(url); cb(file); };
+      img.src = url;
+      return;
+    }
+    createImageBitmap(file).then(function(bmp) {
+      var w = bmp.width, h = bmp.height, mx = 1200;
+      if (w <= mx && h <= mx) { bmp.close(); return cb(file); }
+      var r = Math.min(mx / w, mx / h);
+      var c = document.createElement("canvas");
+      c.width = Math.round(w * r); c.height = Math.round(h * r);
+      c.getContext("2d").drawImage(bmp, 0, 0, c.width, c.height);
+      bmp.close();
+      c.toBlob(function(b) { cb(b || file); }, "image/jpeg", 0.82);
+    }).catch(function() { cb(file); });
+  } catch(e) { cb(file); }
+}
+
+function _renderPhoto(d) {
+  var pv = _$("phP");
+  var dl = _$("phD");
+  var cb2 = _$("cpB");
+  var tb = _$("tlB");
+  _getPh(d, function(rec) {
+    if (rec && rec.blob) {
+      pv.src = URL.createObjectURL(rec.blob);
+      pv.className = "phi show";
+      dl.className = "phd show";
+    } else {
+      pv.className = "phi";
+      pv.src = "";
+      dl.className = "phd";
+    }
+  });
+  _allPhDays(function(days) {
+    cb2.className = days.length >= 2 ? "cpb show" : "cpb";
+    tb.className = days.length >= 1 ? "tlb show" : "tlb";
+  });
+}
+
+function _handlePh(file) {
+  if (!APP_DAY || !file) return;
+  _toast("Processing...");
+  _compress(file, function(blob) {
+    _savePh(APP_DAY, blob, function() {
+      _renderPhoto(APP_DAY);
+      _toast("Photo saved!");
+    });
+  });
+}
+</script>
+
+<!-- ====== SCRIPT 4: Event Wiring ====== -->
+<script>
+try {
+  /* Grid clicks */
+  _$("grid").addEventListener("click", function(e) {
+    var t = e.target;
+    while (t && !t.getAttribute("data-day") && t !== _$("grid")) t = t.parentElement;
+    if (!t) return;
+    var d = parseInt(t.getAttribute("data-day"), 10);
+    if (d >= 1 && d <= 75) _selectDay(d);
+  });
+
+  /* Veg toggle */
+  _$("vegT").addEventListener("click", function() {
+    APP_VEG = !APP_VEG;
+    this.className = APP_VEG ? "vegt on" : "vegt";
+    var q = _$("cSrch").value.trim();
+    if (q.length >= 1) _showLocal(q);
+  });
+
+  /* Food search */
+  _$("cSrch").addEventListener("input", function() {
+    clearTimeout(APP_STM);
+    var q = this.value.trim();
+    if (q.length < 1) { _$("cRes").className = "crl"; return; }
+    _showLocal(q);
+    if (q.length >= 3) APP_STM = setTimeout(function() { _searchOnline(q); }, 600);
+  });
+
+  function _showLocal(q) {
+    var ql = q.toLowerCase();
+    var res = [];
+    for (var i = 0; i < FOODS_DB.length; i++) {
+      var fd = FOODS_DB[i];
+      if (APP_VEG && !fd.v) continue;
+      if (fd.n.toLowerCase().indexOf(ql) !== -1 || fd.cat.toLowerCase().indexOf(ql) !== -1) {
+        res.push(fd);
+        if (res.length >= 15) break;
+      }
+    }
+    var el = _$("cRes");
+    el.innerHTML = "";
+    if (res.length > 0) {
+      var lbl = document.createElement("div");
+      lbl.className = "sl";
+      lbl.textContent = APP_VEG ? "LOCAL (VEG ONLY)" : "LOCAL DATABASE";
+      el.appendChild(lbl);
+      for (var j = 0; j < res.length; j++) {
+        (function(fd) {
+          var it = document.createElement("div");
+          it.className = "cri";
+          it.innerHTML = '<div class="fd"><div class="fn">' + fd.n + '</div><div class="fm">P:' + fd.p + 'g C:' + fd.c + 'g F:' + fd.f + 'g /100g</div></div><span class="fc">' + fd.cal + ' kcal</span>';
+          it.addEventListener("click", function() { _pickFood(fd.n, fd.cal, fd.p, fd.c, fd.f); });
+          el.appendChild(it);
+        })(res[j]);
+      }
+    }
+    var olbl = document.createElement("div");
+    olbl.className = "sl";
+    olbl.id = "oLbl";
+    olbl.textContent = q.length >= 3 ? "USDA ONLINE -- Searching..." : "USDA ONLINE -- Type 3+ chars";
+    el.appendChild(olbl);
+    el.className = "crl show";
+  }
+
+  function _searchOnline(q) {
+    var url = "https://api.nal.usda.gov/fdc/v1/foods/search?query=" + encodeURIComponent(q) + "&pageSize=5&dataType=SR%20Legacy,Foundation&api_key=DEMO_KEY";
+    fetch(url).then(function(r) {
+      if (!r.ok) throw new Error(r.status);
+      return r.json();
+    }).then(function(json) {
+      var ol = _$("oLbl");
+      if (!ol) return;
+      while (ol.nextSibling) { ol.parentNode.removeChild(ol.nextSibling); }
+      var foods = json.foods || [];
+      ol.textContent = foods.length ? "USDA ONLINE" : "USDA ONLINE -- No results";
+      for (var i = 0; i < Math.min(foods.length, 5); i++) {
+        (function(food) {
+          var nut = food.foodNutrients || [];
+          var cal = 0, pr = 0, ca = 0, fa = 0;
+          for (var k = 0; k < nut.length; k++) {
+            if (nut[k].nutrientId === 1008) cal = Math.round(nut[k].value || 0);
+            if (nut[k].nutrientId === 1003) pr = Math.round(nut[k].value || 0);
+            if (nut[k].nutrientId === 1005) ca = Math.round(nut[k].value || 0);
+            if (nut[k].nutrientId === 1004) fa = Math.round(nut[k].value || 0);
+          }
+          var it = document.createElement("div");
+          it.className = "cri";
+          it.innerHTML = '<div class="fd"><div class="fn">' + food.description + '</div><div class="fm">P:' + pr + 'g C:' + ca + 'g F:' + fa + 'g /100g</div></div><span class="fc">' + cal + ' kcal</span>';
+          it.addEventListener("click", function() { _pickFood(food.description, cal, pr, ca, fa); });
+          _$("cRes").appendChild(it);
+        })(foods[i]);
+      }
+    }).catch(function() {
+      var ol = _$("oLbl");
+      if (ol) ol.textContent = "USDA ONLINE -- Error";
+    });
+  }
+
+  function _pickFood(name, cal, p, c, f) {
+    APP_SEL = { name: name, cal: cal, p: p, c: c, f: f };
+    _$("cRes").className = "crl";
+    _$("cSrch").value = "";
+    try { _$("cSrch").blur(); } catch(e) {}
+    _$("cAdL").innerHTML = name + ' <span class="rm">(' + cal + ' kcal | P:' + p + ' C:' + c + ' F:' + f + ' /100g)</span>';
+    _$("cAdG").value = 100;
+    _updCalc();
+    _$("cAd").className = "cad show";
+  }
+
+  _$("cAdG").addEventListener("input", _updCalc);
+  function _updCalc() {
+    if (!APP_SEL) return;
+    var g = parseFloat(_$("cAdG").value) || 0;
+    _$("cAdC").textContent = Math.round((APP_SEL.cal / 100) * g) + " kcal";
+  }
+
+  _$("cAdB").addEventListener("click", function() {
+    if (!APP_SEL || !APP_DAY) return;
+    var g = parseFloat(_$("cAdG").value) || 0;
+    var tc = Math.round((APP_SEL.cal / 100) * g);
+    var tp = Math.round((APP_SEL.p / 100) * g * 10) / 10;
+    var tca = Math.round((APP_SEL.c / 100) * g * 10) / 10;
+    var tf = Math.round((APP_SEL.f / 100) * g * 10) / 10;
+    _ensD(APP_DAY);
+    APP_DATA.days[APP_DAY].foods.push({
+      id: Date.now().toString(36), name: APP_SEL.name, grams: g,
+      totalCal: tc, totalP: tp, totalC: tca, totalF: tf
+    });
+    _save(); APP_SEL = null; _$("cAd").className = "cad"; _renderCals(APP_DAY);
+  });
+
+  _$("cAdX").addEventListener("click", function() { _$("cAd").className = "cad"; APP_SEL = null; });
+
+  _$("mBtn").addEventListener("click", function() {
+    if (!APP_DAY) return;
+    var name = prompt("Food name:");
+    if (!name) return;
+    var cals = parseInt(prompt("Calories (kcal):"), 10);
+    if (isNaN(cals) || cals < 0) return;
+    _ensD(APP_DAY);
+    APP_DATA.days[APP_DAY].foods.push({
+      id: Date.now().toString(36), name: name, grams: null,
+      totalCal: cals, totalP: 0, totalC: 0, totalF: 0
+    });
+    _save(); _renderCals(APP_DAY);
+  });
+
+  _$("cGoal").addEventListener("change", function() {
+    APP_DATA.goal = parseInt(this.value, 10) || 2000;
+    _save();
+    if (APP_DAY) _renderCals(APP_DAY);
+  });
+
+  /* Photo buttons */
+  _$("camI").addEventListener("change", function(e) { if (e.target.files[0]) _handlePh(e.target.files[0]); e.target.value = ""; });
+  _$("libI").addEventListener("change", function(e) { if (e.target.files[0]) _handlePh(e.target.files[0]); e.target.value = ""; });
+  _$("phD").addEventListener("click", function() {
+    if (!APP_DAY || !confirm("Remove photo?")) return;
+    _delPh(APP_DAY, function() { _renderPhoto(APP_DAY); _toast("Removed"); });
+  });
+
+  /* Compare */
+  _$("cpB").addEventListener("click", function() {
+    _allPhDays(function(days) {
+      if (days.length < 2) return;
+      _getPh(days[0], function(first) {
+        _getPh(days[days.length - 1], function(last) {
+          if (!first || !last) return;
+          _$("mTt").textContent = "Day " + days[0] + " vs Day " + days[days.length - 1];
+          var cnt = _$("mCt");
+          cnt.innerHTML = '<div class="cmpg"></div>';
+          var g = cnt.firstChild;
+          var pairs = [{ r: first, l: "Day " + days[0] }, { r: last, l: "Day " + days[days.length - 1] }];
+          for (var i = 0; i < pairs.length; i++) {
+            var cd = document.createElement("div");
+            cd.className = "cmpc";
+            var im = document.createElement("img");
+            im.src = URL.createObjectURL(pairs[i].r.blob);
+            var la = document.createElement("div");
+            la.className = "cl";
+            la.textContent = pairs[i].l;
+            cd.appendChild(im); cd.appendChild(la); g.appendChild(cd);
+          }
+          _$("modal").className = "modal show";
+        });
+      });
+    });
+  });
+
+  /* Timeline */
+  _$("tlB").addEventListener("click", function() {
+    _allPhDays(function(days) {
+      if (!days.length) return;
+      _$("mTt").textContent = "Photo Timeline";
+      var cnt = _$("mCt");
+      cnt.innerHTML = '<div class="tlg" id="tlgC"></div>';
+      var loaded = 0;
+      for (var i = 0; i < days.length; i++) {
+        (function(day) {
+          _getPh(day, function(rec) {
+            loaded++;
+            if (rec && rec.blob) {
+              var c = document.createElement("div");
+              c.className = "tc";
+              var im = document.createElement("img");
+              im.src = URL.createObjectURL(rec.blob);
+              var la = document.createElement("div");
+              la.className = "tl";
+              la.textContent = "Day " + day;
+              c.appendChild(im); c.appendChild(la);
+              _$("tlgC").appendChild(c);
+            }
+            if (loaded >= days.length) _$("modal").className = "modal show";
+          });
+        })(days[i]);
+      }
+    });
+  });
+
+  _$("mCl").addEventListener("click", function() { _$("modal").className = "modal"; });
+
+  /* Export */
+  _$("expB").addEventListener("click", function() {
+    _toast("Preparing...");
+    var exp = { data: APP_DATA, photos: [] };
+    _allPhDays(function(days) {
+      if (days.length === 0) { _doExport(exp); return; }
+      var loaded = 0;
+      for (var i = 0; i < days.length; i++) {
+        (function(day) {
+          _getPh(day, function(rec) {
+            loaded++;
+            if (rec && rec.blob) {
+              var reader = new FileReader();
+              reader.onload = function() {
+                exp.photos.push({ day: day, d: reader.result, ts: rec.ts });
+                if (loaded >= days.length) _doExport(exp);
+              };
+              reader.readAsDataURL(rec.blob);
+            } else {
+              if (loaded >= days.length) _doExport(exp);
+            }
+          });
+        })(days[i]);
+      }
+    });
+  });
+
+  function _doExport(exp) {
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(exp)], { type: "application/json" }));
+    a.download = "75hard_backup.json";
+    a.click();
+    _toast("Exported!");
+  }
+
+  /* Import */
+  _$("impB").addEventListener("click", function() {
+    var inp = _$("fIn");
+    inp.value = "";
+    inp.onchange = function(e) {
+      var file = e.target.files[0];
+      if (!file) return;
+      _toast("Importing...");
+      var reader = new FileReader();
+      reader.onload = function() {
+        try {
+          var obj = JSON.parse(reader.result);
+          if (obj.data) APP_DATA = obj.data;
+          else if (obj.days) APP_DATA = obj;
+          _save(); _colorGrid(); _updateStats();
+          if (obj.photos && obj.photos.length) {
+            var pi = 0;
+            function next() {
+              if (pi >= obj.photos.length) { if (APP_DAY) _selectDay(APP_DAY); _toast("Imported!"); return; }
+              var p = obj.photos[pi]; pi++;
+              var src = p.d || p.dataUrl;
+              if (!src) { next(); return; }
+              fetch(src).then(function(r) { return r.blob(); }).then(function(b) { _savePh(p.day, b, next); }).catch(next);
+            }
+            next();
+          } else {
+            if (APP_DAY) _selectDay(APP_DAY);
+            _toast("Imported!");
+          }
+        } catch(e2) { _toast("Invalid file"); }
+      };
+      reader.readAsText(file);
+    };
+    inp.click();
+  });
+
+  /* Reset */
+  _$("rstB").addEventListener("click", function() {
+    if (!confirm("Erase ALL progress and photos?")) return;
+    if (!confirm("Last chance. Are you sure?")) return;
+    APP_DATA = { goal: 2000, days: {} };
+    _save();
+    _openPDB(function(db) {
+      if (!db) return;
+      try { db.transaction("ph", "readwrite").objectStore("ph").clear(); } catch(e) {}
+    });
+    _colorGrid(); _updateStats();
+    _$("dpanel").className = "dpanel";
+    APP_DAY = null;
+    _toast("Reset");
+  });
+
+  /* ── AUTH ── */
+  function _getUsers() {
+    try { var u = localStorage.getItem(APP_UKEY); return u ? JSON.parse(u) : {}; } catch(e) { return {}; }
+  }
+  function _saveUsers(u) {
+    try { localStorage.setItem(APP_UKEY, JSON.stringify(u)); } catch(e) {}
+  }
+
+  function _showLogin() {
+    _$("loginScreen").className = "login-screen";
+    _$("appPage").className = "page hide";
+    _$("lUser").value = "";
+    _$("lPass").value = "";
+    _$("lErr").textContent = "";
+  }
+
+  function _showApp(username) {
+    APP_USER = username;
+    APP_SKEY = "75hard_u_" + username;
+    _pDB = null; /* reset so IndexedDB reopens for this user */
+    _$("loginScreen").className = "login-screen hide";
+    _$("appPage").className = "page";
+    _$("uName").textContent = username;
+    sessionStorage.setItem("75hard_session", username);
+    _initApp();
+  }
+
+  _$("loginBtn").addEventListener("click", function() {
+    var u = _$("lUser").value.trim().toLowerCase();
+    var p = _$("lPass").value;
+    if (!u || !p) { _$("lErr").textContent = "Enter username and password."; return; }
+    var users = _getUsers();
+    if (!users[u]) { _$("lErr").textContent = "User not found. Register first."; return; }
+    if (users[u].password !== p) { _$("lErr").textContent = "Wrong password."; return; }
+    _showApp(u);
+  });
+
+  _$("regBtn").addEventListener("click", function() {
+    var u = _$("lUser").value.trim().toLowerCase();
+    var p = _$("lPass").value;
+    if (!u || !p) { _$("lErr").textContent = "Enter username and password."; return; }
+    if (u.length < 2) { _$("lErr").textContent = "Username must be 2+ characters."; return; }
+    if (p.length < 3) { _$("lErr").textContent = "Password must be 3+ characters."; return; }
+    var users = _getUsers();
+    if (users[u]) { _$("lErr").textContent = "Username taken. Try another."; return; }
+    users[u] = { password: p };
+    _saveUsers(users);
+    _showApp(u);
+  });
+
+  _$("logoutBtn").addEventListener("click", function() {
+    sessionStorage.removeItem("75hard_session");
+    APP_USER = null;
+    APP_DATA = { goal: 2000, days: {} };
+    APP_DAY = null;
+    _pDB = null;
+    _$("dpanel").className = "dpanel";
+    _$("grid").innerHTML = "";
+    _showLogin();
+  });
+
+  /* Allow Enter key to submit login */
+  _$("lPass").addEventListener("keydown", function(e) {
+    if (e.key === "Enter" || e.keyCode === 13) _$("loginBtn").click();
+  });
+
+  /* ── INIT APP (called after successful auth) ── */
+  function _initApp() {
+    /* Build grid via DOM (document.write breaks on iOS WKWebView) */
+    var g = _$("grid");
+    g.innerHTML = "";
+    for (var i = 1; i <= 75; i++) {
+      var b = document.createElement("button");
+      b.className = "dbtn";
+      b.setAttribute("data-day", i);
+      b.textContent = i;
+      g.appendChild(b);
+    }
+
+    _load();
+
+    /* Top quote */
+    var now2 = new Date();
+    var start2 = new Date(now2.getFullYear(), 0, 0);
+    var doy = Math.floor((now2 - start2) / 86400000);
+    var tq = QUOTES_DB[doy % QUOTES_DB.length];
+    _$("tQ").textContent = '"' + tq.q + '"';
+    _$("tA").textContent = tq.a ? "-- " + tq.a : "-- 75 Hard";
+
+    _colorGrid();
+    _updateStats();
+    APP_DAY = null;
+    _$("dpanel").className = "dpanel";
+  }
+
+  /* ── AUTO-LOGIN CHECK ── */
+  var _sess = sessionStorage.getItem("75hard_session");
+  if (_sess) {
+    var _users = _getUsers();
+    if (_users[_sess]) {
+      _showApp(_sess);
+    } else {
+      sessionStorage.removeItem("75hard_session");
+      _showLogin();
+    }
+  } else {
+    _showLogin();
+  }
+
+} catch(e) {
+  _log("INIT ERROR: " + e.message + " at line " + (e.line || "?"));
+}
+</script>
+
+</body>
+</html>
