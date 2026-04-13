@@ -263,27 +263,30 @@
     .pf-close { background: var(--card); border: 1px solid var(--border); color: var(--text); border-radius: 10px; padding: 6px 14px; font-size: .82rem; font-weight: 600; cursor: pointer; min-height: 36px; -webkit-appearance: none; }
     .pf-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; margin-bottom: .8rem; }
     .pf-card h3 { font-size: .88rem; font-weight: 700; margin-bottom: .6rem; }
-    .pf-row { display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; gap: .5rem; margin-bottom: .5rem; }
-    .pf-row label { font-size: .75rem; font-weight: 600; color: var(--dim); text-transform: uppercase; letter-spacing: .5px; width: 100px; -webkit-flex-shrink: 0; flex-shrink: 0; }
-    .pf-input { -webkit-flex: 1; flex: 1; padding: 8px 10px; font-size: 16px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text); outline: none; -webkit-appearance: none; }
+    .pf-field { margin-bottom: .6rem; }
+    .pf-field label { display: block; font-size: .68rem; font-weight: 600; color: var(--dim); text-transform: uppercase; letter-spacing: .5px; margin-bottom: .25rem; }
+    .pf-field-row { display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; gap: .4rem; }
+    .pf-input { -webkit-flex: 1; flex: 1; padding: 10px 12px; font-size: 16px; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; color: var(--text); outline: none; -webkit-appearance: none; min-width: 0; }
     .pf-input:focus { border-color: var(--accent); }
-    .pf-select { -webkit-flex: 1; flex: 1; padding: 8px 10px; font-size: 14px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text); outline: none; -webkit-appearance: none; }
+    .pf-input.sm { -webkit-flex: none; flex: none; width: 65px; text-align: center; }
+    .pf-select { -webkit-flex: 1; flex: 1; padding: 10px 12px; font-size: 15px; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; color: var(--text); outline: none; -webkit-appearance: none; min-width: 0; }
     .pf-select:focus { border-color: var(--accent); }
-    .pf-unit-toggle { display: -webkit-flex; display: flex; background: var(--bg); border-radius: 8px; border: 1px solid var(--border); overflow: hidden; -webkit-flex-shrink: 0; flex-shrink: 0; }
-    .pf-ubtn { padding: 6px 10px; font-size: .7rem; font-weight: 600; background: none; border: none; color: var(--dim); cursor: pointer; -webkit-appearance: none; }
+    .pf-unit-toggle { display: -webkit-flex; display: flex; background: var(--bg); border-radius: 10px; border: 1px solid var(--border); overflow: hidden; -webkit-flex-shrink: 0; flex-shrink: 0; }
+    .pf-ubtn { padding: 8px 12px; font-size: .72rem; font-weight: 700; background: none; border: none; color: var(--dim); cursor: pointer; -webkit-appearance: none; white-space: nowrap; }
     .pf-ubtn.active { background: var(--accent); color: #fff; }
-    .pf-slider-wrap { -webkit-flex: 1; flex: 1; display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; gap: .5rem; }
+    .pf-unit-label { font-size: .75rem; color: var(--dim); -webkit-flex-shrink: 0; flex-shrink: 0; }
+    .pf-slider-wrap { display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; gap: .5rem; }
     .pf-slider { -webkit-flex: 1; flex: 1; -webkit-appearance: none; height: 6px; border-radius: 3px; background: var(--border); outline: none; }
-    .pf-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: var(--accent); cursor: pointer; }
-    .pf-slider-val { font-size: .82rem; font-weight: 700; color: var(--accent); min-width: 50px; text-align: center; }
-    .pf-save { width: 100%; padding: 12px; font-size: .88rem; font-weight: 700; border: none; border-radius: 12px; cursor: pointer; -webkit-appearance: none; background: linear-gradient(135deg, var(--accent), #a855f7); color: #fff; margin-top: .5rem; }
+    .pf-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: var(--accent); cursor: pointer; }
+    .pf-slider-val { font-size: .88rem; font-weight: 700; color: var(--accent); min-width: 55px; text-align: right; }
+    .pf-save { width: 100%; padding: 14px; font-size: .9rem; font-weight: 700; border: none; border-radius: 14px; cursor: pointer; -webkit-appearance: none; background: linear-gradient(135deg, var(--accent), #a855f7); color: #fff; margin-top: .3rem; min-height: 50px; }
     .pf-save:active { opacity: .8; }
-    .pf-results { margin-top: .8rem; padding: .8rem; background: var(--bg); border-radius: 12px; }
-    .pf-result-row { display: -webkit-flex; display: flex; -webkit-justify-content: space-between; justify-content: space-between; padding: .3rem 0; font-size: .8rem; }
+    .pf-results { margin-top: .8rem; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; }
+    .pf-result-row { display: -webkit-flex; display: flex; -webkit-justify-content: space-between; justify-content: space-between; -webkit-align-items: baseline; align-items: baseline; padding: .35rem 0; font-size: .82rem; }
     .pf-result-row .rv { font-weight: 700; }
     .pf-result-row.bmr .rv { color: var(--dim); }
     .pf-result-row.tdee .rv { color: var(--accent); }
-    .pf-result-row.target .rv { color: var(--green); font-size: 1rem; }
+    .pf-result-row.target .rv { color: var(--green); font-size: 1.1rem; }
     .pf-result-row.macros { border-top: 1px solid var(--border); margin-top: .3rem; padding-top: .4rem; }
 
     /* ── ANALYTICS EXTRAS ── */
@@ -604,34 +607,43 @@
     </div>
     <div class="pf-card">
       <h3>Biometrics</h3>
-      <div class="pf-row"><label>Age</label><input class="pf-input" type="number" id="pfAge" inputmode="numeric" placeholder="30" min="10" max="100"></div>
-      <div class="pf-row">
+      <div class="pf-field">
+        <label>Age</label>
+        <input class="pf-input" type="number" id="pfAge" inputmode="numeric" placeholder="e.g. 27" min="10" max="100">
+      </div>
+      <div class="pf-field">
         <label>Height</label>
-        <input class="pf-input" type="number" id="pfHeight" inputmode="decimal" placeholder="180" step="any">
-        <div class="pf-unit-toggle" id="pfHUnit">
+        <div class="pf-field-row" id="pfHCmRow">
+          <input class="pf-input" type="number" id="pfHeight" inputmode="decimal" placeholder="e.g. 180" step="any">
+          <span class="pf-unit-label">cm</span>
+        </div>
+        <div class="pf-field-row" id="pfHFtRow" style="display:none">
+          <input class="pf-input sm" type="number" id="pfFt" inputmode="numeric" placeholder="5" min="3" max="8">
+          <span class="pf-unit-label">ft</span>
+          <input class="pf-input sm" type="number" id="pfIn" inputmode="numeric" placeholder="11" min="0" max="11">
+          <span class="pf-unit-label">in</span>
+        </div>
+        <div class="pf-unit-toggle" id="pfHUnit" style="margin-top:.35rem">
           <button class="pf-ubtn active" data-u="cm">cm</button>
-          <button class="pf-ubtn" data-u="ft">ft/in</button>
+          <button class="pf-ubtn" data-u="ft">ft / in</button>
         </div>
       </div>
-      <div class="pf-row" id="pfFtRow" style="display:none">
-        <label>Ft &amp; In</label>
-        <input class="pf-input" type="number" id="pfFt" inputmode="numeric" placeholder="5" min="3" max="8" style="width:60px;flex:none">
-        <span style="color:var(--dim);font-size:.8rem">ft</span>
-        <input class="pf-input" type="number" id="pfIn" inputmode="numeric" placeholder="11" min="0" max="11" style="width:60px;flex:none">
-        <span style="color:var(--dim);font-size:.8rem">in</span>
-      </div>
-      <div class="pf-row">
+      <div class="pf-field">
         <label>Weight</label>
-        <input class="pf-input" type="number" id="pfWeight" inputmode="decimal" placeholder="80" step="any">
-        <div class="pf-unit-toggle" id="pfWUnit">
-          <button class="pf-ubtn active" data-u="kg">kg</button>
-          <button class="pf-ubtn" data-u="lb">lb</button>
+        <div class="pf-field-row">
+          <input class="pf-input" type="number" id="pfWeight" inputmode="decimal" placeholder="e.g. 65.5" step="any">
+          <div class="pf-unit-toggle" id="pfWUnit">
+            <button class="pf-ubtn active" data-u="kg">kg</button>
+            <button class="pf-ubtn" data-u="lb">lb</button>
+          </div>
         </div>
       </div>
-      <div class="pf-row"><label>Sex</label>
+      <div class="pf-field">
+        <label>Sex</label>
         <select class="pf-select" id="pfSex"><option value="">Select</option><option value="male">Male</option><option value="female">Female</option></select>
       </div>
-      <div class="pf-row"><label>Activity</label>
+      <div class="pf-field">
+        <label>Activity Level</label>
         <select class="pf-select" id="pfActivity">
           <option value="">Select level</option>
           <option value="sedentary">Sedentary (desk job)</option>
@@ -644,7 +656,8 @@
     </div>
     <div class="pf-card">
       <h3>Goal</h3>
-      <div class="pf-row"><label>Goal Type</label>
+      <div class="pf-field">
+        <label>Goal Type</label>
         <select class="pf-select" id="pfGoal">
           <option value="">Select goal</option>
           <option value="weight_loss">Weight Loss</option>
@@ -652,8 +665,8 @@
           <option value="muscle_gain">Muscle Gain</option>
         </select>
       </div>
-      <div class="pf-row" id="pfDefRow">
-        <label id="pfDefLabel">Deficit</label>
+      <div class="pf-field" id="pfDefRow">
+        <label id="pfDefLabel">Daily Deficit</label>
         <div class="pf-slider-wrap">
           <input class="pf-slider" type="range" id="pfDeficit" min="100" max="1000" step="50" value="500">
           <span class="pf-slider-val" id="pfDefVal">500 cal</span>
@@ -662,11 +675,11 @@
     </div>
     <button class="pf-save" id="pfSave">Calculate &amp; Save</button>
     <div class="pf-results" id="pfResults" style="display:none">
-      <div class="pf-result-row bmr"><span>Basal Metabolic Rate (BMR)</span><span class="rv" id="pfBMR">—</span></div>
-      <div class="pf-result-row tdee"><span>Total Daily Energy (TDEE)</span><span class="rv" id="pfTDEE">—</span></div>
-      <div class="pf-result-row target"><span>Daily Calorie Target</span><span class="rv" id="pfTarget">—</span></div>
-      <div class="pf-result-row macros"><span>Protein / Carbs / Fat</span><span class="rv" id="pfMacros">—</span></div>
-      <div class="pf-result-row"><span>Est. Weekly Change</span><span class="rv" id="pfWeekly">—</span></div>
+      <div class="pf-result-row bmr"><span>Basal Metabolic Rate (BMR)</span><span class="rv" id="pfBMR">&mdash;</span></div>
+      <div class="pf-result-row tdee"><span>Total Daily Energy (TDEE)</span><span class="rv" id="pfTDEE">&mdash;</span></div>
+      <div class="pf-result-row target"><span>Daily Calorie Target</span><span class="rv" id="pfTarget">&mdash;</span></div>
+      <div class="pf-result-row macros"><span>Protein / Carbs / Fat</span><span class="rv" id="pfMacros">&mdash;</span></div>
+      <div class="pf-result-row"><span>Est. Weekly Change</span><span class="rv" id="pfWeekly">&mdash;</span></div>
     </div>
   </div>
 </div>
@@ -1819,9 +1832,8 @@ try{
     _pfHUnit=btn.getAttribute("data-u");
     this.querySelectorAll(".pf-ubtn").forEach(function(b){b.classList.remove("active");});
     btn.classList.add("active");
-    _$("pfFtRow").style.display=_pfHUnit==="ft"?"flex":"none";
-    _$("pfHeight").parentNode.querySelector(".pf-input").placeholder=_pfHUnit==="cm"?"180":"5.11";
-    if(_pfHUnit==="ft"){_$("pfHeight").style.display="none";}else{_$("pfHeight").style.display="";}
+    _$("pfHCmRow").style.display=_pfHUnit==="cm"?"flex":"none";
+    _$("pfHFtRow").style.display=_pfHUnit==="ft"?"flex":"none";
   });
   _$("pfWUnit").addEventListener("click",function(e){
     var btn=e.target;if(!btn.getAttribute("data-u"))return;
