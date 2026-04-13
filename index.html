@@ -253,6 +253,67 @@
     .remind-freq { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text); padding: 6px 10px; font-size: .8rem; -webkit-appearance: none; }
     .remind-freq:focus { border-color: var(--accent); outline: none; }
     .remind-status { font-size: .7rem; color: var(--dim); margin-top: .2rem; }
+
+    /* ── PROFILE ── */
+    .profile-overlay { position: fixed; inset: 0; z-index: 997; background: var(--bg); overflow-y: auto; -webkit-overflow-scrolling: touch; display: none; }
+    .profile-overlay.show { display: block; }
+    .profile-inner { max-width: 520px; margin: 0 auto; padding: 1rem 1rem 5rem; }
+    .pf-hdr { display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; -webkit-justify-content: space-between; justify-content: space-between; margin-bottom: 1rem; }
+    .pf-hdr h2 { font-size: 1.3rem; font-weight: 800; }
+    .pf-close { background: var(--card); border: 1px solid var(--border); color: var(--text); border-radius: 10px; padding: 6px 14px; font-size: .82rem; font-weight: 600; cursor: pointer; min-height: 36px; -webkit-appearance: none; }
+    .pf-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; margin-bottom: .8rem; }
+    .pf-card h3 { font-size: .88rem; font-weight: 700; margin-bottom: .6rem; }
+    .pf-row { display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; gap: .5rem; margin-bottom: .5rem; }
+    .pf-row label { font-size: .75rem; font-weight: 600; color: var(--dim); text-transform: uppercase; letter-spacing: .5px; width: 100px; -webkit-flex-shrink: 0; flex-shrink: 0; }
+    .pf-input { -webkit-flex: 1; flex: 1; padding: 8px 10px; font-size: 16px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text); outline: none; -webkit-appearance: none; }
+    .pf-input:focus { border-color: var(--accent); }
+    .pf-select { -webkit-flex: 1; flex: 1; padding: 8px 10px; font-size: 14px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text); outline: none; -webkit-appearance: none; }
+    .pf-select:focus { border-color: var(--accent); }
+    .pf-unit-toggle { display: -webkit-flex; display: flex; background: var(--bg); border-radius: 8px; border: 1px solid var(--border); overflow: hidden; -webkit-flex-shrink: 0; flex-shrink: 0; }
+    .pf-ubtn { padding: 6px 10px; font-size: .7rem; font-weight: 600; background: none; border: none; color: var(--dim); cursor: pointer; -webkit-appearance: none; }
+    .pf-ubtn.active { background: var(--accent); color: #fff; }
+    .pf-slider-wrap { -webkit-flex: 1; flex: 1; display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; gap: .5rem; }
+    .pf-slider { -webkit-flex: 1; flex: 1; -webkit-appearance: none; height: 6px; border-radius: 3px; background: var(--border); outline: none; }
+    .pf-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: var(--accent); cursor: pointer; }
+    .pf-slider-val { font-size: .82rem; font-weight: 700; color: var(--accent); min-width: 50px; text-align: center; }
+    .pf-save { width: 100%; padding: 12px; font-size: .88rem; font-weight: 700; border: none; border-radius: 12px; cursor: pointer; -webkit-appearance: none; background: linear-gradient(135deg, var(--accent), #a855f7); color: #fff; margin-top: .5rem; }
+    .pf-save:active { opacity: .8; }
+    .pf-results { margin-top: .8rem; padding: .8rem; background: var(--bg); border-radius: 12px; }
+    .pf-result-row { display: -webkit-flex; display: flex; -webkit-justify-content: space-between; justify-content: space-between; padding: .3rem 0; font-size: .8rem; }
+    .pf-result-row .rv { font-weight: 700; }
+    .pf-result-row.bmr .rv { color: var(--dim); }
+    .pf-result-row.tdee .rv { color: var(--accent); }
+    .pf-result-row.target .rv { color: var(--green); font-size: 1rem; }
+    .pf-result-row.macros { border-top: 1px solid var(--border); margin-top: .3rem; padding-top: .4rem; }
+
+    /* ── ANALYTICS EXTRAS ── */
+    .ana-line-chart { width: 100%; height: 130px; margin: .3rem 0; }
+    .ana-line-chart svg { width: 100%; height: 100%; }
+    .ana-donut-wrap { display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; gap: 1rem; }
+    .ana-donut { width: 100px; height: 100px; -webkit-flex-shrink: 0; flex-shrink: 0; }
+    .ana-donut svg { width: 100%; height: 100%; }
+    .ana-donut-legend { -webkit-flex: 1; flex: 1; font-size: .78rem; }
+    .ana-donut-legend .dl { display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; gap: .3rem; margin-bottom: .3rem; }
+    .ana-donut-legend .dd { width: 10px; height: 10px; border-radius: 3px; -webkit-flex-shrink: 0; flex-shrink: 0; }
+    .ana-score-wrap { text-align: center; margin-bottom: .5rem; }
+    .ana-score-big { font-size: 3rem; font-weight: 900; line-height: 1; }
+    .ana-grade { display: inline-block; font-size: 1.2rem; font-weight: 800; padding: 4px 14px; border-radius: 10px; margin-left: .5rem; }
+    .ana-grade.A { background: var(--gg); color: var(--green); }
+    .ana-grade.B { background: rgba(108,92,231,.15); color: var(--accent); }
+    .ana-grade.C { background: rgba(253,203,110,.12); color: var(--yellow); }
+    .ana-grade.D { background: rgba(225,112,85,.12); color: var(--red); }
+    .ana-grade.F { background: rgba(225,112,85,.2); color: var(--red); }
+    .ana-trend-arrow { font-weight: 700; }
+    .ana-trend-arrow.up { color: var(--green); }
+    .ana-trend-arrow.down { color: var(--red); }
+    .ana-trend-arrow.flat { color: var(--dim); }
+    .ana-food-list { list-style: none; padding: 0; }
+    .ana-food-item { display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; gap: .5rem; padding: .4rem 0; border-bottom: 1px solid rgba(255,255,255,.04); font-size: .8rem; }
+    .ana-food-item .af-rank { font-weight: 800; color: var(--accent); width: 20px; text-align: center; }
+    .ana-food-item .af-name { -webkit-flex: 1; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .ana-food-item .af-count { color: var(--dim); font-size: .72rem; }
+    .ana-food-item .af-cal { font-weight: 700; color: var(--green); }
+
     .btn { padding: .6rem 1.1rem; border-radius: 12px; border: 1px solid var(--border); background: var(--card); color: var(--text); font-size: .8rem; font-weight: 600; cursor: pointer; min-height: 44px; -webkit-appearance: none; }
     .btn:active { background: var(--card2); border-color: var(--accent); }
     .btn.dng:active { border-color: var(--red); color: var(--red); }
@@ -527,9 +588,86 @@
 
   <div class="ctrls" id="ctrlSec">
     <button class="ana-btn" id="anaBtn">&#128202; Analytics</button>
+    <button class="btn" id="pfBtn">&#9878;&#65039; Profile</button>
     <button class="btn" id="expB">Export</button>
     <button class="btn" id="impB">Import</button>
     <button class="btn dng" id="rstB">Reset</button>
+  </div>
+</div>
+
+<!-- Profile Overlay -->
+<div class="profile-overlay" id="pfOverlay">
+  <div class="profile-inner">
+    <div class="pf-hdr">
+      <h2>&#9878;&#65039; Body Profile</h2>
+      <button class="pf-close" id="pfClose">Close</button>
+    </div>
+    <div class="pf-card">
+      <h3>Biometrics</h3>
+      <div class="pf-row"><label>Age</label><input class="pf-input" type="number" id="pfAge" inputmode="numeric" placeholder="30" min="10" max="100"></div>
+      <div class="pf-row">
+        <label>Height</label>
+        <input class="pf-input" type="number" id="pfHeight" inputmode="decimal" placeholder="180" step="any">
+        <div class="pf-unit-toggle" id="pfHUnit">
+          <button class="pf-ubtn active" data-u="cm">cm</button>
+          <button class="pf-ubtn" data-u="ft">ft/in</button>
+        </div>
+      </div>
+      <div class="pf-row" id="pfFtRow" style="display:none">
+        <label>Ft &amp; In</label>
+        <input class="pf-input" type="number" id="pfFt" inputmode="numeric" placeholder="5" min="3" max="8" style="width:60px;flex:none">
+        <span style="color:var(--dim);font-size:.8rem">ft</span>
+        <input class="pf-input" type="number" id="pfIn" inputmode="numeric" placeholder="11" min="0" max="11" style="width:60px;flex:none">
+        <span style="color:var(--dim);font-size:.8rem">in</span>
+      </div>
+      <div class="pf-row">
+        <label>Weight</label>
+        <input class="pf-input" type="number" id="pfWeight" inputmode="decimal" placeholder="80" step="any">
+        <div class="pf-unit-toggle" id="pfWUnit">
+          <button class="pf-ubtn active" data-u="kg">kg</button>
+          <button class="pf-ubtn" data-u="lb">lb</button>
+        </div>
+      </div>
+      <div class="pf-row"><label>Sex</label>
+        <select class="pf-select" id="pfSex"><option value="">Select</option><option value="male">Male</option><option value="female">Female</option></select>
+      </div>
+      <div class="pf-row"><label>Activity</label>
+        <select class="pf-select" id="pfActivity">
+          <option value="">Select level</option>
+          <option value="sedentary">Sedentary (desk job)</option>
+          <option value="lightly_active">Light (1-3 days/wk)</option>
+          <option value="moderately_active">Moderate (3-5 days/wk)</option>
+          <option value="very_active">Very Active (6-7 days/wk)</option>
+          <option value="extra_active">Extra Active (2x/day)</option>
+        </select>
+      </div>
+    </div>
+    <div class="pf-card">
+      <h3>Goal</h3>
+      <div class="pf-row"><label>Goal Type</label>
+        <select class="pf-select" id="pfGoal">
+          <option value="">Select goal</option>
+          <option value="weight_loss">Weight Loss</option>
+          <option value="maintenance">Maintenance</option>
+          <option value="muscle_gain">Muscle Gain</option>
+        </select>
+      </div>
+      <div class="pf-row" id="pfDefRow">
+        <label id="pfDefLabel">Deficit</label>
+        <div class="pf-slider-wrap">
+          <input class="pf-slider" type="range" id="pfDeficit" min="100" max="1000" step="50" value="500">
+          <span class="pf-slider-val" id="pfDefVal">500 cal</span>
+        </div>
+      </div>
+    </div>
+    <button class="pf-save" id="pfSave">Calculate &amp; Save</button>
+    <div class="pf-results" id="pfResults" style="display:none">
+      <div class="pf-result-row bmr"><span>Basal Metabolic Rate (BMR)</span><span class="rv" id="pfBMR">—</span></div>
+      <div class="pf-result-row tdee"><span>Total Daily Energy (TDEE)</span><span class="rv" id="pfTDEE">—</span></div>
+      <div class="pf-result-row target"><span>Daily Calorie Target</span><span class="rv" id="pfTarget">—</span></div>
+      <div class="pf-result-row macros"><span>Protein / Carbs / Fat</span><span class="rv" id="pfMacros">—</span></div>
+      <div class="pf-result-row"><span>Est. Weekly Change</span><span class="rv" id="pfWeekly">—</span></div>
+    </div>
   </div>
 </div>
 
@@ -796,6 +934,7 @@ function _load(){
   if(APP_DATA.startDate===undefined)APP_DATA.startDate=null;
   if(!APP_DATA.waterMode)APP_DATA.waterMode="oz";
   if(!APP_DATA.reminders)APP_DATA.reminders={on:false,time:"09:00",freq:"daily"};
+  if(!APP_DATA.profile)APP_DATA.profile={};
 }
 
 function _save(){
@@ -1666,6 +1805,137 @@ try{
     }
   }
 
+  /* ── PROFILE ── */
+  var ACTIVITY_MULT={sedentary:1.2,lightly_active:1.375,moderately_active:1.55,very_active:1.725,extra_active:1.9};
+  var MACRO_PRESETS={weight_loss:{p:.33,f:.25,c:.42},maintenance:{p:.27,f:.27,c:.46},muscle_gain:{p:.28,f:.27,c:.45}};
+  var _pfHUnit="cm",_pfWUnit="kg";
+
+  _$("pfBtn").addEventListener("click",function(){_openProfile();_$("pfOverlay").className="profile-overlay show";});
+  _$("pfClose").addEventListener("click",function(){_$("pfOverlay").className="profile-overlay";});
+
+  // Unit toggles
+  _$("pfHUnit").addEventListener("click",function(e){
+    var btn=e.target;if(!btn.getAttribute("data-u"))return;
+    _pfHUnit=btn.getAttribute("data-u");
+    this.querySelectorAll(".pf-ubtn").forEach(function(b){b.classList.remove("active");});
+    btn.classList.add("active");
+    _$("pfFtRow").style.display=_pfHUnit==="ft"?"flex":"none";
+    _$("pfHeight").parentNode.querySelector(".pf-input").placeholder=_pfHUnit==="cm"?"180":"5.11";
+    if(_pfHUnit==="ft"){_$("pfHeight").style.display="none";}else{_$("pfHeight").style.display="";}
+  });
+  _$("pfWUnit").addEventListener("click",function(e){
+    var btn=e.target;if(!btn.getAttribute("data-u"))return;
+    _pfWUnit=btn.getAttribute("data-u");
+    this.querySelectorAll(".pf-ubtn").forEach(function(b){b.classList.remove("active");});
+    btn.classList.add("active");
+    _$("pfWeight").placeholder=_pfWUnit==="kg"?"80":"176";
+  });
+
+  _$("pfGoal").addEventListener("change",function(){
+    var v=this.value;
+    _$("pfDefRow").style.display=v==="maintenance"?"none":"";
+    _$("pfDefLabel").textContent=v==="muscle_gain"?"Surplus":"Deficit";
+  });
+  _$("pfDeficit").addEventListener("input",function(){
+    _$("pfDefVal").textContent=this.value+" cal";
+  });
+
+  function _openProfile(){
+    var pf=APP_DATA.profile||{};
+    if(pf.age)_$("pfAge").value=pf.age;
+    if(pf.height_cm){
+      if(_pfHUnit==="cm")_$("pfHeight").value=pf.height_cm;
+      else{
+        var totalIn=pf.height_cm/2.54;
+        _$("pfFt").value=Math.floor(totalIn/12);
+        _$("pfIn").value=Math.round(totalIn%12);
+      }
+    }
+    if(pf.weight_kg){
+      _$("pfWeight").value=_pfWUnit==="kg"?pf.weight_kg:Math.round(pf.weight_kg*2.20462);
+    }
+    if(pf.sex)_$("pfSex").value=pf.sex;
+    if(pf.activity)_$("pfActivity").value=pf.activity;
+    if(pf.goal_type){
+      _$("pfGoal").value=pf.goal_type;
+      _$("pfDefRow").style.display=pf.goal_type==="maintenance"?"none":"";
+      _$("pfDefLabel").textContent=pf.goal_type==="muscle_gain"?"Surplus":"Deficit";
+    }
+    if(pf.deficit)_$("pfDeficit").value=pf.deficit;
+    _$("pfDefVal").textContent=(pf.deficit||500)+" cal";
+    // Show results if already calculated
+    if(pf.bmr)_showPfResults(pf);
+  }
+
+  _$("pfSave").addEventListener("click",function(){
+    var age=parseInt(_$("pfAge").value,10);
+    var heightCm,weightKg;
+    if(_pfHUnit==="ft"){
+      var ft=parseInt(_$("pfFt").value,10)||0;
+      var inch=parseInt(_$("pfIn").value,10)||0;
+      heightCm=Math.round((ft*12+inch)*2.54);
+    }else{
+      heightCm=parseFloat(_$("pfHeight").value);
+    }
+    weightKg=parseFloat(_$("pfWeight").value);
+    if(_pfWUnit==="lb")weightKg=weightKg/2.20462;
+    var sex=_$("pfSex").value;
+    var activity=_$("pfActivity").value;
+    var goalType=_$("pfGoal").value;
+    var deficit=parseInt(_$("pfDeficit").value,10)||500;
+
+    if(!age||!heightCm||!weightKg||!sex||!activity){
+      _toast("Fill in all biometric fields");return;
+    }
+    if(!goalType){_toast("Select a goal");return;}
+
+    // Mifflin-St Jeor
+    var bmr;
+    if(sex==="male")bmr=(10*weightKg)+(6.25*heightCm)-(5*age)+5;
+    else bmr=(10*weightKg)+(6.25*heightCm)-(5*age)-161;
+    bmr=Math.round(bmr);
+
+    var tdee=Math.round(bmr*(ACTIVITY_MULT[activity]||1.55));
+    var target;
+    if(goalType==="weight_loss")target=Math.max(tdee-deficit,sex==="female"?1200:1500);
+    else if(goalType==="muscle_gain")target=tdee+deficit;
+    else target=tdee;
+    target=Math.round(target);
+
+    var mp=MACRO_PRESETS[goalType]||MACRO_PRESETS.maintenance;
+    var macros={
+      p:Math.round(target*mp.p/4),
+      c:Math.round(target*mp.c/4),
+      f:Math.round(target*mp.f/9)
+    };
+
+    var weeklyChange=0;
+    if(goalType==="weight_loss")weeklyChange=-Math.round((tdee-target)*7/7700*100)/100;
+    else if(goalType==="muscle_gain")weeklyChange=Math.round((target-tdee)*7/7700*100)/100;
+
+    APP_DATA.profile={
+      age:age,height_cm:Math.round(heightCm),weight_kg:Math.round(weightKg*10)/10,
+      sex:sex,activity:activity,goal_type:goalType,deficit:deficit,
+      bmr:bmr,tdee:tdee,target:target,macros:macros,weeklyChange:weeklyChange
+    };
+    APP_DATA.goal=target;
+    _save();
+    _showPfResults(APP_DATA.profile);
+    if(APP_DAY)_renderCals(APP_DAY);
+  });
+
+  function _showPfResults(pf){
+    _$("pfResults").style.display="";
+    _$("pfBMR").textContent=pf.bmr+" kcal";
+    _$("pfTDEE").textContent=pf.tdee+" kcal";
+    _$("pfTarget").textContent=pf.target+" kcal";
+    if(pf.macros)_$("pfMacros").textContent=pf.macros.p+"g / "+pf.macros.c+"g / "+pf.macros.f+"g";
+    var wc=pf.weeklyChange||0;
+    if(wc<0)_$("pfWeekly").textContent=wc+" kg/week (loss)";
+    else if(wc>0)_$("pfWeekly").textContent="+"+wc+" kg/week (gain)";
+    else _$("pfWeekly").textContent="Maintenance";
+  }
+
   /* ── ANALYTICS ── */
   _$("anaBtn").addEventListener("click",function(){_renderAnalytics();_$("anaOverlay").className="analytics-overlay show";});
   _$("anaClose").addEventListener("click",function(){_$("anaOverlay").className="analytics-overlay";});
@@ -1675,8 +1945,9 @@ try{
     var cur=_getCurrentDay()||0;
     var totalDays=0,completeDays=0,streak=0,bestStreak=0,curStreak=0;
     var taskCounts={};var taskTotals={};
-    var totalCals=[],totalWater=[];
+    var totalCals=[],totalPro=[],totalCarb=[],totalFat=[],totalWater=[];
     var dayScores=[];
+    var foodFreq={};
 
     for(var i=0;i<TASKS_DB.length;i++){taskCounts[TASKS_DB[i].id]=0;taskTotals[TASKS_DB[i].id]=0;}
 
@@ -1694,93 +1965,221 @@ try{
       if(isComplete){curStreak++;if(curStreak>bestStreak)bestStreak=curStreak;}
       else{curStreak=0;}
 
-      var dayCals=0;
-      if(dd&&dd.foods){for(var fi=0;fi<dd.foods.length;fi++){dayCals+=(dd.foods[fi].totalCal||0);}}
-      totalCals.push(dayCals);
+      var dayCals=0,dayP=0,dayC=0,dayF=0;
+      if(dd&&dd.foods){
+        for(var fi=0;fi<dd.foods.length;fi++){
+          var f=dd.foods[fi];
+          dayCals+=(f.totalCal||0);dayP+=(f.totalP||0);dayC+=(f.totalC||0);dayF+=(f.totalF||0);
+          var fn=f.name||"Unknown";
+          if(!foodFreq[fn])foodFreq[fn]={count:0,cal:0};
+          foodFreq[fn].count++;foodFreq[fn].cal+=(f.totalCal||0);
+        }
+      }
+      totalCals.push(dayCals);totalPro.push(dayP);totalCarb.push(dayC);totalFat.push(dayF);
       totalWater.push(dd?dd.waterOz||0:0);
-      dayScores.push({day:d,tasks:doneCount,cals:dayCals,water:dd?dd.waterOz||0:0,complete:isComplete});
+      dayScores.push({day:d,tasks:doneCount,cals:dayCals,p:dayP,c:dayC,f:dayF,water:dd?dd.waterOz||0:0,complete:isComplete});
     }
     streak=curStreak;
+    var goal=APP_DATA.goal||2000;
+    var pf=APP_DATA.profile||{};
+    var hasPf=!!(pf.bmr&&pf.tdee);
+    var html="";
 
-    // ── TODAY'S SUMMARY ──
+    // ── DAILY SCORE ──
     var todayScore=dayScores.length>0?dayScores[dayScores.length-1]:null;
-    var html='<div class="ana-card"><h3><span class="ana-icon">\u2600\ufe0f</span> Today\'s Summary (Day '+cur+')</h3>';
+    html+='<div class="ana-card"><h3><span class="ana-icon">\u2600\ufe0f</span> Today\'s Score (Day '+cur+')</h3>';
     if(todayScore){
+      var taskPts=Math.round(todayScore.tasks/TASKS_DB.length*50);
+      var calDiff=goal>0?Math.abs(todayScore.cals-goal)/goal:1;
+      var calPts=todayScore.cals>0?Math.round(Math.max(0,25-calDiff*50)):0;
+      var waterPts=Math.round(Math.min(todayScore.water/128,1)*15);
+      var photoPts=(dd&&dd.tasks&&dd.tasks.photo)?10:0;
+      var score=Math.min(100,taskPts+calPts+waterPts+photoPts);
+      var grade=score>=90?"A":score>=75?"B":score>=60?"C":score>=40?"D":"F";
+      html+='<div class="ana-score-wrap"><span class="ana-score-big">'+score+'</span><span class="ana-grade '+grade+'">'+grade+'</span></div>';
+      html+='<div style="font-size:.7rem;color:var(--dim);text-align:center;margin-bottom:.5rem">Tasks '+taskPts+'/50 &bull; Calories '+calPts+'/25 &bull; Water '+waterPts+'/15 &bull; Photo '+photoPts+'/10</div>';
       var todayPct=Math.round(todayScore.tasks/TASKS_DB.length*100);
-      var goalPct=APP_DATA.goal>0?Math.round(todayScore.cals/APP_DATA.goal*100):0;
-      var waterPct=Math.round(todayScore.water/128*100);
+      var goalPct=goal>0?Math.round(todayScore.cals/goal*100):0;
+      var waterPct2=Math.round(todayScore.water/128*100);
       html+='<div class="ana-metric">';
-      html+='<div class="ana-stat '+(todayPct===100?"good":todayPct>=50?"warn":"bad")+'"><div class="av">'+todayScore.tasks+'/'+TASKS_DB.length+'</div><div class="al">Tasks Done</div></div>';
-      html+='<div class="ana-stat '+(goalPct>=80&&goalPct<=120?"good":goalPct>120?"warn":"info")+'"><div class="av">'+todayScore.cals+'</div><div class="al">Calories ('+goalPct+'% of goal)</div></div>';
-      html+='<div class="ana-stat '+(waterPct>=100?"good":waterPct>=50?"warn":"bad")+'"><div class="av">'+todayScore.water+'</div><div class="al">oz Water ('+waterPct+'%)</div></div>';
-      html+='<div class="ana-stat '+(streak>=5?"good":streak>=2?"warn":"info")+'"><div class="av">'+streak+'</div><div class="al">Current Streak</div></div>';
+      html+='<div class="ana-stat '+(todayPct===100?"good":todayPct>=50?"warn":"bad")+'"><div class="av">'+todayScore.tasks+'/'+TASKS_DB.length+'</div><div class="al">Tasks</div></div>';
+      html+='<div class="ana-stat '+(goalPct>=80&&goalPct<=120?"good":goalPct>120?"warn":"info")+'"><div class="av">'+todayScore.cals+'</div><div class="al">kcal ('+goalPct+'%)</div></div>';
+      html+='<div class="ana-stat '+(waterPct2>=100?"good":waterPct2>=50?"warn":"bad")+'"><div class="av">'+todayScore.water+'</div><div class="al">oz ('+waterPct2+'%)</div></div>';
+      html+='<div class="ana-stat '+(streak>=5?"good":streak>=2?"warn":"info")+'"><div class="av">'+streak+'</div><div class="al">Streak</div></div>';
       html+='</div>';
-    }else{html+='<p style="color:var(--dim);font-size:.82rem">No data yet. Start your challenge!</p>';}
+    }else{html+='<p style="color:var(--dim);font-size:.82rem">No data yet.</p>';}
     html+='</div>';
+
+    // ── BIOMETRIC SUMMARY (if profile set) ──
+    if(hasPf){
+      html+='<div class="ana-card"><h3><span class="ana-icon">\u2764\ufe0f</span> Body Profile</h3>';
+      html+='<div class="ana-metric">';
+      html+='<div class="ana-stat info"><div class="av">'+pf.bmr+'</div><div class="al">BMR kcal</div></div>';
+      html+='<div class="ana-stat info"><div class="av">'+pf.tdee+'</div><div class="al">TDEE kcal</div></div>';
+      html+='<div class="ana-stat good"><div class="av">'+pf.target+'</div><div class="al">Target kcal</div></div>';
+      var gtLabel=pf.goal_type==="weight_loss"?"Loss":pf.goal_type==="muscle_gain"?"Gain":"Maintain";
+      html+='<div class="ana-stat warn"><div class="av">'+gtLabel+'</div><div class="al">Goal</div></div>';
+      html+='</div>';
+      if(pf.macros){
+        html+='<div style="margin-top:.5rem;font-size:.78rem;color:var(--dim)">Recommended macros: <b style="color:#74b9ff">'+pf.macros.p+'g P</b> / <b style="color:var(--yellow)">'+pf.macros.c+'g C</b> / <b style="color:var(--red)">'+pf.macros.f+'g F</b></div>';
+      }
+      html+='</div>';
+    }
 
     // ── OVERALL PROGRESS ──
     html+='<div class="ana-card"><h3><span class="ana-icon">\ud83c\udfc6</span> Overall Progress</h3>';
     var overallPct=totalDays>0?Math.round(completeDays/totalDays*100):0;
     html+='<div class="ana-metric">';
     html+='<div class="ana-stat good"><div class="av">'+completeDays+'/'+totalDays+'</div><div class="al">Perfect Days</div></div>';
-    html+='<div class="ana-stat info"><div class="av">'+overallPct+'%</div><div class="al">Completion Rate</div></div>';
+    html+='<div class="ana-stat info"><div class="av">'+overallPct+'%</div><div class="al">Completion</div></div>';
     html+='<div class="ana-stat '+(bestStreak>=7?"good":"warn")+'"><div class="av">'+bestStreak+'</div><div class="al">Best Streak</div></div>';
-    html+='<div class="ana-stat info"><div class="av">'+(75-cur)+'</div><div class="al">Days Remaining</div></div>';
+    html+='<div class="ana-stat info"><div class="av">'+(75-cur)+'</div><div class="al">Remaining</div></div>';
     html+='</div></div>';
 
-    // ── TASK BREAKDOWN ──
+    // ── TASK COMPLETION RATES ──
     html+='<div class="ana-card"><h3><span class="ana-icon">\u2705</span> Task Completion Rates</h3>';
     for(var ti=0;ti<TASKS_DB.length;ti++){
       var t=TASKS_DB[ti];
       var rate=taskTotals[t.id]>0?Math.round(taskCounts[t.id]/taskTotals[t.id]*100):0;
       var color=rate>=80?"var(--green)":rate>=50?"var(--yellow)":"var(--red)";
-      html+='<div class="ana-bar-row">';
-      html+='<span class="ana-bar-label">'+t.emoji+' '+t.name.split("(")[0].trim()+'</span>';
-      html+='<div class="ana-bar-track"><div class="ana-bar-fill2" style="width:'+rate+'%;background:'+color+'"></div></div>';
-      html+='<span class="ana-bar-val" style="color:'+color+'">'+rate+'%</span>';
-      html+='</div>';
+      html+='<div class="ana-bar-row"><span class="ana-bar-label">'+t.emoji+' '+t.name.split("(")[0].trim()+'</span><div class="ana-bar-track"><div class="ana-bar-fill2" style="width:'+rate+'%;background:'+color+'"></div></div><span class="ana-bar-val" style="color:'+color+'">'+rate+'%</span></div>';
     }
-    // Find weakest task
     var weakest=null,weakRate=101;
     for(var wi2=0;wi2<TASKS_DB.length;wi2++){
       var wr=taskTotals[TASKS_DB[wi2].id]>0?taskCounts[TASKS_DB[wi2].id]/taskTotals[TASKS_DB[wi2].id]*100:100;
       if(wr<weakRate){weakRate=wr;weakest=TASKS_DB[wi2];}
     }
     if(weakest&&weakRate<100&&totalDays>0){
-      html+='<div class="ana-insight tip" style="margin-top:.5rem">\ud83c\udfaf Focus area: <b>'+weakest.name+'</b> at '+Math.round(weakRate)+'%. Prioritize this tomorrow.</div>';
+      html+='<div class="ana-insight tip" style="margin-top:.5rem">\ud83c\udfaf Focus: <b>'+weakest.name+'</b> at '+Math.round(weakRate)+'%</div>';
     }
     html+='</div>';
 
-    // ── CALORIE TRENDS (last 14 days) ──
+    // ── CALORIE LINE CHART ──
     if(totalCals.length>0){
-      html+='<div class="ana-card"><h3><span class="ana-icon">\ud83d\udcca</span> Calorie Trends</h3>';
-      var recent=totalCals.slice(-14);
-      var recentDayStart=Math.max(1,totalCals.length-13);
-      var maxCal=Math.max.apply(null,recent.concat([APP_DATA.goal||2000]));
-      if(maxCal===0)maxCal=1;
-      html+='<div class="ana-chart-wrap"><div class="ana-chart">';
-      var avgCals=0;
-      for(var ci=0;ci<recent.length;ci++){
-        avgCals+=recent[ci];
-        var h2=Math.max(2,Math.round(recent[ci]/maxCal*70));
-        var barC=recent[ci]>(APP_DATA.goal||2000)*1.1?"var(--red)":recent[ci]<(APP_DATA.goal||2000)*0.7?"var(--yellow)":"var(--green)";
-        html+='<div style="flex:1;text-align:center"><div class="ana-chart-bar" style="height:'+h2+'px;background:'+barC+'"></div><div class="ana-chart-label">'+(recentDayStart+ci)+'</div></div>';
+      html+='<div class="ana-card"><h3><span class="ana-icon">\ud83d\udcc8</span> Calorie Trends</h3>';
+      var svgW=Math.max(totalCals.length*20,300);var svgH=130;
+      var allVals=totalCals.concat([goal]);
+      var maxV=Math.max.apply(null,allVals);var minV=Math.min.apply(null,allVals);
+      if(maxV===minV)maxV=minV+100;
+      var pad=15;var chartW=svgW-pad*2;var chartH=svgH-pad*2;
+      function yPos(v){return pad+chartH-(((v-minV)/(maxV-minV))*chartH);}
+      function xPos(i2){return pad+(totalCals.length>1?(i2/(totalCals.length-1))*chartW:chartW/2);}
+
+      html+='<div class="ana-line-chart" style="overflow-x:auto;-webkit-overflow-scrolling:touch"><svg viewBox="0 0 '+svgW+' '+svgH+'" preserveAspectRatio="none" style="min-width:'+svgW+'px;height:'+svgH+'px">';
+      // Grid lines
+      for(var gl=0;gl<5;gl++){
+        var gv=minV+((maxV-minV)/4)*gl;
+        var gy=yPos(gv);
+        html+='<line x1="'+pad+'" y1="'+gy+'" x2="'+(svgW-pad)+'" y2="'+gy+'" stroke="rgba(255,255,255,.06)" stroke-width="1"/>';
       }
-      html+='</div></div>';
-      avgCals=recent.length>0?Math.round(avgCals/recent.length):0;
-      var goal=APP_DATA.goal||2000;
-      html+='<div style="margin-top:.6rem;font-size:.78rem;color:var(--dim)">Avg: <b style="color:var(--text)">'+avgCals+' kcal</b> / Goal: '+goal+' kcal</div>';
+      // Goal line (dashed)
+      var goalY=yPos(goal);
+      html+='<line x1="'+pad+'" y1="'+goalY+'" x2="'+(svgW-pad)+'" y2="'+goalY+'" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="6,4" opacity=".7"/>';
+      html+='<text x="'+(svgW-pad-2)+'" y="'+(goalY-4)+'" fill="var(--accent)" font-size="8" text-anchor="end" opacity=".7">Goal '+goal+'</text>';
+      // Avg line
+      var avgCals=Math.round(totalCals.reduce(function(a,b){return a+b;},0)/totalCals.length);
+      var avgY=yPos(avgCals);
+      html+='<line x1="'+pad+'" y1="'+avgY+'" x2="'+(svgW-pad)+'" y2="'+avgY+'" stroke="var(--dim)" stroke-width="1" stroke-dasharray="3,3" opacity=".4"/>';
+      html+='<text x="'+(pad+2)+'" y="'+(avgY-4)+'" fill="var(--dim)" font-size="7" opacity=".5">Avg '+avgCals+'</text>';
+      // Data line
+      var pts=[];
+      for(var ci=0;ci<totalCals.length;ci++){pts.push(xPos(ci).toFixed(1)+","+yPos(totalCals[ci]).toFixed(1));}
+      html+='<polyline fill="none" stroke="var(--green)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" points="'+pts.join(" ")+'"/>';
+      // Gradient fill under line
+      html+='<polygon fill="url(#calGrad)" opacity=".15" points="'+xPos(0).toFixed(1)+','+yPos(minV).toFixed(1)+' '+pts.join(" ")+' '+xPos(totalCals.length-1).toFixed(1)+','+yPos(minV).toFixed(1)+'"/>';
+      html+='<defs><linearGradient id="calGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--green)"/><stop offset="100%" stop-color="transparent"/></linearGradient></defs>';
+      // Dots
+      for(var di=0;di<totalCals.length;di++){
+        var dotC=totalCals[di]>goal*1.1?"var(--red)":totalCals[di]<goal*.7?"var(--yellow)":"var(--green)";
+        html+='<circle cx="'+xPos(di).toFixed(1)+'" cy="'+yPos(totalCals[di]).toFixed(1)+'" r="3" fill="'+dotC+'"/>';
+        // Day label every few days
+        if(totalCals.length<=15||di%Math.ceil(totalCals.length/15)===0||di===totalCals.length-1){
+          html+='<text x="'+xPos(di).toFixed(1)+'" y="'+(svgH-2)+'" fill="var(--dim)" font-size="7" text-anchor="middle">'+(di+1)+'</text>';
+        }
+      }
+      html+='</svg></div>';
+      html+='<div style="margin-top:.4rem;font-size:.75rem;color:var(--dim)">Avg: <b style="color:var(--text)">'+avgCals+'</b> / Goal: '+goal+' kcal</div>';
+      // Calorie adherence
+      var adhereDays=0;
+      for(var ad=0;ad<totalCals.length;ad++){if(totalCals[ad]>0&&Math.abs(totalCals[ad]-goal)/goal<=.1)adhereDays++;}
+      var tracked=totalCals.filter(function(c){return c>0;}).length;
+      var adherePct=tracked>0?Math.round(adhereDays/tracked*100):0;
+      html+='<div style="font-size:.75rem;color:var(--dim);margin-top:.2rem">Consistency: <b style="color:'+(adherePct>=70?"var(--green)":"var(--yellow)")+'">'+adherePct+'%</b> of tracked days within \u00b110% of goal</div>';
       if(avgCals>goal*1.1){
-        html+='<div class="ana-insight alert" style="margin-top:.4rem">You\'re averaging '+Math.round((avgCals/goal-1)*100)+'% over your calorie goal. Consider adjusting portions.</div>';
-      }else if(avgCals<goal*0.7&&avgCals>0){
-        html+='<div class="ana-insight alert" style="margin-top:.4rem">You\'re under-eating at '+avgCals+' avg. Make sure you\'re fueling properly.</div>';
+        html+='<div class="ana-insight alert" style="margin-top:.4rem">Averaging '+Math.round((avgCals/goal-1)*100)+'% over goal. Consider portion control.</div>';
+      }else if(avgCals<goal*.7&&avgCals>0){
+        html+='<div class="ana-insight alert" style="margin-top:.4rem">Under-eating at '+avgCals+' avg. Fuel properly.</div>';
       }else if(avgCals>0){
-        html+='<div class="ana-insight win" style="margin-top:.4rem">Great job staying near your calorie goal!</div>';
+        html+='<div class="ana-insight win" style="margin-top:.4rem">On track with your calorie goal!</div>';
       }
       html+='</div>';
     }
 
-    // ── WATER INTAKE TRENDS ──
+    // ── MACRO DONUT ──
+    if(totalPro.length>0){
+      var wkP=0,wkC=0,wkF=0,wkN=Math.min(7,totalPro.length);
+      for(var mi3=totalPro.length-wkN;mi3<totalPro.length;mi3++){wkP+=totalPro[mi3];wkC+=totalCarb[mi3];wkF+=totalFat[mi3];}
+      if(wkN>0){wkP=Math.round(wkP/wkN);wkC=Math.round(wkC/wkN);wkF=Math.round(wkF/wkN);}
+      var macTotal=wkP*4+wkC*4+wkF*9;
+      if(macTotal>0){
+        var pPct=Math.round(wkP*4/macTotal*100);
+        var cPct=Math.round(wkC*4/macTotal*100);
+        var fPct=100-pPct-cPct;
+        html+='<div class="ana-card"><h3><span class="ana-icon">\ud83e\udd67</span> Macro Split (7-Day Avg)</h3>';
+        html+='<div class="ana-donut-wrap">';
+        // SVG donut
+        var r2=40,cx2=50,cy2=50,circ2=2*Math.PI*r2;
+        var pArc=circ2*pPct/100,cArc=circ2*cPct/100,fArc=circ2*fPct/100;
+        var pOff=0,cOff=pArc,fOff=pArc+cArc;
+        html+='<div class="ana-donut"><svg viewBox="0 0 100 100">';
+        // Fat segment
+        html+='<circle cx="'+cx2+'" cy="'+cy2+'" r="'+r2+'" fill="none" stroke="var(--red)" stroke-width="14" stroke-dasharray="'+fArc.toFixed(1)+' '+(circ2-fArc).toFixed(1)+'" stroke-dashoffset="'+(-fOff).toFixed(1)+'" transform="rotate(-90 50 50)"/>';
+        // Carbs segment
+        html+='<circle cx="'+cx2+'" cy="'+cy2+'" r="'+r2+'" fill="none" stroke="var(--yellow)" stroke-width="14" stroke-dasharray="'+cArc.toFixed(1)+' '+(circ2-cArc).toFixed(1)+'" stroke-dashoffset="'+(-cOff).toFixed(1)+'" transform="rotate(-90 50 50)"/>';
+        // Protein segment (on top)
+        html+='<circle cx="'+cx2+'" cy="'+cy2+'" r="'+r2+'" fill="none" stroke="#74b9ff" stroke-width="14" stroke-dasharray="'+pArc.toFixed(1)+' '+(circ2-pArc).toFixed(1)+'" stroke-dashoffset="0" transform="rotate(-90 50 50)"/>';
+        html+='</svg></div>';
+        html+='<div class="ana-donut-legend">';
+        html+='<div class="dl"><div class="dd" style="background:#74b9ff"></div>Protein '+pPct+'% ('+wkP+'g)</div>';
+        html+='<div class="dl"><div class="dd" style="background:var(--yellow)"></div>Carbs '+cPct+'% ('+wkC+'g)</div>';
+        html+='<div class="dl"><div class="dd" style="background:var(--red)"></div>Fat '+fPct+'% ('+wkF+'g)</div>';
+        if(hasPf&&pf.macros){
+          html+='<div style="margin-top:.4rem;padding-top:.4rem;border-top:1px solid var(--border);font-size:.7rem;color:var(--dim)">Target: '+pf.macros.p+'g P / '+pf.macros.c+'g C / '+pf.macros.f+'g F</div>';
+        }
+        html+='</div></div></div>';
+      }
+    }
+
+    // ── WEEKLY AVERAGES + TREND ──
+    if(totalCals.length>=2){
+      html+='<div class="ana-card"><h3><span class="ana-icon">\ud83d\udcc5</span> Weekly Averages</h3>';
+      var w7=totalCals.slice(-7),p7=totalPro.slice(-7),c7=totalCarb.slice(-7),f7=totalFat.slice(-7);
+      var avgC7=Math.round(w7.reduce(function(a,b){return a+b;},0)/w7.length);
+      var avgP7=Math.round(p7.reduce(function(a,b){return a+b;},0)/p7.length);
+      var avgCb7=Math.round(c7.reduce(function(a,b){return a+b;},0)/c7.length);
+      var avgF7=Math.round(f7.reduce(function(a,b){return a+b;},0)/f7.length);
+      // Previous week for trend
+      var prevC=0,prevN=0;
+      if(totalCals.length>7){
+        var pw=totalCals.slice(-14,-7);
+        prevC=Math.round(pw.reduce(function(a,b){return a+b;},0)/pw.length);prevN=pw.length;
+      }
+      var trendDir=prevN>0?(avgC7>prevC+50?"up":avgC7<prevC-50?"down":"flat"):"flat";
+      var trendSym=trendDir==="up"?"\u2191":trendDir==="down"?"\u2193":"\u2192";
+      html+='<div class="ana-metric">';
+      html+='<div class="ana-stat info"><div class="av">'+avgC7+' <span class="ana-trend-arrow '+trendDir+'" style="font-size:.8rem">'+trendSym+'</span></div><div class="al">Avg Calories</div></div>';
+      html+='<div class="ana-stat info"><div class="av" style="color:#74b9ff">'+avgP7+'g</div><div class="al">Avg Protein</div></div>';
+      html+='<div class="ana-stat info"><div class="av" style="color:var(--yellow)">'+avgCb7+'g</div><div class="al">Avg Carbs</div></div>';
+      html+='<div class="ana-stat info"><div class="av" style="color:var(--red)">'+avgF7+'g</div><div class="al">Avg Fat</div></div>';
+      html+='</div>';
+      if(prevN>0){
+        var diff2=avgC7-prevC;
+        html+='<div style="font-size:.72rem;color:var(--dim);margin-top:.3rem">vs prev week: '+(diff2>0?"+":"")+diff2+' kcal/day</div>';
+      }
+      html+='</div>';
+    }
+
+    // ── WATER INTAKE ──
     if(totalWater.length>0){
       html+='<div class="ana-card"><h3><span class="ana-icon">\ud83d\udca7</span> Water Intake</h3>';
       var waterDays2=0,waterHit=0;
@@ -1793,71 +2192,100 @@ try{
       html+='</div></div>';
     }
 
-    // ── 75-DAY HEATMAP ──
+    // ── MOST LOGGED FOODS ──
+    var foodArr=[];
+    for(var fk in foodFreq){if(foodFreq.hasOwnProperty(fk))foodArr.push({name:fk,count:foodFreq[fk].count,cal:foodFreq[fk].cal});}
+    foodArr.sort(function(a,b){return b.count-a.count;});
+    if(foodArr.length>0){
+      html+='<div class="ana-card"><h3><span class="ana-icon">\ud83c\udf7d\ufe0f</span> Most Logged Foods</h3>';
+      html+='<ul class="ana-food-list">';
+      for(var ffi=0;ffi<Math.min(foodArr.length,7);ffi++){
+        html+='<li class="ana-food-item"><span class="af-rank">'+(ffi+1)+'</span><span class="af-name">'+foodArr[ffi].name+'</span><span class="af-count">'+foodArr[ffi].count+'x</span><span class="af-cal">'+Math.round(foodArr[ffi].cal)+'</span></li>';
+      }
+      html+='</ul></div>';
+    }
+
+    // ── COMPLETION HEATMAP ──
     html+='<div class="ana-card"><h3><span class="ana-icon">\ud83d\uddfa\ufe0f</span> Completion Heatmap</h3>';
     html+='<div class="ana-heatmap">';
     for(var hi=1;hi<=75;hi++){
-      var hd=APP_DATA.days[hi];
-      var hc=0;
+      var hd=APP_DATA.days[hi];var hc=0;
       if(hd&&hd.tasks){for(var hj=0;hj<TASKS_DB.length;hj++){if(hd.tasks[TASKS_DB[hj].id])hc++;}}
-      var ratio=hc/TASKS_DB.length;
-      var bgColor;
+      var ratio=hc/TASKS_DB.length;var bgColor;
       if(hi>cur)bgColor="var(--card2)";
       else if(ratio===1)bgColor="var(--green)";
-      else if(ratio>=0.5)bgColor="var(--yellow)";
+      else if(ratio>=.5)bgColor="var(--yellow)";
       else if(ratio>0)bgColor="var(--red)";
       else bgColor="rgba(255,255,255,.04)";
       html+='<div class="ana-heat" style="background:'+bgColor+'" title="Day '+hi+': '+hc+'/'+TASKS_DB.length+'"></div>';
     }
-    html+='</div>';
-    html+='<div class="ana-legend">';
+    html+='</div><div class="ana-legend">';
     html+='<span><span class="ana-legend-dot" style="background:var(--green)"></span>Complete</span>';
     html+='<span><span class="ana-legend-dot" style="background:var(--yellow)"></span>Partial</span>';
     html+='<span><span class="ana-legend-dot" style="background:var(--red)"></span>Low</span>';
     html+='<span><span class="ana-legend-dot" style="background:rgba(255,255,255,.04)"></span>None</span>';
     html+='</div></div>';
 
+    // ── WEIGHT PROJECTION (if profile) ──
+    if(hasPf&&totalCals.length>=3){
+      var avgIntake=Math.round(totalCals.reduce(function(a,b){return a+b;},0)/totalCals.length);
+      var actualDeficit=pf.tdee-avgIntake;
+      var daysLeft=75-cur;
+      var projChangeKg=Math.round(actualDeficit*daysLeft/7700*100)/100;
+      var projWeight=Math.round((pf.weight_kg-projChangeKg)*10)/10;
+      html+='<div class="ana-card"><h3><span class="ana-icon">\ud83d\udcb0</span> Weight Projection</h3>';
+      html+='<div class="ana-metric">';
+      html+='<div class="ana-stat info"><div class="av">'+pf.weight_kg+'</div><div class="al">Current (kg)</div></div>';
+      html+='<div class="ana-stat '+(actualDeficit>0?"good":"warn")+'"><div class="av">'+(actualDeficit>0?"-":"+")+Math.abs(Math.round(actualDeficit))+'</div><div class="al">Daily Deficit</div></div>';
+      html+='<div class="ana-stat good"><div class="av">'+projWeight+'</div><div class="al">Projected (kg)</div></div>';
+      html+='<div class="ana-stat info"><div class="av">'+(projChangeKg>0?"-":projChangeKg<0?"+":"")+Math.abs(projChangeKg)+'</div><div class="al">Est. Change</div></div>';
+      html+='</div>';
+      if(actualDeficit>0){
+        html+='<div class="ana-insight win" style="margin-top:.4rem">At this pace, you could lose ~'+Math.abs(projChangeKg)+' kg by Day 75.</div>';
+      }else if(actualDeficit<-100){
+        html+='<div class="ana-insight alert" style="margin-top:.4rem">You\'re in a surplus of '+Math.abs(Math.round(actualDeficit))+' cal/day vs TDEE.</div>';
+      }
+      html+='</div>';
+    }
+
     // ── INSIGHTS & TIPS ──
     html+='<div class="ana-card"><h3><span class="ana-icon">\ud83d\udca1</span> Insights & Tips</h3>';
     var insights=[];
 
-    if(streak>=7)insights.push({type:"win",text:"\ud83d\udd25 "+streak+"-day streak! You're building unbreakable discipline."});
-    else if(streak>=3)insights.push({type:"win",text:"\ud83d\udcaa "+streak+" days strong. Keep the momentum going!"});
-    else if(streak===0&&totalDays>1)insights.push({type:"alert",text:"Streak broken. Reset mentally and crush tomorrow. Every day is day 1."});
+    if(streak>=7)insights.push({type:"win",text:"\ud83d\udd25 "+streak+"-day streak! Unbreakable discipline."});
+    else if(streak>=3)insights.push({type:"win",text:"\ud83d\udcaa "+streak+" days strong. Keep it up!"});
+    else if(streak===0&&totalDays>1)insights.push({type:"alert",text:"Streak broken. Tomorrow is day 1. Get back on it."});
 
-    if(overallPct>=90&&totalDays>=7)insights.push({type:"win",text:"\ud83c\udfc5 "+overallPct+"% completion rate \u2014 you're in the elite zone."});
-    else if(overallPct<50&&totalDays>=5)insights.push({type:"alert",text:"\u26a0\ufe0f Below 50% completion. Identify your biggest blocker and solve it first."});
+    if(overallPct>=90&&totalDays>=7)insights.push({type:"win",text:"\ud83c\udfc5 "+overallPct+"% completion \u2014 elite zone."});
+    else if(overallPct<50&&totalDays>=5)insights.push({type:"alert",text:"\u26a0\ufe0f Below 50%. Find your blocker and fix it."});
 
     if(dayScores.length>=3){
-      var bestDay=dayScores[0],worstDay=dayScores[0];
+      var bestDay=dayScores[0];
       for(var bi=1;bi<dayScores.length;bi++){
         if(dayScores[bi].tasks>bestDay.tasks||(dayScores[bi].tasks===bestDay.tasks&&dayScores[bi].cals>bestDay.cals))bestDay=dayScores[bi];
-        if(dayScores[bi].tasks<worstDay.tasks)worstDay=dayScores[bi];
       }
-      if(bestDay.complete)insights.push({type:"tip",text:"\u2b50 Best day: Day "+bestDay.day+" \u2014 all tasks done with "+bestDay.cals+" kcal tracked."});
+      if(bestDay.complete)insights.push({type:"tip",text:"\u2b50 Best: Day "+bestDay.day+" \u2014 all done, "+bestDay.cals+" kcal."});
     }
 
     if(todayScore&&!todayScore.complete){
-      var missing=[];
-      var dd2=APP_DATA.days[cur];
-      for(var mi2=0;mi2<TASKS_DB.length;mi2++){
-        if(!dd2||!dd2.tasks||!dd2.tasks[TASKS_DB[mi2].id])missing.push(TASKS_DB[mi2].emoji+" "+TASKS_DB[mi2].name.split("(")[0].trim());
+      var missing2=[];var dd3=APP_DATA.days[cur];
+      for(var mi4=0;mi4<TASKS_DB.length;mi4++){
+        if(!dd3||!dd3.tasks||!dd3.tasks[TASKS_DB[mi4].id])missing2.push(TASKS_DB[mi4].emoji+" "+TASKS_DB[mi4].name.split("(")[0].trim());
       }
-      if(missing.length>0&&missing.length<TASKS_DB.length){
-        insights.push({type:"tip",text:"Still to do today: "+missing.join(", ")});
+      if(missing2.length>0&&missing2.length<TASKS_DB.length){
+        insights.push({type:"tip",text:"Still today: "+missing2.join(", ")});
       }
     }
+
+    if(!hasPf)insights.push({type:"tip",text:"\u2699\ufe0f Set up your Body Profile to get personalized calorie targets and weight projections."});
 
     if(completeDays>0&&cur>0){
       var projRate=completeDays/totalDays;
-      if(projRate>=0.95)insights.push({type:"win",text:"\ud83c\udf1f At this rate, you'll crush all 75 days. Stay locked in."});
-      else{
-        var projComplete=Math.round(75*projRate);
-        insights.push({type:"tip",text:"\ud83d\udcc8 Projected perfect days: ~"+projComplete+"/75. Each day you complete improves this."});
-      }
+      if(projRate>=.95)insights.push({type:"win",text:"\ud83c\udf1f You'll crush all 75 days at this rate."});
+      else insights.push({type:"tip",text:"\ud83d\udcc8 Projected perfect: ~"+Math.round(75*projRate)+"/75. Every completed day improves this."});
     }
 
-    if(insights.length===0)insights.push({type:"tip",text:"Complete a few days to see personalized insights here."});
+    if(insights.length===0)insights.push({type:"tip",text:"Complete a few days to see insights."});
     for(var ii=0;ii<insights.length;ii++){
       html+='<div class="ana-insight '+insights[ii].type+'">'+insights[ii].text+'</div>';
     }
