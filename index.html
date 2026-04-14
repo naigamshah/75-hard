@@ -325,7 +325,7 @@
     .modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,.93); z-index: 999; display: none; -webkit-flex-direction: column; flex-direction: column; }
     .modal.show { display: -webkit-flex; display: flex; }
     .modal-top { position: relative; -webkit-flex-shrink: 0; flex-shrink: 0; padding: calc(.8rem + var(--sat)) 1rem .8rem; }
-    .mcl { position: absolute; top: 8px; right: 14px; background: rgba(255,255,255,.15); border: none; color: #fff; font-size: 1.5rem; width: 44px; height: 44px; border-radius: 99px; cursor: pointer; z-index: 1; -webkit-appearance: none; display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; -webkit-justify-content: center; justify-content: center; }
+    .mcl { position: absolute; top: calc(8px + var(--sat)); right: 14px; background: rgba(255,255,255,.15); border: none; color: #fff; font-size: 1.5rem; width: 44px; height: 44px; border-radius: 99px; cursor: pointer; z-index: 1; -webkit-appearance: none; display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; -webkit-justify-content: center; justify-content: center; }
     .mcl:active { background: rgba(255,255,255,.3); }
     .modal-scroll { -webkit-flex: 1; flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 0 1rem 2rem; }
     .mtt { color: #fff; font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; text-align: center; }
@@ -524,6 +524,14 @@
     <div class="start-wrap">
       <div class="start-ring" id="startRing"></div>
       <button class="start-btn" id="startBtn">START CHALLENGE</button>
+    </div>
+    <div style="margin-top:1.5rem;font-size:.78rem;color:var(--dim)">
+      Already grinding? Tell us which day you're on:<br>
+      <div style="display:inline-flex;align-items:center;gap:.4rem;margin-top:.4rem">
+        <span style="color:var(--accent)">Day</span>
+        <input type="number" id="resumeDay" inputmode="numeric" min="1" max="75" placeholder="e.g. 3" style="width:55px;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:16px;text-align:center;-webkit-appearance:none">
+        <button id="resumeBtn" style="padding:5px 12px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-weight:700;font-size:.78rem;cursor:pointer;-webkit-appearance:none">Resume</button>
+      </div>
     </div>
   </div>
 
@@ -1699,6 +1707,21 @@ try{
     },1500);
   });
 
+  /* ── Resume from day N ── */
+  _$("resumeBtn").addEventListener("click",function(){
+    var dayNum=parseInt(_$("resumeDay").value,10);
+    if(!dayNum||dayNum<1||dayNum>75){_toast("Enter a day between 1 and 75");return;}
+    // Back-calculate: if user is on day N today, then day 1 was (N-1) days ago
+    var now=new Date();
+    var day1=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+    day1.setDate(day1.getDate()-(dayNum-1));
+    APP_DATA.startDate=day1.getFullYear()+"-"+String(day1.getMonth()+1).padStart(2,"0")+"-"+String(day1.getDate()).padStart(2,"0");
+    _save();_showChallenge();
+    _buildGrid();_colorGrid();_updateStats();
+    _selectDay(dayNum);
+    _toast("Resumed at Day "+dayNum+"!");
+  });
+
   /* ── Veg toggle ── */
   _$("vegT").addEventListener("click",function(){
     APP_VEG=!APP_VEG;this.className=APP_VEG?"vegt on":"vegt";
@@ -1987,14 +2010,19 @@ try{
   _$("rstB").addEventListener("click",function(){
     if(!confirm("Erase ALL progress and photos?"))return;
     if(!confirm("Last chance. Are you sure?"))return;
-    APP_DATA={goal:2000,startDate:null,customFoods:[],days:{}};
-    _save();
+    APP_DATA={goal:2000,startDate:null,customFoods:[],days:{},waterMode:"oz",reminders:{on:false,time:"09:00",freq:"daily"},profile:{}};
+    APP_DAY=null;APP_CTX=null;APP_CTX_BACKUP=null;
+    try{localStorage.setItem(APP_SKEY,JSON.stringify(APP_DATA));}catch(e){}
     _openPDB(function(db){
       if(!db)return;
       try{db.transaction("ph","readwrite").objectStore("ph").clear();}catch(e){}
     });
-    APP_DAY=null;
-    _initAfterLoad();
+    // Full re-init from clean state
+    _$("ctxLabel").style.display="none";
+    _$("backToPersonal").style.display="none";
+    _$("sScoreWrap").style.display="none";
+    _$("grid").innerHTML="";
+    _initApp();
     _toast("Reset");
   });
 
@@ -3137,9 +3165,12 @@ try{
     ["cgDays","cgWorkouts","cgWater","cgRead","cgTaskPts","cgCompPts","cgMlWeekly","cgMlHabit","cgMlHalf","cgMlHome","cgMlDone"].forEach(function(id){
       _$(id).addEventListener("input",function(){_$(id+"V").textContent=this.value+(sliderUnits[id]||"");});
     });
-    // Set default start date to tomorrow
+    // Set default start date to tomorrow, block past dates
+    var today=new Date();
+    var todayStr=today.getFullYear()+"-"+String(today.getMonth()+1).padStart(2,"0")+"-"+String(today.getDate()).padStart(2,"0");
     var tom=new Date();tom.setDate(tom.getDate()+1);
     _$("cgStart").value=tom.toISOString().split("T")[0];
+    _$("cgStart").setAttribute("min",todayStr);
 
     _$("cgCreate").addEventListener("click",function(){
       var name=_$("cgName").value.trim();
@@ -3147,6 +3178,11 @@ try{
       var pin=_$("cgPin").value.trim();
       if(!name){_toast("Enter a name");return;}
       if(!pin||pin.length<4){_toast("Enter 4-digit PIN");return;}
+      var startVal=_$("cgStart").value;
+      if(!startVal){_toast("Select a start date");return;}
+      var startCheck=new Date(startVal+"T00:00:00");
+      var todayCheck=new Date();todayCheck=new Date(todayCheck.getFullYear(),todayCheck.getMonth(),todayCheck.getDate());
+      if(startCheck<todayCheck){_toast("Start date can't be in the past");return;}
       _$("cgCreate").textContent="Creating...";_$("cgCreate").disabled=true;
       var inviteCode=Math.random().toString(36).substr(2,8).toUpperCase();
       FB_DB.collection("users").doc(FB_UID).get().then(function(me){
