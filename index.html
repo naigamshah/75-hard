@@ -3036,14 +3036,16 @@ try{
         if(isFriend){
           // ── FRIEND VIEW: full stats ──
           var r=45,circ=2*Math.PI*r,off=circ-(pct/100)*circ;
-          h+='<div style="text-align:center;margin-bottom:1rem"><svg width="110" height="110" viewBox="0 0 110 110" style="-webkit-transform:rotate(-90deg);transform:rotate(-90deg)">';
+          h+='<div style="position:relative;width:110px;height:110px;margin:0 auto 1rem">';
+          h+='<svg width="110" height="110" viewBox="0 0 110 110" style="-webkit-transform:rotate(-90deg);transform:rotate(-90deg)">';
           h+='<circle cx="55" cy="55" r="'+r+'" fill="none" stroke="var(--border)" stroke-width="8"/>';
           h+='<circle cx="55" cy="55" r="'+r+'" fill="none" stroke="url(#fpGrad)" stroke-width="8" stroke-linecap="round" stroke-dasharray="'+circ.toFixed(1)+'" stroke-dashoffset="'+off.toFixed(1)+'"/>';
           h+='<defs><linearGradient id="fpGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#6c5ce7"/><stop offset="100%" stop-color="#00e676"/></linearGradient></defs>';
           h+='</svg>';
-          h+='<div style="margin-top:-70px;font-size:1.5rem;font-weight:800;position:relative">'+pct+'%</div>';
-          h+='<div style="font-size:.68rem;color:var(--dim);position:relative;margin-top:2px">Completion</div>';
-          h+='</div>';
+          h+='<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none">';
+          h+='<div style="font-size:1.5rem;font-weight:800">'+pct+'%</div>';
+          h+='<div style="font-size:.68rem;color:var(--dim)">Completion</div>';
+          h+='</div></div>';
           h+='<div class="ana-metric" style="margin-bottom:1rem">';
           h+='<div class="ana-stat good"><div class="av">'+(p.completedDays||0)+'</div><div class="al">Days Done</div></div>';
           h+='<div class="ana-stat info"><div class="av">'+(p.totalDaysTracked||0)+'</div><div class="al">Days Tracked</div></div>';
