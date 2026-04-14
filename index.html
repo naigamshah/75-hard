@@ -3357,6 +3357,12 @@ try{
       _$("grpTrack").disabled=notStarted;
       _$("grpTrack").style.opacity=notStarted?".4":"";
       _$("grpTrack").textContent=notStarted?"\u23f3 Starts "+d.config.startDate:"\ud83c\udfaf Track My Progress";
+      // If challenge hasn't started, reset stale scores for current user
+      if(notStarted){
+        FB_DB.collection("groups").doc(gid).collection("members").doc(FB_UID).update({
+          score:0,currentStreak:0,completedDays:0,lastSyncDay:0,dayData:{}
+        }).catch(function(){});
+      }
       _$("grpPIN").textContent=d.password;
       _$("grpInvCode").textContent=d.inviteCode;
       // Goals
@@ -3377,7 +3383,7 @@ try{
       _$("grpEnd").style.display=isOwner?"":"none";
       _$("grpDelete").style.display=isOwner?"":"none";
       // Leaderboard
-      _loadLeaderboard(gid);
+      _loadLeaderboard(gid,notStarted);
     });
   }
 
@@ -3388,15 +3394,26 @@ try{
   });
   _$("cgClose").addEventListener("click",function(){_$("cgOverlay").className="cg-overlay";});
 
-  function _loadLeaderboard(gid){
+  function _loadLeaderboard(gid,notStarted){
     FB_DB.collection("groups").doc(gid).collection("members").orderBy("score","desc").get().then(function(snap){
       var el=_$("grpLeaderboard");el.innerHTML="";
       var rank=0;
+      // If challenge hasn't started, batch-reset any stale scores in Firestore
+      if(notStarted){
+        snap.forEach(function(doc2){
+          var d2=doc2.data();
+          if(d2.score>0||d2.completedDays>0){
+            doc2.ref.update({score:0,currentStreak:0,completedDays:0,lastSyncDay:0,dayData:{}}).catch(function(){});
+          }
+        });
+      }
       snap.forEach(function(doc){
         rank++;var d=doc.data();var isMe=doc.id===FB_UID;var memUid=doc.id;
+        var score=notStarted?0:d.score;
+        var cStreak=notStarted?0:d.currentStreak;
+        var cDone=notStarted?0:d.completedDays;
         var row=document.createElement("div");row.className="lb-row"+(isMe?" me":"");
-        row.innerHTML='<span class="lb-rank'+(rank<=3?" g":"")+'">'+rank+'</span><span class="lb-icon">'+d.icon+'</span><div class="lb-info"><div class="lb-name" style="cursor:pointer">'+d.username+(isMe?" (you)":"")+'</div><div class="lb-stats">\ud83d\udd25 '+d.currentStreak+' streak &bull; '+d.completedDays+' days done</div></div><span class="lb-score">'+d.score+'</span>';
-        // Click name → open profile
+        row.innerHTML='<span class="lb-rank'+(rank<=3?" g":"")+'">'+rank+'</span><span class="lb-icon">'+d.icon+'</span><div class="lb-info"><div class="lb-name" style="cursor:pointer">'+d.username+(isMe?" (you)":"")+'</div><div class="lb-stats">\ud83d\udd25 '+cStreak+' streak &bull; '+cDone+' days done</div></div><span class="lb-score">'+score+'</span>';
         row.querySelector(".lb-name").addEventListener("click",function(){
           if(!isMe)_viewUserProfile(memUid);
         });
