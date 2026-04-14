@@ -2879,8 +2879,14 @@ try{
     FB_DB.collection("groups").doc(gid).get().then(function(gDoc){
       if(!gDoc.exists)return;
       var gd=gDoc.data();
-      var cur=_getCurrentDay()||0;
-      if(cur<1)return;
+      // Use group's start date to calculate current day
+      if(!APP_DATA.startDate)return;
+      var s=new Date(APP_DATA.startDate+"T00:00:00");
+      var now=new Date();
+      var today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+      var diff=Math.floor((today-s)/86400000)+1;
+      if(diff<1)return;
+      var cur=Math.min(gd.config.days,diff);
       var result=_calcScore(gd.config,gd.config.days,cur);
       FB_DB.collection("groups").doc(gid).collection("members").doc(FB_UID).update({
         score:result.totalScore,currentStreak:result.currentStreak,completedDays:result.completedDays,lastSyncDay:cur,dayData:result.dayData
@@ -3522,16 +3528,31 @@ try{
     }).catch(function(e){_toast("Error: "+e.message);});
   });
   function _syncToGroups(){
-    if(!FB_UID||!APP_DATA.startDate)return;
+    if(!FB_UID)return;
     FB_DB.collection("users").doc(FB_UID).get().then(function(me){
       var md=me.data();var groups=md.groups||[];
       if(groups.length===0)return;
-      var cur=_getCurrentDay()||0;if(cur<1)return;
       groups.forEach(function(gid){
         FB_DB.collection("groups").doc(gid).get().then(function(gDoc){
           if(!gDoc.exists)return;
           var gd=gDoc.data();
+          // Load this group's LOCAL data (not personal APP_DATA)
+          var gcKey="75hard_gc_"+gid+"_"+FB_UID;
+          var gcData={goal:2000,startDate:null,days:{}};
+          try{var raw=localStorage.getItem(gcKey);if(raw)gcData=JSON.parse(raw);}catch(e){}
+          if(!gcData.startDate)return; // user hasn't started tracking this challenge
+          // Calculate current day from the GROUP's start date
+          var s=new Date(gcData.startDate+"T00:00:00");
+          var now=new Date();
+          var today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+          var diff=Math.floor((today-s)/86400000)+1;
+          if(diff<1)return; // challenge hasn't started yet
+          var cur=Math.min(gd.config.days,diff);
+          // Temporarily swap APP_DATA to calculate score from group data
+          var savedData=APP_DATA;
+          APP_DATA=gcData;
           var result=_calcScore(gd.config,gd.config.days,cur);
+          APP_DATA=savedData; // restore
           FB_DB.collection("groups").doc(gid).collection("members").doc(FB_UID).update({
             score:result.totalScore,currentStreak:result.currentStreak,completedDays:result.completedDays,lastSyncDay:cur,dayData:result.dayData
           }).catch(function(){});
