@@ -1220,9 +1220,13 @@ function _getActiveTasks(){
     var gc=APP_CTX.config.dailyGoals||{};
     var t=[];
     var wk=gc.workouts||2;
-    if(wk>=1)t.push({id:"w1",name:"Workout #1 (45 min)",desc:"Any workout, 45 min minimum",emoji:"\ud83c\udfcb\ufe0f"});
-    if(wk>=2)t.push({id:"w2",name:"Workout #2 (Outdoor)",desc:"Outdoor, 45 min, no excuses",emoji:"\ud83c\udfc3"});
-    if(wk>=3)t.push({id:"w3",name:"Workout #3",desc:"Extra workout session",emoji:"\ud83e\uddd7"});
+    var dur=gc.workoutDurations||[];
+    var wkNames=["\ud83c\udfcb\ufe0f","\ud83c\udfc3","\ud83e\uddd7"];
+    var wkLabels=["Workout #1","Workout #2 (Outdoor)","Workout #3"];
+    for(var wi=0;wi<wk;wi++){
+      var mins=dur[wi]||45;
+      t.push({id:"w"+(wi+1),name:wkLabels[wi]+" ("+mins+" min)",desc:mins+" min, no excuses",emoji:wkNames[wi]});
+    }
     if(gc.diet!==false)t.push({id:"diet",name:"Follow Your Diet",desc:"No alcohol, no cheat meals",emoji:"\ud83e\udd57"});
     t.push({id:"water",name:"Drink Water",desc:(gc.waterOz||128)+" oz / "+Math.round((gc.waterOz||128)/16)+" glasses",emoji:"\ud83d\udca7"});
     t.push({id:"read",name:"Read "+(gc.readPages||10)+" Pages",desc:"Non-fiction / self-improvement",emoji:"\ud83d\udcda"});
@@ -3137,6 +3141,7 @@ try{
     h+='</div>';
     h+='<div class="pf-card"><h3>\ud83c\udfaf Daily Goals</h3>';
     h+='<div class="pf-field"><label>\ud83c\udfcb\ufe0f Workouts per day</label><div class="pf-slider-wrap"><input class="pf-slider" type="range" id="cgWorkouts" min="1" max="3" value="2"><span class="pf-slider-val" id="cgWorkoutsV">2</span></div></div>';
+    h+='<div id="cgWkDurations"></div>';
     h+='<div class="pf-field"><label>\ud83d\udca7 Water target</label><div class="pf-slider-wrap"><input class="pf-slider" type="range" id="cgWater" min="64" max="256" step="8" value="128"><span class="pf-slider-val" id="cgWaterV">128 oz</span></div></div>';
     h+='<div class="pf-field"><label>\ud83d\udcda Reading pages</label><div class="pf-slider-wrap"><input class="pf-slider" type="range" id="cgRead" min="5" max="50" step="5" value="10"><span class="pf-slider-val" id="cgReadV">10 pages</span></div></div>';
     // Toggle goals
@@ -3165,12 +3170,44 @@ try{
     ["cgDays","cgWorkouts","cgWater","cgRead","cgTaskPts","cgCompPts","cgMlWeekly","cgMlHabit","cgMlHalf","cgMlHome","cgMlDone"].forEach(function(id){
       _$(id).addEventListener("input",function(){_$(id+"V").textContent=this.value+(sliderUnits[id]||"");});
     });
+    // Dynamic workout duration sliders
+    var wkNames=["\ud83c\udfcb\ufe0f Workout #1","\ud83c\udfc3 Workout #2 (Outdoor)","\ud83e\uddd7 Workout #3"];
+    var wkDefaults=[45,45,30];
+    function _buildWkDurations(){
+      var n=parseInt(_$("cgWorkouts").value,10)||2;
+      var el=_$("cgWkDurations");el.innerHTML="";
+      for(var i=0;i<n;i++){
+        (function(idx){
+          var cur=wkDefaults[idx]||45;
+          // Check if there's an existing slider value to preserve
+          var prev=document.getElementById("cgWkDur"+idx);
+          if(prev)cur=parseInt(prev.value,10)||cur;
+          var d=document.createElement("div");d.className="pf-field";d.style.marginLeft="1rem";
+          d.innerHTML='<label style="font-size:.65rem">'+wkNames[idx]+' duration</label><div class="pf-slider-wrap"><input class="pf-slider" type="range" id="cgWkDur'+idx+'" min="10" max="90" step="5" value="'+cur+'"><span class="pf-slider-val" id="cgWkDur'+idx+'V">'+cur+' min</span></div>';
+          el.appendChild(d);
+          _$("cgWkDur"+idx).addEventListener("input",function(){_$("cgWkDur"+idx+"V").textContent=this.value+" min";});
+        })(i);
+      }
+    }
+    _buildWkDurations();
+    _$("cgWorkouts").addEventListener("input",function(){
+      _$("cgWorkoutsV").textContent=this.value;
+      _buildWkDurations();
+    });
     // Set default start date to tomorrow, block past dates
     var today=new Date();
     var todayStr=today.getFullYear()+"-"+String(today.getMonth()+1).padStart(2,"0")+"-"+String(today.getDate()).padStart(2,"0");
     var tom=new Date();tom.setDate(tom.getDate()+1);
     _$("cgStart").value=tom.toISOString().split("T")[0];
     _$("cgStart").setAttribute("min",todayStr);
+    // iOS doesn't gray out past dates — validate on change and reset if past
+    _$("cgStart").addEventListener("change",function(){
+      var picked=this.value;
+      if(picked<todayStr){
+        this.value=todayStr;
+        _toast("Start date can't be in the past");
+      }
+    });
 
     _$("cgCreate").addEventListener("click",function(){
       var name=_$("cgName").value.trim();
@@ -3188,10 +3225,13 @@ try{
       FB_DB.collection("users").doc(FB_UID).get().then(function(me){
         var md=me.data();
         var grpRef=FB_DB.collection("groups").doc();
+        var wkCount=parseInt(_$("cgWorkouts").value,10);
+        var wkDurations=[];
+        for(var wi=0;wi<wkCount;wi++){var durEl=_$("cgWkDur"+wi);wkDurations.push(durEl?parseInt(durEl.value,10):45);}
         var config={
           days:parseInt(_$("cgDays").value,10),
           startDate:_$("cgStart").value,
-          dailyGoals:{workouts:parseInt(_$("cgWorkouts").value,10),waterOz:parseInt(_$("cgWater").value,10),readPages:parseInt(_$("cgRead").value,10),diet:_$("cgDiet").checked,photo:_$("cgPhoto").checked,outdoorWorkout:_$("cgOutdoor").checked},
+          dailyGoals:{workouts:wkCount,workoutDurations:wkDurations,waterOz:parseInt(_$("cgWater").value,10),readPages:parseInt(_$("cgRead").value,10),diet:_$("cgDiet").checked,photo:_$("cgPhoto").checked,outdoorWorkout:_$("cgOutdoor").checked},
           scoring:{taskPoints:parseInt(_$("cgTaskPts").value,10),completionBonus:parseInt(_$("cgCompPts").value,10)},
           milestones:{weekly:parseInt(_$("cgMlWeekly").value,10),habit21:parseInt(_$("cgMlHabit").value,10),halfway:parseInt(_$("cgMlHalf").value,10),homeStretch:parseInt(_$("cgMlHome").value,10),complete:parseInt(_$("cgMlDone").value,10)}
         };
@@ -3313,7 +3353,10 @@ try{
       _$("grpInvCode").textContent=d.inviteCode;
       // Goals
       var gc=d.config.dailyGoals;
-      _$("grpGoals").innerHTML='<div style="font-size:.8rem;color:var(--dim)">Workouts: <b style="color:var(--text)">'+gc.workouts+'</b> &bull; Water: <b style="color:var(--text)">'+gc.waterOz+' oz</b> &bull; Read: <b style="color:var(--text)">'+gc.readPages+' pages</b> &bull; Diet: <b style="color:var(--text)">'+(gc.diet?"Yes":"No")+'</b> &bull; Photo: <b style="color:var(--text)">'+(gc.photo?"Yes":"No")+'</b></div>';
+      var wkDur=gc.workoutDurations||[];
+      var wkInfo="";
+      for(var wdi=0;wdi<(gc.workouts||2);wdi++){wkInfo+=(wdi>0?", ":"")+(wkDur[wdi]||45)+"min";}
+      _$("grpGoals").innerHTML='<div style="font-size:.8rem;color:var(--dim)">Workouts: <b style="color:var(--text)">'+gc.workouts+'</b> ('+wkInfo+') &bull; Water: <b style="color:var(--text)">'+gc.waterOz+' oz</b> &bull; Read: <b style="color:var(--text)">'+gc.readPages+' pages</b> &bull; Diet: <b style="color:var(--text)">'+(gc.diet?"Yes":"No")+'</b> &bull; Photo: <b style="color:var(--text)">'+(gc.photo?"Yes":"No")+'</b></div>';
       var sc=d.config.scoring;
       var halfDay=Math.ceil(d.config.days/2);
       var ml=d.config.milestones||{weekly:100,habit21:500,halfway:750,homeStretch:1000,complete:5000};
