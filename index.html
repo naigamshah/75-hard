@@ -38,7 +38,7 @@
     .login-box { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem 1.5rem; width: 100%; max-width: 340px; text-align: center; }
     .login-box h1 { font-size: 2.2rem; font-weight: 800; margin-bottom: .2rem; background: -webkit-linear-gradient(135deg, var(--accent), #a29bfe, var(--green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .login-box .sub { color: var(--dim); font-size: .82rem; margin-bottom: 1.5rem; }
-    .login-box input[type=text], .login-box input[type=password] { width: 100%; padding: .7rem .9rem; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-size: 16px; margin-bottom: .6rem; outline: none; -webkit-appearance: none; }
+    .login-box input[type=text], .login-box input[type=password], .login-box input[type=email] { width: 100%; padding: .7rem .9rem; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-size: 16px; margin-bottom: .6rem; outline: none; -webkit-appearance: none; }
     .login-box input:focus { border-color: var(--accent); }
     .login-box .lbtns { display: -webkit-flex; display: flex; gap: .5rem; margin-top: .8rem; }
     .login-box .lbtn { -webkit-flex: 1; flex: 1; padding: .65rem; border-radius: 12px; font-weight: 700; font-size: .88rem; cursor: pointer; border: none; min-height: 44px; -webkit-appearance: none; }
@@ -257,7 +257,7 @@
     /* ── PROFILE ── */
     .profile-overlay { position: fixed; inset: 0; z-index: 997; background: var(--bg); overflow-y: auto; -webkit-overflow-scrolling: touch; display: none; }
     .profile-overlay.show { display: block; }
-    .profile-inner { max-width: 520px; margin: 0 auto; padding: 1rem 1rem 5rem; }
+    .profile-inner { max-width: 520px; margin: 0 auto; padding: calc(1rem + var(--sat)) 1rem 5rem; }
     .pf-hdr { display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; -webkit-justify-content: space-between; justify-content: space-between; margin-bottom: 1rem; }
     .pf-hdr h2 { font-size: 1.3rem; font-weight: 800; }
     .pf-close { background: var(--card); border: 1px solid var(--border); color: var(--text); border-radius: 10px; padding: 6px 14px; font-size: .82rem; font-weight: 600; cursor: pointer; min-height: 36px; -webkit-appearance: none; }
@@ -324,7 +324,7 @@
     /* ── MODAL ── */
     .modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,.93); z-index: 999; display: none; -webkit-flex-direction: column; flex-direction: column; }
     .modal.show { display: -webkit-flex; display: flex; }
-    .modal-top { position: relative; -webkit-flex-shrink: 0; flex-shrink: 0; padding: .8rem 1rem; }
+    .modal-top { position: relative; -webkit-flex-shrink: 0; flex-shrink: 0; padding: calc(.8rem + var(--sat)) 1rem .8rem; }
     .mcl { position: absolute; top: 8px; right: 14px; background: rgba(255,255,255,.15); border: none; color: #fff; font-size: 1.5rem; width: 44px; height: 44px; border-radius: 99px; cursor: pointer; z-index: 1; -webkit-appearance: none; display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; -webkit-justify-content: center; justify-content: center; }
     .mcl:active { background: rgba(255,255,255,.3); }
     .modal-scroll { -webkit-flex: 1; flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 0 1rem 2rem; }
@@ -357,7 +357,7 @@
     /* ── ANALYTICS ── */
     .analytics-overlay { position: fixed; inset: 0; z-index: 998; background: var(--bg); overflow-y: auto; -webkit-overflow-scrolling: touch; display: none; }
     .analytics-overlay.show { display: block; }
-    .analytics-inner { max-width: 520px; margin: 0 auto; padding: 1rem 1rem 5rem; }
+    .analytics-inner { max-width: 520px; margin: 0 auto; padding: calc(1rem + var(--sat)) 1rem 5rem; }
     .ana-hdr { display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; -webkit-justify-content: space-between; justify-content: space-between; margin-bottom: 1.2rem; }
     .ana-hdr h2 { font-size: 1.3rem; font-weight: 800; }
     .ana-close { background: var(--card); border: 1px solid var(--border); color: var(--text); border-radius: 10px; padding: 6px 14px; font-size: .82rem; font-weight: 600; cursor: pointer; min-height: 36px; -webkit-appearance: none; }
@@ -401,6 +401,82 @@
       .ring-container { width: 170px; height: 170px; }
       .ring-day { font-size: 42px; }
     }
+
+    /* ── ICON PICKER ── */
+    .icon-grid { display: -webkit-flex; display: flex; -webkit-flex-wrap: wrap; flex-wrap: wrap; gap: 4px; -webkit-justify-content: center; justify-content: center; max-height: 140px; overflow-y: auto; }
+    .icon-opt { width: 40px; height: 40px; border-radius: 10px; border: 2px solid var(--border); background: var(--bg); display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; -webkit-justify-content: center; justify-content: center; font-size: 1.3rem; cursor: pointer; -webkit-appearance: none; padding: 0; }
+    .icon-opt.sel { border-color: var(--accent); background: rgba(108,92,231,.15); }
+    .icon-opt:active { -webkit-transform: scale(.9); transform: scale(.9); }
+
+    /* ── COMMUNITY ── */
+    .comm-overlay { position: fixed; inset: 0; z-index: 996; background: var(--bg); overflow-y: auto; -webkit-overflow-scrolling: touch; display: none; }
+    .comm-overlay.show { display: block; }
+    .comm-inner { max-width: 520px; margin: 0 auto; padding: calc(1rem + var(--sat)) 1rem 5rem; }
+    .comm-hdr { display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; -webkit-justify-content: space-between; justify-content: space-between; margin-bottom: .8rem; }
+    .comm-hdr h2 { font-size: 1.3rem; font-weight: 800; }
+    .comm-close { background: var(--card); border: 1px solid var(--border); color: var(--text); border-radius: 10px; padding: 6px 14px; font-size: .82rem; font-weight: 600; cursor: pointer; min-height: 36px; -webkit-appearance: none; }
+    .comm-tabs { display: -webkit-flex; display: flex; gap: 0; background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 1rem; }
+    .comm-tab { -webkit-flex: 1; flex: 1; padding: .6rem; text-align: center; font-size: .82rem; font-weight: 700; background: none; border: none; color: var(--dim); cursor: pointer; -webkit-appearance: none; min-height: 44px; }
+    .comm-tab.active { background: var(--accent); color: #fff; }
+    .comm-panel { display: none; }
+    .comm-panel.active { display: block; }
+    .comm-search { width: 100%; padding: .65rem .9rem; background: var(--card); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-size: 16px; outline: none; -webkit-appearance: none; margin-bottom: .6rem; }
+    .comm-search:focus { border-color: var(--accent); }
+    .comm-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: .8rem; margin-bottom: .5rem; }
+    .comm-card h4 { font-size: .82rem; font-weight: 700; margin-bottom: .5rem; color: var(--dim); text-transform: uppercase; letter-spacing: .5px; }
+    .comm-empty { text-align: center; color: var(--dim); font-size: .82rem; padding: 2rem 1rem; }
+    .comm-user-row { display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; gap: .5rem; padding: .5rem .6rem; border-radius: 10px; margin-bottom: .3rem; background: rgba(255,255,255,.02); }
+    .comm-user-row .cu-icon { font-size: 1.5rem; -webkit-flex-shrink: 0; flex-shrink: 0; }
+    .comm-user-row .cu-info { -webkit-flex: 1; flex: 1; min-width: 0; }
+    .comm-user-row .cu-name { font-weight: 700; font-size: .88rem; }
+    .comm-user-row .cu-sub { font-size: .7rem; color: var(--dim); }
+    .comm-user-row .cu-btn { padding: 5px 12px; border-radius: 8px; font-size: .72rem; font-weight: 700; cursor: pointer; border: none; -webkit-appearance: none; min-height: 32px; }
+    .comm-user-row .cu-btn.add { background: var(--accent); color: #fff; }
+    .comm-user-row .cu-btn.pending { background: var(--card2); color: var(--dim); border: 1px solid var(--border); }
+    .comm-user-row .cu-btn.accept { background: var(--green); color: #000; }
+    .comm-user-row .cu-btn.decline { background: none; border: 1px solid var(--border); color: var(--dim); }
+    .comm-user-row .cu-btn.remove { background: none; border: 1px solid var(--red); color: var(--red); }
+    .comm-user-row .cu-btn.view { background: var(--card2); color: var(--text); border: 1px solid var(--border); }
+
+    /* Group cards */
+    .grp-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; margin-bottom: .6rem; cursor: pointer; }
+    .grp-card:active { border-color: var(--accent); }
+    .grp-card .grp-name { font-weight: 800; font-size: 1rem; margin-bottom: .2rem; }
+    .grp-card .grp-desc { font-size: .78rem; color: var(--dim); margin-bottom: .4rem; }
+    .grp-card .grp-meta { display: -webkit-flex; display: flex; gap: .6rem; font-size: .72rem; color: var(--dim); }
+    .grp-card .grp-meta b { color: var(--text); }
+    .grp-badge { display: inline-block; font-size: .65rem; font-weight: 700; padding: 2px 8px; border-radius: 6px; text-transform: uppercase; }
+    .grp-badge.upcoming { background: rgba(108,92,231,.12); color: var(--accent); }
+    .grp-badge.active { background: var(--gg); color: var(--green); }
+    .grp-badge.ended { background: rgba(110,110,130,.1); color: var(--dim); }
+
+    /* Group detail overlay */
+    .grp-overlay { position: fixed; inset: 0; z-index: 997; background: var(--bg); overflow-y: auto; -webkit-overflow-scrolling: touch; display: none; }
+    .grp-overlay.show { display: block; }
+    .grp-inner { max-width: 520px; margin: 0 auto; padding: calc(1rem + var(--sat)) 1rem 5rem; }
+    .grp-detail-hdr { margin-bottom: 1rem; }
+    .grp-detail-hdr h2 { font-size: 1.2rem; font-weight: 800; margin-bottom: .2rem; }
+    .grp-detail-hdr .grp-desc2 { font-size: .82rem; color: var(--dim); }
+    .lb-row { display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; gap: .5rem; padding: .6rem .7rem; border-radius: 10px; margin-bottom: .3rem; background: rgba(255,255,255,.02); }
+    .lb-row.me { background: rgba(108,92,231,.08); border: 1px solid rgba(108,92,231,.25); }
+    .lb-rank { font-weight: 800; font-size: .88rem; width: 28px; text-align: center; -webkit-flex-shrink: 0; flex-shrink: 0; }
+    .lb-rank.g { color: var(--green); }
+    .lb-icon { font-size: 1.3rem; -webkit-flex-shrink: 0; flex-shrink: 0; }
+    .lb-info { -webkit-flex: 1; flex: 1; min-width: 0; }
+    .lb-name { font-weight: 700; font-size: .82rem; }
+    .lb-stats { font-size: .68rem; color: var(--dim); }
+    .lb-score { font-weight: 800; font-size: 1rem; color: var(--green); -webkit-flex-shrink: 0; flex-shrink: 0; }
+    .grp-actions { display: -webkit-flex; display: flex; gap: .4rem; -webkit-flex-wrap: wrap; flex-wrap: wrap; margin-top: .8rem; }
+    .grp-actions .btn { font-size: .78rem; }
+
+    /* Create/join group form */
+    .cg-overlay { position: fixed; inset: 0; z-index: 998; background: var(--bg); overflow-y: auto; -webkit-overflow-scrolling: touch; display: none; }
+    .cg-overlay.show { display: block; }
+    .cg-inner { max-width: 520px; margin: 0 auto; padding: calc(1rem + var(--sat)) 1rem 5rem; }
+
+    /* Friend profile modal content */
+    .fp-icon { font-size: 4rem; text-align: center; margin-bottom: .5rem; }
+    .fp-name { font-size: 1.2rem; font-weight: 800; text-align: center; margin-bottom: .8rem; }
   </style>
 </head>
 <body>
@@ -410,13 +486,23 @@
   <div class="login-box">
     <h1>75 HARD</h1>
     <div class="sub">Mental toughness. Zero compromises.</div>
-    <input type="text" id="lUser" placeholder="Username" autocomplete="off" autocapitalize="off">
+    <input type="email" id="lUser" placeholder="Email" autocomplete="email">
+    <input type="text" id="lUserReg" placeholder="Choose a username" autocomplete="off" autocapitalize="off" style="display:none">
+    <input type="email" id="lEmail" placeholder="Email" autocomplete="email" style="display:none">
     <input type="password" id="lPass" placeholder="Password">
+    <div id="iconPickWrap" style="display:none">
+      <div style="font-size:.72rem;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;margin:.6rem 0 .3rem">Choose your avatar</div>
+      <div class="icon-grid" id="iconGrid"></div>
+      <input type="hidden" id="lIcon" value="">
+    </div>
     <div class="lbtns">
       <button class="lbtn primary" id="loginBtn">Login</button>
       <button class="lbtn secondary" id="regBtn">Register</button>
     </div>
     <div class="lerr" id="lErr"></div>
+    <div style="margin-top:.6rem;font-size:.72rem;color:var(--dim)" id="authToggle">
+      <span id="showRegFields" style="cursor:pointer;color:var(--accent)">New here? Show register fields</span>
+    </div>
   </div>
 </div>
 
@@ -424,8 +510,11 @@
 <div class="page hide" id="appPage">
 
   <div class="usr-bar" id="usrBar">
-    <span>Logged in as <span class="uname" id="uName"></span></span>
-    <button class="logout-btn" id="logoutBtn">Logout</button>
+    <span><span class="uname" id="uName"></span> <span id="ctxLabel" style="font-size:.7rem;color:var(--accent);display:none">— Personal Challenge</span></span>
+    <div style="display:-webkit-flex;display:flex;gap:.4rem">
+      <button class="logout-btn" id="backToPersonal" style="display:none;border-color:var(--accent);color:var(--accent)">&larr; Personal</button>
+      <button class="logout-btn" id="logoutBtn">Logout</button>
+    </div>
   </div>
 
   <!-- Start Challenge (shown when no startDate) -->
@@ -462,6 +551,7 @@
       <div class="hst c1"><div class="n" id="sDone">0</div><div class="l">Done</div></div>
       <div class="hst c2"><div class="n" id="sLeft">75</div><div class="l">Left</div></div>
       <div class="hst c3"><div class="n" id="sStrk">0</div><div class="l">Streak</div></div>
+      <div class="hst c1" id="sScoreWrap" style="display:none"><div class="n" id="sScore">0</div><div class="l">Score</div></div>
     </div>
   </div>
 
@@ -561,7 +651,7 @@
 
   <!-- 75 Day Map -->
   <div class="map-sec hide" id="mapSec">
-    <h3>75 DAY MAP</h3>
+    <h3 id="mapTitle">75 DAY MAP</h3>
     <div class="grid" id="grid"></div>
   </div>
 
@@ -591,6 +681,7 @@
 
   <div class="ctrls" id="ctrlSec">
     <button class="ana-btn" id="anaBtn">&#128202; Analytics</button>
+    <button class="ana-btn" id="commBtn" style="background:linear-gradient(135deg,#00b894,#00cec9)">&#128101; Community</button>
     <button class="btn" id="pfBtn">&#9878;&#65039; Profile</button>
     <button class="btn" id="expB">Export</button>
     <button class="btn" id="impB">Import</button>
@@ -684,6 +775,95 @@
   </div>
 </div>
 
+<!-- Community Overlay -->
+<div class="comm-overlay" id="commOverlay">
+  <div class="comm-inner">
+    <div class="comm-hdr"><h2>&#128101; Community</h2><button class="comm-close" id="commClose">Close</button></div>
+    <div class="comm-tabs">
+      <button class="comm-tab active" data-tab="friends" id="ctFriends">Friends</button>
+      <button class="comm-tab" data-tab="groups" id="ctGroups">Challenges</button>
+    </div>
+
+    <!-- Friends Panel -->
+    <div class="comm-panel active" id="panFriends">
+      <input class="comm-search" id="userSearch" type="text" placeholder="Search users by username..." autocomplete="off">
+      <div id="userSearchRes"></div>
+      <div class="comm-card" id="pendingReqCard" style="display:none">
+        <h4>Pending Requests</h4>
+        <div id="pendingReqs"></div>
+      </div>
+      <div class="comm-card">
+        <h4>My Friends</h4>
+        <div id="friendList"></div>
+      </div>
+    </div>
+
+    <!-- Groups Panel -->
+    <div class="comm-panel" id="panGroups">
+      <div style="display:-webkit-flex;display:flex;gap:.4rem;margin-bottom:.8rem">
+        <button class="ana-btn" id="createGrpBtn" style="flex:1;font-size:.82rem">+ Create Challenge</button>
+        <button class="btn" id="joinGrpBtn" style="flex:1;font-size:.82rem">Join Challenge</button>
+      </div>
+      <div id="myGroups"><div class="comm-empty">No challenges yet. Create or join one!</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Group Detail Overlay -->
+<div class="grp-overlay" id="grpOverlay">
+  <div class="grp-inner">
+    <div style="display:-webkit-flex;display:flex;-webkit-justify-content:space-between;justify-content:space-between;-webkit-align-items:center;align-items:center;margin-bottom:.8rem">
+      <button class="comm-close" id="grpBack">&larr; Back</button>
+      <span class="grp-badge" id="grpStatus">Active</span>
+    </div>
+    <div class="grp-detail-hdr">
+      <h2 id="grpName">Group Name</h2>
+      <div class="grp-desc2" id="grpDesc">Description</div>
+      <div class="grp-meta" style="margin-top:.4rem">
+        <span>&#128197; <b id="grpDays">75</b> days</span>
+        <span>&#128101; <b id="grpMemCt">0</b> members</span>
+        <span>Starts <b id="grpStart">—</b></span>
+      </div>
+    </div>
+    <button class="pf-save" id="grpTrack" style="margin-bottom:.8rem">&#127919; Track My Progress</button>
+    <div class="comm-card">
+      <h4>&#127942; Leaderboard</h4>
+      <div id="grpLeaderboard"></div>
+    </div>
+    <div class="comm-card" id="grpGoalsCard">
+      <h4>Daily Goals</h4>
+      <div id="grpGoals"></div>
+    </div>
+    <div class="comm-card" id="grpScoringCard">
+      <h4>Scoring</h4>
+      <div id="grpScoring"></div>
+    </div>
+    <div class="comm-card" id="grpShareCard">
+      <h4>Invite</h4>
+      <div style="font-size:.8rem;color:var(--dim)">PIN: <b id="grpPIN" style="color:var(--text);font-size:1.1rem;letter-spacing:2px">—</b></div>
+      <div style="font-size:.72rem;color:var(--dim);margin-top:.3rem">Invite code: <b id="grpInvCode" style="color:var(--accent)">—</b></div>
+    </div>
+    <div class="grp-actions">
+      <button class="btn dng" id="grpLeave">Leave Challenge</button>
+      <button class="btn" id="grpEdit" style="display:none">Edit Goals</button>
+      <button class="btn dng" id="grpKick" style="display:none">Kick Member</button>
+      <button class="btn dng" id="grpEnd" style="display:none">End Challenge</button>
+      <button class="btn dng" id="grpDelete" style="display:none">Delete Challenge</button>
+    </div>
+  </div>
+</div>
+
+<!-- Create/Join Group Overlay -->
+<div class="cg-overlay" id="cgOverlay">
+  <div class="cg-inner">
+    <div style="display:-webkit-flex;display:flex;-webkit-justify-content:space-between;justify-content:space-between;-webkit-align-items:center;align-items:center;margin-bottom:1rem">
+      <h2 id="cgTitle">Create Group</h2>
+      <button class="comm-close" id="cgClose">Close</button>
+    </div>
+    <div id="cgContent"></div>
+  </div>
+</div>
+
 <!-- Celebration Overlay -->
 <div class="celeb" id="celeb">
   <div class="celeb-ring2"></div>
@@ -705,6 +885,29 @@
 <div class="modal" id="modal"><div class="modal-top"><button class="mcl" id="mCl">&times;</button><div class="mtt" id="mTt"></div></div><div class="modal-scroll"><div id="mCt"></div></div></div>
 <div class="toast" id="toast"></div>
 <input type="file" id="fIn" accept=".json" style="display:none">
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script>
+// ╔══════════════════════════════════════════════════╗
+// ║  PASTE YOUR FIREBASE CONFIG BELOW               ║
+// ╚══════════════════════════════════════════════════╝
+var FIREBASE_CONFIG = {
+  apiKey: "AIzaSyCDiXKOc1Y-dsTdW216Rt8pOigN4DoKpuI",
+  authDomain: "hard-fc1c4.firebaseapp.com",
+  projectId: "hard-fc1c4",
+  storageBucket: "hard-fc1c4.firebasestorage.app",
+  messagingSenderId: "599794315117",
+  appId: "1:599794315117:web:94f602dd7c912c6abab464",
+  measurementId: "G-V200LYYWY0"
+};
+firebase.initializeApp(FIREBASE_CONFIG);
+var FB_AUTH = firebase.auth();
+var FB_DB = firebase.firestore();
+var FB_UID = null;
+</script>
 
 <!-- ====== SCRIPT 1: Data & Food Database ====== -->
 <script>
@@ -928,6 +1131,8 @@ var APP_SEL=null;
 var APP_VEG=false;
 var APP_STM=null;
 var APP_UNIT="piece";
+var APP_CTX=null; // null=personal, {gid,config,name} for group challenge
+var APP_CTX_BACKUP=null; // saves personal context when switching
 </script>
 
 <!-- ====== SCRIPT 2: Core Logic ====== -->
@@ -967,13 +1172,16 @@ function _getQ(d){
   return QUOTES_DB[i];
 }
 
+function _maxDays(){return(APP_CTX&&APP_CTX.config)?APP_CTX.config.days:75;}
+
 function _getCurrentDay(){
   if(!APP_DATA.startDate)return null;
   var s=new Date(APP_DATA.startDate+"T00:00:00");
   var now=new Date();
   var today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
   var diff=Math.floor((today-s)/86400000)+1;
-  return Math.max(1,Math.min(75,diff));
+  if(diff<1)return 0; // challenge hasn't started yet
+  return Math.min(_maxDays(),diff);
 }
 
 function _getDayDate(d){
@@ -987,14 +1195,33 @@ function _getDayDate(d){
 
 function _isDayComplete(d){
   var x=APP_DATA.days[d];if(!x)return false;
-  for(var j=0;j<TASKS_DB.length;j++){if(!x.tasks[TASKS_DB[j].id])return false;}
+  var tasks=_getActiveTasks();
+  for(var j=0;j<tasks.length;j++){if(!x.tasks[tasks[j].id])return false;}
   return true;
 }
 
 function _countTasksDone(d){
   var x=APP_DATA.days[d];if(!x)return 0;
-  var n=0;for(var j=0;j<TASKS_DB.length;j++){if(x.tasks[TASKS_DB[j].id])n++;}
+  var tasks=_getActiveTasks();
+  var n=0;for(var j=0;j<tasks.length;j++){if(x.tasks[tasks[j].id])n++;}
   return n;
+}
+
+function _getActiveTasks(){
+  if(APP_CTX&&APP_CTX.config){
+    var gc=APP_CTX.config.dailyGoals||{};
+    var t=[];
+    var wk=gc.workouts||2;
+    if(wk>=1)t.push({id:"w1",name:"Workout #1 (45 min)",desc:"Any workout, 45 min minimum",emoji:"\ud83c\udfcb\ufe0f"});
+    if(wk>=2)t.push({id:"w2",name:"Workout #2 (Outdoor)",desc:"Outdoor, 45 min, no excuses",emoji:"\ud83c\udfc3"});
+    if(wk>=3)t.push({id:"w3",name:"Workout #3",desc:"Extra workout session",emoji:"\ud83e\uddd7"});
+    if(gc.diet!==false)t.push({id:"diet",name:"Follow Your Diet",desc:"No alcohol, no cheat meals",emoji:"\ud83e\udd57"});
+    t.push({id:"water",name:"Drink Water",desc:(gc.waterOz||128)+" oz / "+Math.round((gc.waterOz||128)/16)+" glasses",emoji:"\ud83d\udca7"});
+    t.push({id:"read",name:"Read "+(gc.readPages||10)+" Pages",desc:"Non-fiction / self-improvement",emoji:"\ud83d\udcda"});
+    if(gc.photo!==false)t.push({id:"photo",name:"Progress Photo",desc:"Document your transformation",emoji:"\ud83d\udcf8"});
+    return t;
+  }
+  return TASKS_DB;
 }
 
 /* Ring */
@@ -1016,17 +1243,64 @@ function _updateRing(pct,day,streak){
 
 /* Stats */
 function _updateStats(){
-  var done=0,streak=0,brk=false;
-  for(var i=1;i<=75;i++){
+  var done=0,streak=0,brk=false;var mx=_maxDays();
+  for(var i=1;i<=mx;i++){
     if(_isDayComplete(i)){done++;if(!brk)streak++;}
     else brk=true;
   }
-  var pct=Math.round(done/75*100);
+  var pct=Math.round(done/mx*100);
   _$("sDone").textContent=String(done);
-  _$("sLeft").textContent=String(75-done);
+  _$("sLeft").textContent=String(mx-done);
   _$("sStrk").textContent=String(streak);
   var cur=_getCurrentDay()||1;
   _updateRing(pct,cur,streak);
+  // Score (group challenge only)
+  if(APP_CTX&&APP_CTX.config){
+    _$("sScoreWrap").style.display="";
+    var scoreResult=_calcScore(APP_CTX.config,mx,cur);
+    _$("sScore").textContent=String(scoreResult.totalScore);
+  }else{
+    _$("sScoreWrap").style.display="none";
+  }
+}
+
+/* Unified scoring engine for group challenges */
+function _calcScore(config,maxDays,curDay){
+  var sc=config.scoring||{taskPoints:10,completionBonus:50};
+  var ml=config.milestones||{weekly:100,habit21:500,halfway:750,homeStretch:1000,complete:5000};
+  var gc=config.dailyGoals||{};
+  // Count expected tasks
+  var expectedTasks=0;
+  var wk=gc.workouts||2;expectedTasks+=wk;
+  if(gc.diet!==false)expectedTasks++;
+  expectedTasks++; // water
+  expectedTasks++; // read
+  if(gc.photo!==false)expectedTasks++;
+
+  var halfDay=Math.ceil(maxDays/2);
+  var homeDay=Math.round(maxDays*0.8);
+  var totalScore=0,cStreak=0,cDone=0,dayData={};
+  for(var d=1;d<=Math.min(curDay,maxDays);d++){
+    var dd=APP_DATA.days[d];var tc=0;
+    if(dd&&dd.tasks){for(var k in dd.tasks){if(dd.tasks[k])tc++;}}
+    var allDone=tc>=expectedTasks;
+    var dayScore=tc*sc.taskPoints;
+    if(allDone){
+      dayScore+=sc.completionBonus;
+      cStreak++;cDone++;
+      // ── MILESTONE BONUSES ──
+      if(cStreak>0&&cStreak%7===0)dayScore+=(ml.weekly||100);
+      if(cStreak===21)dayScore+=(ml.habit21||500);
+      if(d===halfDay)dayScore+=(ml.halfway||750);
+      if(d===homeDay&&homeDay!==halfDay)dayScore+=(ml.homeStretch||1000);
+      if(d===maxDays)dayScore+=(ml.complete||5000);
+    }else{
+      cStreak=0;
+    }
+    totalScore+=dayScore;
+    dayData[String(d)]={tasksCompleted:tc,allTasksDone:allDone,score:dayScore};
+  }
+  return{totalScore:totalScore,currentStreak:cStreak,completedDays:cDone,dayData:dayData};
 }
 
 /* Grid colors */
@@ -1047,7 +1321,10 @@ function _colorGrid(){
 /* Render tasks */
 function _renderTasks(d){
   var l=_$("tList");l.innerHTML="";var dn=0;
-  for(var i=0;i<TASKS_DB.length;i++){
+  var tasks=_getActiveTasks();
+  var waterGoal=(APP_CTX&&APP_CTX.config)?APP_CTX.config.dailyGoals.waterOz||128:128;
+  var totalTasks=tasks.length;
+  for(var i=0;i<tasks.length;i++){
     (function(t){
       var ck=!!(APP_DATA.days[d]&&APP_DATA.days[d].tasks[t.id]);
       if(ck)dn++;
@@ -1060,16 +1337,18 @@ function _renderTasks(d){
 
       // Water tracker inline
       if(t.id==="water"){
+        var wGoal=(APP_CTX&&APP_CTX.config)?APP_CTX.config.dailyGoals.waterOz||128:128;
+        var wGlasses=Math.ceil(wGoal/16);
         var wOz=APP_DATA.days[d]?APP_DATA.days[d].waterOz||0:0;
         var wMode=APP_DATA.waterMode||"oz";
-        var wPct=Math.min(100,(wOz/128)*100);
+        var wPct=Math.min(100,(wOz/wGoal)*100);
         var glasses=Math.floor(wOz/16);
         html+='<div class="water-inline">';
         if(wMode==="oz"){
           html+='<input class="water-input" type="number" inputmode="numeric" min="0" max="256" value="'+wOz+'" id="waterOz">';
-          html+='<span class="water-label">oz / 128</span>';
+          html+='<span class="water-label">oz / '+wGoal+'</span>';
         }else{
-          html+='<span class="water-label" style="font-weight:700;color:var(--water);font-size:.88rem">'+glasses+' / 8 glasses</span>';
+          html+='<span class="water-label" style="font-weight:700;color:var(--water);font-size:.88rem">'+glasses+' / '+wGlasses+' glasses</span>';
         }
         html+='<div class="water-mode-toggle">';
         html+='<button class="water-mode-btn'+(wMode==="oz"?" active":"")+'" data-wm="oz">oz</button>';
@@ -1078,7 +1357,7 @@ function _renderTasks(d){
         html+='</div>';
         if(wMode==="glasses"){
           html+='<div class="water-glasses" id="waterGlasses">';
-          for(var gi=0;gi<8;gi++){
+          for(var gi=0;gi<wGlasses;gi++){
             html+='<button class="water-glass'+(gi<glasses?" filled":"")+'" data-gi="'+gi+'">'+(gi<glasses?"\ud83d\udca7":"\u2b55")+'</button>';
           }
           html+='</div>';
@@ -1114,11 +1393,11 @@ function _renderTasks(d){
               _ensD(d);APP_DATA.days[d].waterOz=oz;
               var bar=_$("waterBar");
               if(bar){
-                var p=Math.min(100,(oz/128)*100);
+                var p=Math.min(100,(oz/wGoal)*100);
                 bar.style.width=p+"%";
-                bar.className="water-bar-fill"+(oz>=128?" done":"");
+                bar.className="water-bar-fill"+(oz>=wGoal?" done":"");
               }
-              if(oz>=128&&!APP_DATA.days[d].tasks.water){
+              if(oz>=wGoal&&!APP_DATA.days[d].tasks.water){
                 APP_DATA.days[d].tasks.water=true;
                 _save();_renderTasks(d);_colorGrid();_updateStats();_checkComplete(d);
               }else{_save();}
@@ -1139,9 +1418,9 @@ function _renderTasks(d){
                   APP_DATA.days[d].waterOz=(idx+1)*16;
                 }
                 var oz2=APP_DATA.days[d].waterOz;
-                if(oz2>=128&&!APP_DATA.days[d].tasks.water){
+                if(oz2>=wGoal&&!APP_DATA.days[d].tasks.water){
                   APP_DATA.days[d].tasks.water=true;
-                }else if(oz2<128&&APP_DATA.days[d].tasks.water){
+                }else if(oz2<wGoal&&APP_DATA.days[d].tasks.water){
                   APP_DATA.days[d].tasks.water=false;
                 }
                 _save();_renderTasks(d);_colorGrid();_updateStats();_checkComplete(d);
@@ -1162,17 +1441,18 @@ function _renderTasks(d){
         });
       }
       l.appendChild(row);
-    })(TASKS_DB[i]);
+    })(tasks[i]);
   }
-  _$("tBg").textContent=dn+"/"+TASKS_DB.length;
+  _$("tBg").textContent=dn+"/"+totalTasks;
   _updateDayBadge(d);
 }
 
 function _updateDayBadge(d){
   var badge=_$("dayBadge");
   var n=_countTasksDone(d);
-  if(n===TASKS_DB.length){badge.className="day-badge complete";badge.textContent="COMPLETE";}
-  else if(n>0){badge.className="day-badge in-progress";badge.textContent=n+"/"+TASKS_DB.length;}
+  var total=_getActiveTasks().length;
+  if(n===total){badge.className="day-badge complete";badge.textContent="COMPLETE";}
+  else if(n>0){badge.className="day-badge in-progress";badge.textContent=n+"/"+total;}
   else{badge.className="day-badge not-started";badge.textContent="NOT STARTED";}
 }
 
@@ -1204,6 +1484,18 @@ function _checkComplete(d){
     ov.classList.remove("active");void ov.offsetWidth;ov.classList.add("active");
     setTimeout(function(){ov.classList.remove("active");},2500);
   }
+  // Sync to Firebase (debounced)
+  clearTimeout(_checkComplete._t);
+  _checkComplete._t=setTimeout(function(){
+    if(APP_CTX&&APP_CTX.gid){
+      // In group challenge context — sync to that group
+      if(typeof _syncSingleGroup==="function")_syncSingleGroup(APP_CTX.gid);
+    }else{
+      // Personal context
+      if(typeof _syncPublicProfile==="function")_syncPublicProfile();
+      if(typeof _syncToGroups==="function")_syncToGroups();
+    }
+  },2000);
 }
 
 /* Render calories */
@@ -1251,9 +1543,13 @@ function _renderCals(d){
 /* Select a day */
 function _selectDay(d){
   APP_DAY=d;_ensD(d);_colorGrid();
-  // Show all day panels
+  // Show day panels, but conditionally hide photo if disabled in group config
   var panels=["dayHdr","dayQuote","taskSec","calSec","photoSec","notesSec"];
   for(var i=0;i<panels.length;i++){_$(panels[i]).classList.remove("hide");}
+  // Hide photo section if photo task is disabled
+  if(APP_CTX&&APP_CTX.config&&APP_CTX.config.dailyGoals&&APP_CTX.config.dailyGoals.photo===false){
+    _$("photoSec").classList.add("hide");
+  }
 
   _$("dayTitle").textContent="Day "+d;
   _$("dayDate").textContent=_getDayDate(d);
@@ -1341,8 +1637,17 @@ function _compress(file,cb){
 function _renderPhoto(d){
   var pv=_$("phP"),dl=_$("phD"),cb2=_$("cpB"),tb=_$("tlB");
   _getPh(d,function(rec){
-    if(rec&&rec.blob){pv.src=URL.createObjectURL(rec.blob);pv.className="phi show";dl.className="phd show";}
+    var hasPhoto=!!(rec&&rec.blob);
+    if(hasPhoto){pv.src=URL.createObjectURL(rec.blob);pv.className="phi show";dl.className="phd show";}
     else{pv.className="phi";pv.src="";dl.className="phd";}
+    // Sync photo task checkbox with actual photo state
+    _ensD(d);
+    var wasChecked=!!APP_DATA.days[d].tasks.photo;
+    if(hasPhoto&&!wasChecked){
+      APP_DATA.days[d].tasks.photo=true;_save();_renderTasks(d);_colorGrid();_updateStats();
+    }else if(!hasPhoto&&wasChecked){
+      APP_DATA.days[d].tasks.photo=false;_save();_renderTasks(d);_colorGrid();_updateStats();
+    }
   });
   _allPhDays(function(days){
     cb2.className=days.length>=2?"cpb show":"cpb";
@@ -1693,55 +1998,112 @@ try{
     _toast("Reset");
   });
 
-  /* ── AUTH ── */
-  function _getUsers(){
-    try{var u=localStorage.getItem(APP_UKEY);return u?JSON.parse(u):{};}catch(e){return {};}
-  }
-  function _saveUsers(u){
-    try{localStorage.setItem(APP_UKEY,JSON.stringify(u));}catch(e){}
-  }
+  /* ── AUTH (Firebase) ── */
+  var AVATAR_ICONS=["\ud83e\udd81","\ud83d\udc3b","\ud83e\udd8a","\ud83d\udc3a","\ud83e\udd85","\ud83e\udd89","\ud83d\udc22","\ud83d\udc2c","\ud83d\udc19","\ud83e\udd8b","\ud83d\udc1d","\ud83e\udda5","\ud83e\udd96","\ud83e\udd84","\ud83d\udc32","\ud83c\udf1f","\u26a1","\ud83d\udd25","\ud83c\udf3f","\ud83c\udf35","\ud83c\udf38","\ud83c\udf1e","\ud83c\udf19","\u2744\ufe0f","\ud83c\udfaf","\ud83c\udfc6","\ud83d\ude80","\u2708\ufe0f","\ud83c\udfb8","\ud83c\udfa8","\ud83e\udde9","\ud83c\udfb2","\ud83d\udc8e","\ud83d\udd2e","\u2764\ufe0f","\ud83e\udde1","\ud83d\udc9c","\ud83d\udc9a","\ud83d\udc99","\ud83e\udd0d"];
+  var _regMode=false;
+
+  // Build icon grid
+  (function(){
+    var g=_$("iconGrid");g.innerHTML="";
+    for(var i=0;i<AVATAR_ICONS.length;i++){
+      (function(ic,idx){
+        var b=document.createElement("button");b.className="icon-opt"+(idx===0?" sel":"");b.textContent=ic;b.type="button";
+        b.addEventListener("click",function(e){
+          e.preventDefault();
+          g.querySelectorAll(".icon-opt").forEach(function(x){x.classList.remove("sel");});
+          b.classList.add("sel");_$("lIcon").value=ic;
+        });
+        g.appendChild(b);
+      })(AVATAR_ICONS[i],i);
+    }
+    _$("lIcon").value=AVATAR_ICONS[0];
+  })();
+
+  _$("showRegFields").addEventListener("click",function(){
+    _regMode=!_regMode;
+    _$("lUserReg").style.display=_regMode?"":"none";
+    _$("iconPickWrap").style.display=_regMode?"":"none";
+    _$("lUser").placeholder=_regMode?"Email":"Email";
+    this.textContent=_regMode?"Already have an account? Login":"New here? Show register fields";
+  });
 
   function _showLogin(){
     _$("loginScreen").className="login-screen";
     _$("appPage").className="page hide";
-    _$("lUser").value="";_$("lPass").value="";_$("lErr").textContent="";
+    _$("lUser").value="";_$("lPass").value="";_$("lUserReg").value="";_$("lErr").textContent="";
+    _regMode=false;_$("lUserReg").style.display="none";_$("iconPickWrap").style.display="none";
+    _$("showRegFields").textContent="New here? Show register fields";
   }
 
-  function _showApp(username){
-    APP_USER=username;
-    APP_SKEY="75hard_u_"+username;
+  function _showApp(uid,username,icon){
+    FB_UID=uid;APP_USER=username;
+    APP_SKEY="75hard_u_"+uid;
     _pDB=null;
     _$("loginScreen").className="login-screen hide";
     _$("appPage").className="page";
-    _$("uName").textContent=username;
-    sessionStorage.setItem("75hard_session",username);
+    _$("uName").textContent=(icon||"")+' '+username;
     _initApp();
+    _syncPublicProfile();
   }
 
   _$("loginBtn").addEventListener("click",function(){
-    var u=_$("lUser").value.trim().toLowerCase();
+    var email=_$("lUser").value.trim();
     var p=_$("lPass").value;
-    if(!u||!p){_$("lErr").textContent="Enter username and password.";return;}
-    var users=_getUsers();
-    if(!users[u]){_$("lErr").textContent="User not found. Register first.";return;}
-    if(users[u].password!==p){_$("lErr").textContent="Wrong password.";return;}
-    _showApp(u);
+    if(!email||!p){_$("lErr").textContent="Enter email and password.";return;}
+    if(email.indexOf("@")===-1){_$("lErr").textContent="Please enter your email address.";return;}
+    _$("lErr").textContent="Signing in...";
+    FB_AUTH.signInWithEmailAndPassword(email,p).then(function(cred){
+      return FB_DB.collection("users").doc(cred.user.uid).get();
+    }).then(function(doc){
+      if(doc.exists){
+        var d=doc.data();_showApp(doc.id,d.username,d.icon);
+      }else{_$("lErr").textContent="Account found but profile missing. Re-register.";}
+    }).catch(function(err){
+      _$("lErr").textContent=err.message.replace("Firebase: ","").replace(/ \(auth\/.*\)/,"");
+    });
   });
 
   _$("regBtn").addEventListener("click",function(){
-    var u=_$("lUser").value.trim().toLowerCase();
+    if(!_regMode){_$("showRegFields").click();return;}
+    var u=_$("lUserReg").value.trim().toLowerCase();
+    var email=_$("lUser").value.trim();
     var p=_$("lPass").value;
-    if(!u||!p){_$("lErr").textContent="Enter username and password.";return;}
+    var icon=_$("lIcon").value||AVATAR_ICONS[0];
+    if(!u||!email||!p){_$("lErr").textContent="Fill all fields.";return;}
     if(u.length<2){_$("lErr").textContent="Username must be 2+ characters.";return;}
-    if(p.length<3){_$("lErr").textContent="Password must be 3+ characters.";return;}
-    var users=_getUsers();
-    if(users[u]){_$("lErr").textContent="Username taken. Try another.";return;}
-    users[u]={password:p};_saveUsers(users);_showApp(u);
+    if(p.length<6){_$("lErr").textContent="Password must be 6+ characters.";return;}
+    if(email.indexOf("@")===-1){_$("lErr").textContent="Enter a valid email.";return;}
+    _$("lErr").textContent="Creating account...";
+    // Create auth user first, then write Firestore doc (user is now authenticated)
+    FB_AUTH.createUserWithEmailAndPassword(email,p).then(function(cred){
+      // Now authenticated — check username uniqueness
+      return FB_DB.collection("users").where("username","==",u).limit(1).get().then(function(snap){
+        if(!snap.empty){
+          // Username taken — delete the auth user we just created
+          cred.user.delete();
+          _$("lErr").textContent="Username taken. Try another.";
+          return Promise.reject("taken");
+        }
+        return FB_DB.collection("users").doc(cred.user.uid).set({
+          username:u,email:email,icon:icon,
+          createdAt:firebase.firestore.FieldValue.serverTimestamp(),
+          challengeStartDate:null,
+          profilePublic:{completedDays:0,currentStreak:0,bestStreak:0,totalDaysTracked:0,completionRate:0},
+          groups:[]
+        }).then(function(){
+          // Write public username→email mapping for login-by-username
+          return FB_DB.collection("usernames").doc(u).set({email:email});
+        }).then(function(){_showApp(cred.user.uid,u,icon);});
+      });
+    }).catch(function(err){
+      if(err==="taken")return;
+      _$("lErr").textContent=typeof err==="string"?err:(err.message||"Error").replace("Firebase: ","").replace(/ \(auth\/.*\)/,"");
+    });
   });
 
   _$("logoutBtn").addEventListener("click",function(){
-    sessionStorage.removeItem("75hard_session");
-    APP_USER=null;APP_DATA={goal:2000,startDate:null,customFoods:[],days:{}};
+    FB_AUTH.signOut();
+    FB_UID=null;APP_USER=null;APP_DATA={goal:2000,startDate:null,customFoods:[],days:{}};
     APP_DAY=null;_pDB=null;
     _hideDayPanels();
     _$("startSec").classList.remove("hide");
@@ -1766,6 +2128,7 @@ try{
     _$("heroSec").classList.remove("hide");
     _$("mapSec").classList.remove("hide");
     _$("remindSec").classList.remove("hide");
+    _$("mapTitle").textContent=_maxDays()+" DAY MAP";
     _initReminders();
   }
 
@@ -1795,8 +2158,8 @@ try{
 
   /* ── Build Grid ── */
   function _buildGrid(){
-    var g=_$("grid");g.innerHTML="";
-    for(var i=1;i<=75;i++){
+    var g=_$("grid");g.innerHTML="";var mx=_maxDays();
+    for(var i=1;i<=mx;i++){
       var b=document.createElement("button");
       b.className="dbtn";b.setAttribute("data-day",i);b.textContent=i;
       g.appendChild(b);
@@ -1811,8 +2174,20 @@ try{
     if(APP_DATA.startDate){
       _showChallenge();
       _colorGrid();_updateStats();
-      var cur=_getCurrentDay()||1;
-      _selectDay(cur);
+      var cur=_getCurrentDay();
+      if(cur===0){
+        // Challenge hasn't started yet — show countdown
+        _hideDayPanels();
+        var s=new Date(APP_DATA.startDate+"T00:00:00");
+        var today=new Date();today=new Date(today.getFullYear(),today.getMonth(),today.getDate());
+        var daysUntil=Math.ceil((s-today)/86400000);
+        _$("dayHdr").classList.remove("hide");
+        _$("dayTitle").textContent="Starts in "+daysUntil+" day"+(daysUntil===1?"":"s");
+        _$("dayDate").textContent=_getDayDate(1);
+        _$("dayBadge").className="day-badge not-started";_$("dayBadge").textContent="UPCOMING";
+      }else{
+        _selectDay(cur);
+      }
     }else{
       _showStartScreen();
     }
@@ -2416,13 +2791,712 @@ try{
     catch(e){}
   }
 
-  /* ── AUTO-LOGIN CHECK ── */
-  var _sess=sessionStorage.getItem("75hard_session");
-  if(_sess){
-    var _users=_getUsers();
-    if(_users[_sess]){_showApp(_sess);}
-    else{sessionStorage.removeItem("75hard_session");_showLogin();}
-  }else{_showLogin();}
+  /* ── CHALLENGE CONTEXT SWITCHING ── */
+  _$("grpTrack").addEventListener("click",function(){
+    if(!_curGrpId||!_curGrpData)return;
+    _enterChallengeCtx(_curGrpId,_curGrpData);
+  });
+
+  _$("backToPersonal").addEventListener("click",function(){
+    _exitChallengeCtx();
+  });
+
+  function _enterChallengeCtx(gid,gData){
+    // Save personal context
+    APP_CTX_BACKUP={skey:APP_SKEY,data:JSON.parse(JSON.stringify(APP_DATA)),day:APP_DAY};
+    // Set group challenge context
+    APP_CTX={gid:gid,config:gData.config,name:gData.name};
+    APP_SKEY="75hard_gc_"+gid+"_"+FB_UID;
+    APP_DAY=null;
+    // Close overlays
+    _$("grpOverlay").className="grp-overlay";
+    _$("commOverlay").className="comm-overlay";
+    // Update UI
+    _$("ctxLabel").style.display="";
+    _$("ctxLabel").textContent="— "+gData.name;
+    _$("backToPersonal").style.display="";
+    // Set startDate from group config if not already set in local data
+    _load();
+    if(!APP_DATA.startDate&&gData.config.startDate){
+      APP_DATA.startDate=gData.config.startDate;
+      _save();
+    }
+    // Override goal days in grid builder
+    _initApp();
+  }
+
+  function _exitChallengeCtx(){
+    if(!APP_CTX_BACKUP)return;
+    // Sync scores before leaving
+    if(APP_CTX&&APP_CTX.gid){
+      _syncSingleGroup(APP_CTX.gid);
+    }
+    // Restore personal context
+    APP_SKEY=APP_CTX_BACKUP.skey;
+    APP_DATA=APP_CTX_BACKUP.data;
+    APP_DAY=APP_CTX_BACKUP.day;
+    APP_CTX=null;APP_CTX_BACKUP=null;
+    // Update UI
+    _$("ctxLabel").style.display="none";
+    _$("backToPersonal").style.display="none";
+    _initApp();
+  }
+
+  function _syncSingleGroup(gid){
+    if(!FB_UID)return;
+    FB_DB.collection("groups").doc(gid).get().then(function(gDoc){
+      if(!gDoc.exists)return;
+      var gd=gDoc.data();
+      var cur=_getCurrentDay()||0;
+      if(cur<1)return;
+      var result=_calcScore(gd.config,gd.config.days,cur);
+      FB_DB.collection("groups").doc(gid).collection("members").doc(FB_UID).update({
+        score:result.totalScore,currentStreak:result.currentStreak,completedDays:result.completedDays,lastSyncDay:cur,dayData:result.dayData
+      }).catch(function(){});
+    });
+  }
+
+  /* ── PROFILE SYNC ── */
+  function _syncPublicProfile(){
+    if(!FB_UID)return;
+    var done=0,streak=0,brk=false,total=0;
+    for(var i=1;i<=75;i++){
+      if(APP_DATA.days[i]){
+        total++;
+        var ic=true;
+        for(var j=0;j<TASKS_DB.length;j++){if(!APP_DATA.days[i].tasks||!APP_DATA.days[i].tasks[TASKS_DB[j].id])ic=false;}
+        if(ic){done++;if(!brk)streak++;}else{brk=true;}
+      }
+    }
+    var pub={completedDays:done,currentStreak:streak,bestStreak:streak,totalDaysTracked:total,completionRate:total>0?Math.round(done/total*100):0};
+    FB_DB.collection("users").doc(FB_UID).update({profilePublic:pub,challengeStartDate:APP_DATA.startDate||null}).catch(function(){});
+  }
+
+  /* ── COMMUNITY ── */
+  _$("commBtn").addEventListener("click",function(){_$("commOverlay").className="comm-overlay show";_loadFriends();_loadPendingReqs();_loadMyGroups();});
+  _$("commClose").addEventListener("click",function(){_$("commOverlay").className="comm-overlay";});
+
+  // Tab switching
+  _$("ctFriends").addEventListener("click",function(){_switchCommTab("friends");});
+  _$("ctGroups").addEventListener("click",function(){_switchCommTab("groups");});
+  function _switchCommTab(tab){
+    document.querySelectorAll(".comm-tab").forEach(function(t){t.classList.remove("active");});
+    document.querySelectorAll(".comm-panel").forEach(function(p){p.classList.remove("active");});
+    _$(tab==="friends"?"ctFriends":"ctGroups").classList.add("active");
+    _$(tab==="friends"?"panFriends":"panGroups").classList.add("active");
+    if(tab==="groups")_loadMyGroups();
+  }
+
+  // ── USER SEARCH ──
+  var _searchTm=null;
+  _$("userSearch").addEventListener("input",function(){
+    clearTimeout(_searchTm);var q=this.value.trim().toLowerCase();
+    if(q.length<2){_$("userSearchRes").innerHTML="";return;}
+    _searchTm=setTimeout(function(){
+      FB_DB.collection("users").where("username",">=",q).where("username","<=",q+"\uf8ff").limit(10).get().then(function(snap){
+        var el=_$("userSearchRes");el.innerHTML="";
+        snap.forEach(function(doc){
+          if(doc.id===FB_UID)return;
+          var d=doc.data();var uid=doc.id;
+          var row=document.createElement("div");row.className="comm-user-row";
+          row.innerHTML='<span class="cu-icon">'+d.icon+'</span><div class="cu-info"><div class="cu-name" style="cursor:pointer;text-decoration:underline;text-decoration-color:var(--border)">'+d.username+'</div></div>';
+          // Click username → open profile
+          row.querySelector(".cu-name").addEventListener("click",function(){_viewUserProfile(uid);});
+          var btn=document.createElement("button");btn.className="cu-btn add";btn.textContent="Add";
+          btn.addEventListener("click",function(e){e.stopPropagation();_sendFriendReq(doc.id,d.username,d.icon);btn.textContent="Sent";btn.className="cu-btn pending";btn.disabled=true;});
+          row.appendChild(btn);el.appendChild(row);
+        });
+        if(el.innerHTML==="")el.innerHTML='<div class="comm-empty">No users found</div>';
+      });
+    },400);
+  });
+
+  // ── FRIEND REQUESTS ──
+  function _sendFriendReq(toUid,toName,toIcon){
+    if(!FB_UID)return;
+    FB_DB.collection("users").doc(FB_UID).get().then(function(me){
+      var md=me.data();
+      return FB_DB.collection("friendRequests").add({
+        from:FB_UID,to:toUid,
+        fromName:md.username,fromIcon:md.icon,
+        toName:toName,toIcon:toIcon,
+        status:"pending",
+        createdAt:firebase.firestore.FieldValue.serverTimestamp()
+      });
+    }).then(function(){_toast("Request sent!");});
+  }
+
+  function _loadPendingReqs(){
+    if(!FB_UID)return;
+    FB_DB.collection("friendRequests").where("to","==",FB_UID).where("status","==","pending").get().then(function(snap){
+      var el=_$("pendingReqs");el.innerHTML="";
+      _$("pendingReqCard").style.display=snap.empty?"none":"";
+      snap.forEach(function(doc){
+        var d=doc.data();
+        var row=document.createElement("div");row.className="comm-user-row";
+        row.innerHTML='<span class="cu-icon">'+d.fromIcon+'</span><div class="cu-info"><div class="cu-name">'+d.fromName+'</div><div class="cu-sub">Wants to be your friend</div></div>';
+        var accBtn=document.createElement("button");accBtn.className="cu-btn accept";accBtn.textContent="Accept";
+        var decBtn=document.createElement("button");decBtn.className="cu-btn decline";decBtn.textContent="Decline";
+        accBtn.addEventListener("click",function(){_acceptFriendReq(doc.id,d);row.remove();});
+        decBtn.addEventListener("click",function(){doc.ref.delete();row.remove();_toast("Declined");});
+        row.appendChild(accBtn);row.appendChild(decBtn);el.appendChild(row);
+      });
+    });
+  }
+
+  function _acceptFriendReq(reqId,data){
+    var batch=FB_DB.batch();
+    batch.update(FB_DB.collection("friendRequests").doc(reqId),{status:"accepted"});
+    // Add to both users' friends subcollection
+    FB_DB.collection("users").doc(FB_UID).get().then(function(me){
+      var md=me.data();
+      batch.set(FB_DB.collection("users").doc(FB_UID).collection("friends").doc(data.from),{
+        username:data.fromName,icon:data.fromIcon,addedAt:firebase.firestore.FieldValue.serverTimestamp()
+      });
+      batch.set(FB_DB.collection("users").doc(data.from).collection("friends").doc(FB_UID),{
+        username:md.username,icon:md.icon,addedAt:firebase.firestore.FieldValue.serverTimestamp()
+      });
+      return batch.commit();
+    }).then(function(){_toast("Friend added!");_loadFriends();_loadPendingReqs();});
+  }
+
+  function _loadFriends(){
+    if(!FB_UID)return;
+    FB_DB.collection("users").doc(FB_UID).collection("friends").get().then(function(snap){
+      var el=_$("friendList");el.innerHTML="";
+      if(snap.empty){el.innerHTML='<div class="comm-empty">No friends yet. Search above!</div>';return;}
+      snap.forEach(function(doc){
+        var d=doc.data();var fid=doc.id;
+        var row=document.createElement("div");row.className="comm-user-row";
+        row.innerHTML='<span class="cu-icon">'+d.icon+'</span><div class="cu-info"><div class="cu-name">'+d.username+'</div></div>';
+        var viewBtn=document.createElement("button");viewBtn.className="cu-btn view";viewBtn.textContent="View";
+        viewBtn.addEventListener("click",function(){_viewUserProfile(fid);});
+        var rmBtn=document.createElement("button");rmBtn.className="cu-btn remove";rmBtn.textContent="Remove";
+        rmBtn.addEventListener("click",function(){if(!confirm("Remove "+d.username+"?"))return;_removeFriend(fid);row.remove();});
+        row.appendChild(viewBtn);row.appendChild(rmBtn);el.appendChild(row);
+      });
+    });
+  }
+
+  function _removeFriend(fid){
+    FB_DB.collection("users").doc(FB_UID).collection("friends").doc(fid).delete();
+    FB_DB.collection("users").doc(fid).collection("friends").doc(FB_UID).delete();
+    _toast("Removed");
+  }
+
+  function _viewUserProfile(uid){
+    if(uid===FB_UID)return; // Don't open own profile
+    // Check if this user is a friend
+    FB_DB.collection("users").doc(FB_UID).collection("friends").doc(uid).get().then(function(friendDoc){
+      var isFriend=friendDoc.exists;
+      return FB_DB.collection("users").doc(uid).get().then(function(doc){
+        if(!doc.exists)return;var d=doc.data();var p=d.profilePublic||{};
+        _$("mTt").textContent="";
+        var pct=p.completionRate||0;
+        var h='';
+        // Gradient header
+        h+='<div style="background:linear-gradient(135deg,rgba(108,92,231,.2),rgba(0,230,118,.1));border-radius:16px;padding:1.5rem 1rem;text-align:center;margin-bottom:1rem">';
+        h+='<div style="font-size:4rem;margin-bottom:.3rem">'+d.icon+'</div>';
+        h+='<div style="font-size:1.3rem;font-weight:800">'+d.username+'</div>';
+        if(d.challengeStartDate)h+='<div style="font-size:.72rem;color:var(--dim);margin-top:.3rem">Challenged since '+d.challengeStartDate+'</div>';
+        h+='</div>';
+
+        if(isFriend){
+          // ── FRIEND VIEW: full stats ──
+          var r=45,circ=2*Math.PI*r,off=circ-(pct/100)*circ;
+          h+='<div style="text-align:center;margin-bottom:1rem"><svg width="110" height="110" viewBox="0 0 110 110" style="-webkit-transform:rotate(-90deg);transform:rotate(-90deg)">';
+          h+='<circle cx="55" cy="55" r="'+r+'" fill="none" stroke="var(--border)" stroke-width="8"/>';
+          h+='<circle cx="55" cy="55" r="'+r+'" fill="none" stroke="url(#fpGrad)" stroke-width="8" stroke-linecap="round" stroke-dasharray="'+circ.toFixed(1)+'" stroke-dashoffset="'+off.toFixed(1)+'"/>';
+          h+='<defs><linearGradient id="fpGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#6c5ce7"/><stop offset="100%" stop-color="#00e676"/></linearGradient></defs>';
+          h+='</svg>';
+          h+='<div style="margin-top:-70px;font-size:1.5rem;font-weight:800;position:relative">'+pct+'%</div>';
+          h+='<div style="font-size:.68rem;color:var(--dim);position:relative;margin-top:2px">Completion</div>';
+          h+='</div>';
+          h+='<div class="ana-metric" style="margin-bottom:1rem">';
+          h+='<div class="ana-stat good"><div class="av">'+(p.completedDays||0)+'</div><div class="al">Days Done</div></div>';
+          h+='<div class="ana-stat info"><div class="av">'+(p.totalDaysTracked||0)+'</div><div class="al">Days Tracked</div></div>';
+          h+='<div class="ana-stat '+(p.currentStreak>=5?"good":"warn")+'"><div class="av">\ud83d\udd25 '+(p.currentStreak||0)+'</div><div class="al">Current Streak</div></div>';
+          h+='<div class="ana-stat info"><div class="av">'+(p.bestStreak||0)+'</div><div class="al">Best Streak</div></div>';
+          h+='</div>';
+          // Remove friend button
+          h+='<div style="text-align:center;margin-bottom:.5rem"><button class="cu-btn remove" id="fpRemove" style="padding:8px 20px">Remove Friend</button></div>';
+        }else{
+          // ── NON-FRIEND VIEW: limited info + add friend ──
+          h+='<div style="text-align:center;color:var(--dim);font-size:.82rem;margin-bottom:1rem">Add as a friend to see detailed stats</div>';
+          h+='<div style="text-align:center"><button class="cu-btn add" id="fpAddFriend" style="padding:10px 28px;font-size:.88rem">+ Add Friend</button></div>';
+        }
+
+        _$("mCt").innerHTML=h;
+
+        // Wire action buttons
+        if(isFriend){
+          var rmBtn=document.getElementById("fpRemove");
+          if(rmBtn)rmBtn.addEventListener("click",function(){
+            if(!confirm("Remove "+d.username+" as friend?"))return;
+            _removeFriend(uid);
+            _$("modal").className="modal";
+            _toast("Removed");
+          });
+        }else{
+          var addBtn=document.getElementById("fpAddFriend");
+          if(addBtn)addBtn.addEventListener("click",function(){
+            _sendFriendReq(uid,d.username,d.icon);
+            addBtn.textContent="Request Sent";addBtn.className="cu-btn pending";addBtn.disabled=true;
+          });
+        }
+
+        // Load challenge participation (visible to both friends and non-friends)
+        var groups=d.groups||[];
+        if(groups.length>0&&isFriend){
+          var gcH='<div style="margin-top:1rem"><div style="font-size:.82rem;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.5rem">\ud83c\udfc6 Active Challenges</div>';
+          var loaded=0;
+          groups.forEach(function(gid){
+            FB_DB.collection("groups").doc(gid).get().then(function(gDoc){
+              loaded++;
+              if(gDoc.exists){
+                var gd=gDoc.data();
+                FB_DB.collection("groups").doc(gid).collection("members").doc(uid).get().then(function(mDoc){
+                  var md=mDoc.exists?mDoc.data():{};
+                  gcH+='<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:.7rem;margin-bottom:.4rem">';
+                  gcH+='<div style="font-weight:700;font-size:.88rem">'+gd.name+'</div>';
+                  gcH+='<div style="font-size:.72rem;color:var(--dim);margin-top:.2rem">Score: <b style="color:var(--green)">'+(md.score||0)+'</b> &bull; Streak: <b>'+(md.currentStreak||0)+'</b> &bull; Days: <b>'+(md.completedDays||0)+'</b></div>';
+                  gcH+='</div>';
+                  if(loaded>=groups.length){gcH+='</div>';_$("mCt").innerHTML+=gcH;}
+                });
+              }else if(loaded>=groups.length){gcH+='</div>';_$("mCt").innerHTML+=gcH;}
+            });
+          });
+        }
+        _$("modal").className="modal show";
+      });
+    });
+  }
+
+  // ── GROUPS ──
+  function _loadMyGroups(){
+    if(!FB_UID)return;
+    var el=_$("myGroups");
+    el.innerHTML='<div class="comm-empty" style="color:var(--accent)">Loading...</div>';
+    FB_DB.collection("groups").where("memberUids","array-contains",FB_UID).get().then(function(snap){
+      el.innerHTML="";
+      if(snap.empty){el.innerHTML='<div class="comm-empty">No challenges yet. Create or join one!</div>';return;}
+      snap.forEach(function(doc){
+        var d=doc.data();
+        var card=document.createElement("div");card.className="grp-card";
+        card.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center"><span class="grp-name">'+d.name+'</span><span class="grp-badge '+(d.status||"active")+'">'+(d.status||"active")+'</span></div><div class="grp-desc">'+d.description+'</div><div class="grp-meta"><span>&#128101; <b>'+(d.memberUids||[]).length+'</b></span><span>'+d.config.days+' days</span></div>';
+        card.addEventListener("click",function(){_openGroupDetail(doc.id);});
+        el.appendChild(card);
+      });
+    }).catch(function(err){
+      console.error("loadMyGroups error:",err);
+      el.innerHTML='<div class="comm-empty">Error loading. Close and reopen Community.</div>';
+    });
+  }
+
+  _$("createGrpBtn").addEventListener("click",function(){_showCreateGroup();});
+  _$("joinGrpBtn").addEventListener("click",function(){_showJoinGroup();});
+
+  function _showCreateGroup(){
+    _$("cgTitle").textContent="\ud83c\udfc6 Create Challenge";
+    var h='<div class="pf-card"><h3>\u270f\ufe0f Details</h3>';
+    h+='<div class="pf-field"><label>Challenge Name</label><input class="pf-input" id="cgName" placeholder="e.g. Weekend Warriors" maxlength="40"></div>';
+    h+='<div class="pf-field"><label>Description</label><input class="pf-input" id="cgDesc" placeholder="What\'s this challenge about?" maxlength="200"></div>';
+    h+='<div class="pf-field"><label>Join PIN (4 digits)</label><input class="pf-input" id="cgPin" type="number" inputmode="numeric" placeholder="1234" maxlength="4" style="width:120px"></div>';
+    h+='</div>';
+    h+='<div class="pf-card"><h3>\ud83d\udcc5 Schedule</h3>';
+    h+='<div class="pf-field"><label>\ud83d\udcc6 Start Date</label><input class="pf-input" id="cgStart" type="date"></div>';
+    h+='<div class="pf-field"><label>\u23f3 Duration</label><div class="pf-slider-wrap"><input class="pf-slider" type="range" id="cgDays" min="7" max="75" value="75"><span class="pf-slider-val" id="cgDaysV">75 days</span></div></div>';
+    h+='</div>';
+    h+='<div class="pf-card"><h3>\ud83c\udfaf Daily Goals</h3>';
+    h+='<div class="pf-field"><label>\ud83c\udfcb\ufe0f Workouts per day</label><div class="pf-slider-wrap"><input class="pf-slider" type="range" id="cgWorkouts" min="1" max="3" value="2"><span class="pf-slider-val" id="cgWorkoutsV">2</span></div></div>';
+    h+='<div class="pf-field"><label>\ud83d\udca7 Water target</label><div class="pf-slider-wrap"><input class="pf-slider" type="range" id="cgWater" min="64" max="256" step="8" value="128"><span class="pf-slider-val" id="cgWaterV">128 oz</span></div></div>';
+    h+='<div class="pf-field"><label>\ud83d\udcda Reading pages</label><div class="pf-slider-wrap"><input class="pf-slider" type="range" id="cgRead" min="5" max="50" step="5" value="10"><span class="pf-slider-val" id="cgReadV">10 pages</span></div></div>';
+    // Toggle goals
+    h+='<div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.5rem">';
+    h+='<label style="display:flex;align-items:center;gap:.4rem;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px 12px;font-size:.8rem;cursor:pointer"><input type="checkbox" id="cgDiet" checked style="width:18px;height:18px"> \ud83e\udd57 Diet</label>';
+    h+='<label style="display:flex;align-items:center;gap:.4rem;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px 12px;font-size:.8rem;cursor:pointer"><input type="checkbox" id="cgPhoto" checked style="width:18px;height:18px"> \ud83d\udcf8 Photo</label>';
+    h+='<label style="display:flex;align-items:center;gap:.4rem;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px 12px;font-size:.8rem;cursor:pointer"><input type="checkbox" id="cgOutdoor" checked style="width:18px;height:18px"> \ud83c\udf33 Outdoor</label>';
+    h+='</div>';
+    h+='</div>';
+    h+='<div class="pf-card"><h3>\ud83c\udfc5 Scoring</h3>';
+    h+='<div class="pf-field"><label>Points per task completed</label><div class="pf-slider-wrap"><input class="pf-slider" type="range" id="cgTaskPts" min="5" max="25" step="5" value="10"><span class="pf-slider-val" id="cgTaskPtsV">10 pts</span></div></div>';
+    h+='<div class="pf-field"><label>All-tasks-done daily bonus</label><div class="pf-slider-wrap"><input class="pf-slider" type="range" id="cgCompPts" min="0" max="100" step="10" value="50"><span class="pf-slider-val" id="cgCompPtsV">50 pts</span></div></div>';
+    h+='</div>';
+    h+='<div class="pf-card"><h3>\ud83c\udfc6 Milestone Bonuses</h3>';
+    h+='<div class="pf-field"><label>\u2b50 Weekly perfect streak (every 7 days)</label><div class="pf-slider-wrap"><input class="pf-slider" type="range" id="cgMlWeekly" min="0" max="500" step="50" value="100"><span class="pf-slider-val" id="cgMlWeeklyV">100 pts</span></div></div>';
+    h+='<div class="pf-field"><label>\ud83e\udde0 Habit Builder (21-day streak)</label><div class="pf-slider-wrap"><input class="pf-slider" type="range" id="cgMlHabit" min="0" max="1000" step="50" value="500"><span class="pf-slider-val" id="cgMlHabitV">500 pts</span></div></div>';
+    h+='<div class="pf-field"><label>\ud83c\udfaf Halfway Mark</label><div class="pf-slider-wrap"><input class="pf-slider" type="range" id="cgMlHalf" min="0" max="2000" step="50" value="750"><span class="pf-slider-val" id="cgMlHalfV">750 pts</span></div></div>';
+    h+='<div class="pf-field"><label>\ud83d\ude80 Home Stretch (80%)</label><div class="pf-slider-wrap"><input class="pf-slider" type="range" id="cgMlHome" min="0" max="2000" step="50" value="1000"><span class="pf-slider-val" id="cgMlHomeV">1000 pts</span></div></div>';
+    h+='<div class="pf-field"><label>\ud83c\udfc6 Challenge Complete</label><div class="pf-slider-wrap"><input class="pf-slider" type="range" id="cgMlDone" min="0" max="10000" step="500" value="5000"><span class="pf-slider-val" id="cgMlDoneV">5000 pts</span></div></div>';
+    h+='</div>';
+    h+='<button class="pf-save" id="cgCreate">\ud83d\ude80 Create Challenge</button>';
+    _$("cgContent").innerHTML=h;
+    _$("cgOverlay").className="cg-overlay show";
+    // Wire sliders with units
+    var sliderUnits={cgDays:" days",cgWorkouts:"",cgWater:" oz",cgRead:" pages",cgTaskPts:" pts",cgCompPts:" pts",cgMlWeekly:" pts",cgMlHabit:" pts",cgMlHalf:" pts",cgMlHome:" pts",cgMlDone:" pts"};
+    ["cgDays","cgWorkouts","cgWater","cgRead","cgTaskPts","cgCompPts","cgMlWeekly","cgMlHabit","cgMlHalf","cgMlHome","cgMlDone"].forEach(function(id){
+      _$(id).addEventListener("input",function(){_$(id+"V").textContent=this.value+(sliderUnits[id]||"");});
+    });
+    // Set default start date to tomorrow
+    var tom=new Date();tom.setDate(tom.getDate()+1);
+    _$("cgStart").value=tom.toISOString().split("T")[0];
+
+    _$("cgCreate").addEventListener("click",function(){
+      var name=_$("cgName").value.trim();
+      var desc=_$("cgDesc").value.trim();
+      var pin=_$("cgPin").value.trim();
+      if(!name){_toast("Enter a name");return;}
+      if(!pin||pin.length<4){_toast("Enter 4-digit PIN");return;}
+      _$("cgCreate").textContent="Creating...";_$("cgCreate").disabled=true;
+      var inviteCode=Math.random().toString(36).substr(2,8).toUpperCase();
+      FB_DB.collection("users").doc(FB_UID).get().then(function(me){
+        var md=me.data();
+        var grpRef=FB_DB.collection("groups").doc();
+        var config={
+          days:parseInt(_$("cgDays").value,10),
+          startDate:_$("cgStart").value,
+          dailyGoals:{workouts:parseInt(_$("cgWorkouts").value,10),waterOz:parseInt(_$("cgWater").value,10),readPages:parseInt(_$("cgRead").value,10),diet:_$("cgDiet").checked,photo:_$("cgPhoto").checked,outdoorWorkout:_$("cgOutdoor").checked},
+          scoring:{taskPoints:parseInt(_$("cgTaskPts").value,10),completionBonus:parseInt(_$("cgCompPts").value,10)},
+          milestones:{weekly:parseInt(_$("cgMlWeekly").value,10),habit21:parseInt(_$("cgMlHabit").value,10),halfway:parseInt(_$("cgMlHalf").value,10),homeStretch:parseInt(_$("cgMlHome").value,10),complete:parseInt(_$("cgMlDone").value,10)}
+        };
+        var startD=new Date(_$("cgStart").value+"T00:00:00");
+        var now=new Date();
+        var status=startD>now?"upcoming":"active";
+        return grpRef.set({
+          name:name,description:desc||"",password:pin,inviteCode:inviteCode,
+          owner:FB_UID,ownerName:md.username,ownerIcon:md.icon,
+          status:status,config:config,
+          memberCount:1,memberUids:[FB_UID],
+          createdAt:firebase.firestore.FieldValue.serverTimestamp()
+        }).then(function(){
+          return grpRef.collection("members").doc(FB_UID).set({
+            username:md.username,icon:md.icon,
+            joinedAt:firebase.firestore.FieldValue.serverTimestamp(),
+            score:0,currentStreak:0,completedDays:0,lastSyncDay:0,dayData:{}
+          });
+        }).then(function(){
+          return FB_DB.collection("users").doc(FB_UID).update({groups:firebase.firestore.FieldValue.arrayUnion(grpRef.id)});
+        });
+      }).then(function(){
+        _$("cgOverlay").className="cg-overlay";
+        _toast("Challenge created!");
+        setTimeout(function(){_loadMyGroups();},800);
+      }).catch(function(e){_toast("Error: "+e.message);_$("cgCreate").textContent="Create Challenge";_$("cgCreate").disabled=false;});
+    });
+  }
+
+  function _showJoinGroup(){
+    _$("cgTitle").textContent="Join Challenge";
+    var h='<div class="pf-card"><h3>Join by Name + PIN</h3>';
+    h+='<div class="pf-field"><label>Challenge Name</label><input class="pf-input" id="jgName" placeholder="Exact challenge name"></div>';
+    h+='<div class="pf-field"><label>PIN</label><input class="pf-input" id="jgPin" type="number" inputmode="numeric" placeholder="4-digit PIN"></div>';
+    h+='<button class="pf-save" id="jgJoin" style="margin-top:.5rem">Join</button>';
+    h+='</div>';
+    h+='<div class="pf-card"><h3>Join by Invite Code</h3>';
+    h+='<div class="pf-field"><label>Invite Code</label><input class="pf-input" id="jgCode" placeholder="8-char code" style="text-transform:uppercase"></div>';
+    h+='<button class="pf-save" id="jgJoinCode" style="margin-top:.5rem">Join</button>';
+    h+='</div>';
+    _$("cgContent").innerHTML=h;
+    _$("cgOverlay").className="cg-overlay show";
+
+    _$("jgJoin").addEventListener("click",function(){
+      var name=_$("jgName").value.trim();var pin=_$("jgPin").value.trim();
+      if(!name||!pin){_toast("Enter name and PIN");return;}
+      FB_DB.collection("groups").where("name","==",name).where("password","==",pin).limit(1).get().then(function(snap){
+        if(snap.empty){_toast("Group not found or wrong PIN");return;}
+        _joinGroup(snap.docs[0].id);
+      });
+    });
+    _$("jgJoinCode").addEventListener("click",function(){
+      var code=_$("jgCode").value.trim().toUpperCase();
+      if(!code){_toast("Enter invite code");return;}
+      FB_DB.collection("groups").where("inviteCode","==",code).limit(1).get().then(function(snap){
+        if(snap.empty){_toast("Invalid invite code");return;}
+        _joinGroup(snap.docs[0].id);
+      });
+    });
+  }
+
+  function _joinGroup(gid){
+    if(!FB_UID)return;
+    FB_DB.collection("users").doc(FB_UID).get().then(function(me){
+      var md=me.data();
+      var grpRef=FB_DB.collection("groups").doc(gid);
+      return grpRef.get().then(function(gDoc){
+        var gd=gDoc.data();
+        if(gd.memberUids.indexOf(FB_UID)!==-1){
+          _toast("Already a member!");return Promise.reject("blocked");
+        }
+        // Block joining after challenge has started
+        var startD=new Date(gd.config.startDate+"T00:00:00");
+        if(startD<=new Date()&&(gd.status==="active"||gd.status==="ended")){
+          _toast("This challenge has already started. Can't join.");return Promise.reject("blocked");
+        }
+        var batch=FB_DB.batch();
+        batch.update(grpRef,{memberCount:firebase.firestore.FieldValue.increment(1),memberUids:firebase.firestore.FieldValue.arrayUnion(FB_UID)});
+        batch.set(grpRef.collection("members").doc(FB_UID),{
+          username:md.username,icon:md.icon,
+          joinedAt:firebase.firestore.FieldValue.serverTimestamp(),
+          score:0,currentStreak:0,completedDays:0,lastSyncDay:0,dayData:{}
+        });
+        batch.update(FB_DB.collection("users").doc(FB_UID),{groups:firebase.firestore.FieldValue.arrayUnion(gid)});
+        return batch.commit();
+      });
+    }).then(function(){
+      _$("cgOverlay").className="cg-overlay";
+      _toast("Joined!");
+      setTimeout(function(){_loadMyGroups();},800);
+    }).catch(function(e){
+      if(e==="blocked")return; // already toasted
+      _toast("Error: "+(e.message||e));
+    });
+  }
+
+  // ── GROUP DETAIL ──
+  var _curGrpId=null,_curGrpData=null;
+  function _openGroupDetail(gid){
+    _curGrpId=gid;
+    _$("commOverlay").className="comm-overlay"; // hide community
+    _$("grpOverlay").className="grp-overlay show";
+    FB_DB.collection("groups").doc(gid).get().then(function(doc){
+      if(!doc.exists)return;
+      _curGrpData=doc.data();var d=_curGrpData;
+      _$("grpName").textContent=d.name;
+      _$("grpDesc").textContent=d.description;
+      _$("grpDays").textContent=d.config.days;
+      _$("grpMemCt").textContent=(d.memberUids||[]).length;
+      _$("grpStart").textContent=d.config.startDate;
+      _$("grpStatus").textContent=d.status;_$("grpStatus").className="grp-badge "+(d.status||"active");
+      // Freeze track button if challenge hasn't started
+      var startD=new Date(d.config.startDate+"T00:00:00");
+      var notStarted=startD>new Date();
+      _$("grpTrack").disabled=notStarted;
+      _$("grpTrack").style.opacity=notStarted?".4":"";
+      _$("grpTrack").textContent=notStarted?"\u23f3 Starts "+d.config.startDate:"\ud83c\udfaf Track My Progress";
+      _$("grpPIN").textContent=d.password;
+      _$("grpInvCode").textContent=d.inviteCode;
+      // Goals
+      var gc=d.config.dailyGoals;
+      _$("grpGoals").innerHTML='<div style="font-size:.8rem;color:var(--dim)">Workouts: <b style="color:var(--text)">'+gc.workouts+'</b> &bull; Water: <b style="color:var(--text)">'+gc.waterOz+' oz</b> &bull; Read: <b style="color:var(--text)">'+gc.readPages+' pages</b> &bull; Diet: <b style="color:var(--text)">'+(gc.diet?"Yes":"No")+'</b> &bull; Photo: <b style="color:var(--text)">'+(gc.photo?"Yes":"No")+'</b></div>';
+      var sc=d.config.scoring;
+      var halfDay=Math.ceil(d.config.days/2);
+      var ml=d.config.milestones||{weekly:100,habit21:500,halfway:750,homeStretch:1000,complete:5000};
+      var homeDay=Math.round(d.config.days*0.8);
+      _$("grpScoring").innerHTML='<div style="font-size:.8rem;color:var(--dim)">Per task: <b style="color:var(--text)">'+sc.taskPoints+'pts</b> &bull; All done: <b style="color:var(--text)">'+sc.completionBonus+'pts</b></div><div style="font-size:.75rem;color:var(--dim);margin-top:.5rem;line-height:1.6"><b style="color:var(--yellow)">\ud83c\udfc5 Milestones:</b><br>\u2b50 7-day perfect streak: <b style="color:var(--green)">+'+ml.weekly+'</b> (repeats)<br>\ud83e\udde0 Habit Builder (21-day streak): <b style="color:var(--green)">+'+ml.habit21+'</b><br>\ud83c\udfaf Halfway (Day '+halfDay+'): <b style="color:var(--green)">+'+ml.halfway+'</b>'+(homeDay!==halfDay?'<br>\ud83d\ude80 Home Stretch (Day '+homeDay+'): <b style="color:var(--green)">+'+ml.homeStretch+'</b>':'')+'<br>\ud83c\udfc6 Complete (Day '+d.config.days+'): <b style="color:var(--green)">+'+ml.complete+'</b></div>';
+      // Owner controls
+      var isOwner=d.owner===FB_UID;
+      _$("grpEdit").style.display=isOwner?"":"none";
+      _$("grpKick").style.display=isOwner?"":"none";
+      _$("grpEnd").style.display=isOwner?"":"none";
+      _$("grpDelete").style.display=isOwner?"":"none";
+      // Leaderboard
+      _loadLeaderboard(gid);
+    });
+  }
+
+  _$("grpBack").addEventListener("click",function(){
+    _$("grpOverlay").className="grp-overlay";
+    _$("commOverlay").className="comm-overlay show";
+    _loadMyGroups();
+  });
+  _$("cgClose").addEventListener("click",function(){_$("cgOverlay").className="cg-overlay";});
+
+  function _loadLeaderboard(gid){
+    FB_DB.collection("groups").doc(gid).collection("members").orderBy("score","desc").get().then(function(snap){
+      var el=_$("grpLeaderboard");el.innerHTML="";
+      var rank=0;
+      snap.forEach(function(doc){
+        rank++;var d=doc.data();var isMe=doc.id===FB_UID;var memUid=doc.id;
+        var row=document.createElement("div");row.className="lb-row"+(isMe?" me":"");
+        row.innerHTML='<span class="lb-rank'+(rank<=3?" g":"")+'">'+rank+'</span><span class="lb-icon">'+d.icon+'</span><div class="lb-info"><div class="lb-name" style="cursor:pointer">'+d.username+(isMe?" (you)":"")+'</div><div class="lb-stats">\ud83d\udd25 '+d.currentStreak+' streak &bull; '+d.completedDays+' days done</div></div><span class="lb-score">'+d.score+'</span>';
+        // Click name → open profile
+        row.querySelector(".lb-name").addEventListener("click",function(){
+          if(!isMe)_viewUserProfile(memUid);
+        });
+        el.appendChild(row);
+      });
+      if(rank===0)el.innerHTML='<div class="comm-empty">No members yet</div>';
+    });
+  }
+
+  // ── LEAVE GROUP ──
+  _$("grpLeave").addEventListener("click",function(){
+    if(!_curGrpId||!confirm("Leave this challenge? Your data will be removed."))return;
+    var gid=_curGrpId;
+    var batch=FB_DB.batch();
+    batch.delete(FB_DB.collection("groups").doc(gid).collection("members").doc(FB_UID));
+    batch.update(FB_DB.collection("groups").doc(gid),{memberCount:firebase.firestore.FieldValue.increment(-1),memberUids:firebase.firestore.FieldValue.arrayRemove(FB_UID)});
+    batch.update(FB_DB.collection("users").doc(FB_UID),{groups:firebase.firestore.FieldValue.arrayRemove(gid)});
+    batch.commit().then(function(){
+      // If owner, transfer or delete
+      if(_curGrpData&&_curGrpData.owner===FB_UID){
+        FB_DB.collection("groups").doc(gid).collection("members").limit(1).get().then(function(snap){
+          if(snap.empty){FB_DB.collection("groups").doc(gid).delete();}
+          else{FB_DB.collection("groups").doc(gid).update({owner:snap.docs[0].id,ownerName:snap.docs[0].data().username,ownerIcon:snap.docs[0].data().icon});}
+        });
+      }
+      _$("grpOverlay").className="grp-overlay";
+      _$("commOverlay").className="comm-overlay show";
+      _toast("Left challenge");setTimeout(function(){_loadMyGroups();},800);
+    });
+  });
+
+  // ── OWNER: KICK MEMBER ──
+  _$("grpKick").addEventListener("click",function(){
+    if(!_curGrpId||!_curGrpData||_curGrpData.owner!==FB_UID)return;
+    var who=prompt("Enter username to kick:");if(!who)return;
+    FB_DB.collection("groups").doc(_curGrpId).collection("members").where("username","==",who.trim().toLowerCase()).limit(1).get().then(function(snap){
+      if(snap.empty){_toast("User not found in group");return;}
+      var memDoc=snap.docs[0];
+      if(memDoc.id===FB_UID){_toast("Can't kick yourself");return;}
+      var batch=FB_DB.batch();
+      batch.delete(memDoc.ref);
+      batch.update(FB_DB.collection("groups").doc(_curGrpId),{memberCount:firebase.firestore.FieldValue.increment(-1),memberUids:firebase.firestore.FieldValue.arrayRemove(memDoc.id)});
+      batch.update(FB_DB.collection("users").doc(memDoc.id),{groups:firebase.firestore.FieldValue.arrayRemove(_curGrpId)});
+      return batch.commit();
+    }).then(function(){_toast("Kicked");_loadLeaderboard(_curGrpId);});
+  });
+
+  // ── OWNER: END CHALLENGE ──
+  _$("grpEnd").addEventListener("click",function(){
+    if(!_curGrpId||!confirm("End this challenge? Leaderboard will be frozen."))return;
+    FB_DB.collection("groups").doc(_curGrpId).update({status:"ended"}).then(function(){
+      _toast("Challenge ended");_openGroupDetail(_curGrpId);
+    });
+  });
+
+  // ── OWNER: EDIT GOALS ──
+  _$("grpEdit").addEventListener("click",function(){
+    if(!_curGrpId||!_curGrpData||_curGrpData.owner!==FB_UID)return;
+    var gc=_curGrpData.config.dailyGoals;
+    var sc=_curGrpData.config.scoring;
+    var ml=_curGrpData.config.milestones||{weekly:100,habit21:500,halfway:750,homeStretch:1000,complete:5000};
+    _$("cgTitle").textContent="\u270f\ufe0f Edit Goals";
+    var h='<div class="pf-card"><h3>\ud83c\udfaf Daily Goals</h3>';
+    h+='<div class="pf-field"><label>\ud83c\udfcb\ufe0f Workouts per day</label><div class="pf-slider-wrap"><input class="pf-slider" type="range" id="egWorkouts" min="1" max="3" value="'+(gc.workouts||2)+'"><span class="pf-slider-val" id="egWorkoutsV">'+(gc.workouts||2)+'</span></div></div>';
+    h+='<div class="pf-field"><label>\ud83d\udca7 Water target</label><div class="pf-slider-wrap"><input class="pf-slider" type="range" id="egWater" min="64" max="256" step="8" value="'+(gc.waterOz||128)+'"><span class="pf-slider-val" id="egWaterV">'+(gc.waterOz||128)+' oz</span></div></div>';
+    h+='<div class="pf-field"><label>\ud83d\udcda Reading pages</label><div class="pf-slider-wrap"><input class="pf-slider" type="range" id="egRead" min="5" max="50" step="5" value="'+(gc.readPages||10)+'"><span class="pf-slider-val" id="egReadV">'+(gc.readPages||10)+' pages</span></div></div>';
+    h+='<div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.5rem">';
+    h+='<label style="display:flex;align-items:center;gap:.4rem;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px 12px;font-size:.8rem;cursor:pointer"><input type="checkbox" id="egDiet"'+(gc.diet!==false?" checked":"")+' style="width:18px;height:18px"> \ud83e\udd57 Diet</label>';
+    h+='<label style="display:flex;align-items:center;gap:.4rem;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px 12px;font-size:.8rem;cursor:pointer"><input type="checkbox" id="egPhoto"'+(gc.photo!==false?" checked":"")+' style="width:18px;height:18px"> \ud83d\udcf8 Photo</label>';
+    h+='</div></div>';
+    h+='<div class="pf-card"><h3>\ud83c\udfc5 Scoring</h3>';
+    h+='<div class="pf-field"><label>Points per task</label><div class="pf-slider-wrap"><input class="pf-slider" type="range" id="egTaskPts" min="5" max="25" step="5" value="'+(sc.taskPoints||10)+'"><span class="pf-slider-val" id="egTaskPtsV">'+(sc.taskPoints||10)+' pts</span></div></div>';
+    h+='<div class="pf-field"><label>All-tasks-done bonus</label><div class="pf-slider-wrap"><input class="pf-slider" type="range" id="egCompPts" min="0" max="100" step="10" value="'+(sc.completionBonus||50)+'"><span class="pf-slider-val" id="egCompPtsV">'+(sc.completionBonus||50)+' pts</span></div></div>';
+    h+='</div>';
+    h+='<div class="pf-card"><h3>\ud83c\udfc6 Milestones</h3>';
+    h+='<div class="pf-field"><label>\u2b50 Weekly streak (every 7 days)</label><div class="pf-slider-wrap"><input class="pf-slider" type="range" id="egMlWeekly" min="0" max="500" step="50" value="'+ml.weekly+'"><span class="pf-slider-val" id="egMlWeeklyV">'+ml.weekly+' pts</span></div></div>';
+    h+='<div class="pf-field"><label>\ud83e\udde0 Habit Builder (21-day streak)</label><div class="pf-slider-wrap"><input class="pf-slider" type="range" id="egMlHabit" min="0" max="1000" step="50" value="'+ml.habit21+'"><span class="pf-slider-val" id="egMlHabitV">'+ml.habit21+' pts</span></div></div>';
+    h+='<div class="pf-field"><label>\ud83c\udfaf Halfway</label><div class="pf-slider-wrap"><input class="pf-slider" type="range" id="egMlHalf" min="0" max="2000" step="50" value="'+ml.halfway+'"><span class="pf-slider-val" id="egMlHalfV">'+ml.halfway+' pts</span></div></div>';
+    h+='<div class="pf-field"><label>\ud83d\ude80 Home Stretch (80%)</label><div class="pf-slider-wrap"><input class="pf-slider" type="range" id="egMlHome" min="0" max="2000" step="50" value="'+ml.homeStretch+'"><span class="pf-slider-val" id="egMlHomeV">'+ml.homeStretch+' pts</span></div></div>';
+    h+='<div class="pf-field"><label>\ud83c\udfc6 Complete</label><div class="pf-slider-wrap"><input class="pf-slider" type="range" id="egMlDone" min="0" max="10000" step="500" value="'+ml.complete+'"><span class="pf-slider-val" id="egMlDoneV">'+ml.complete+' pts</span></div></div>';
+    h+='</div>';
+    h+='<button class="pf-save" id="egSave">\u2705 Save Changes</button>';
+    _$("cgContent").innerHTML=h;
+    _$("cgOverlay").className="cg-overlay show";
+    var su={egWorkouts:"",egWater:" oz",egRead:" pages",egTaskPts:" pts",egCompPts:" pts",egMlWeekly:" pts",egMlHabit:" pts",egMlHalf:" pts",egMlHome:" pts",egMlDone:" pts"};
+    ["egWorkouts","egWater","egRead","egTaskPts","egCompPts","egMlWeekly","egMlHabit","egMlHalf","egMlHome","egMlDone"].forEach(function(id){
+      _$(id).addEventListener("input",function(){_$(id+"V").textContent=this.value+(su[id]||"");});
+    });
+    _$("egSave").addEventListener("click",function(){
+      var newGoals={workouts:parseInt(_$("egWorkouts").value,10),waterOz:parseInt(_$("egWater").value,10),readPages:parseInt(_$("egRead").value,10),diet:_$("egDiet").checked,photo:_$("egPhoto").checked,outdoorWorkout:gc.outdoorWorkout!==undefined?gc.outdoorWorkout:true};
+      var newScoring={taskPoints:parseInt(_$("egTaskPts").value,10),completionBonus:parseInt(_$("egCompPts").value,10)};
+      var newMl={weekly:parseInt(_$("egMlWeekly").value,10),habit21:parseInt(_$("egMlHabit").value,10),halfway:parseInt(_$("egMlHalf").value,10),homeStretch:parseInt(_$("egMlHome").value,10),complete:parseInt(_$("egMlDone").value,10)};
+      FB_DB.collection("groups").doc(_curGrpId).update({
+        "config.dailyGoals":newGoals,"config.scoring":newScoring,"config.milestones":newMl
+      }).then(function(){
+        _$("cgOverlay").className="cg-overlay";
+        _toast("Goals updated!");
+        _openGroupDetail(_curGrpId);
+      }).catch(function(e){_toast("Error: "+e.message);});
+    });
+  });
+
+  // ── OWNER: DELETE CHALLENGE ──
+  _$("grpDelete").addEventListener("click",function(){
+    if(!_curGrpId||!_curGrpData||_curGrpData.owner!==FB_UID)return;
+    if(!confirm("Permanently delete this challenge and all member data?"))return;
+    if(!confirm("This cannot be undone. Are you absolutely sure?"))return;
+    var gid=_curGrpId;
+    var uids=_curGrpData.memberUids||[];
+    // 1. Delete member subcollection docs
+    FB_DB.collection("groups").doc(gid).collection("members").get().then(function(snap){
+      var deletes=[];
+      snap.forEach(function(doc){deletes.push(doc.ref.delete());});
+      return Promise.all(deletes);
+    }).then(function(){
+      // 2. Remove group reference from ALL members' user docs
+      var removes=uids.map(function(uid){
+        return FB_DB.collection("users").doc(uid).update({groups:firebase.firestore.FieldValue.arrayRemove(gid)}).catch(function(){});
+      });
+      return Promise.all(removes);
+    }).then(function(){
+      // 3. Delete the group doc itself
+      return FB_DB.collection("groups").doc(gid).delete();
+    }).then(function(){
+      try{localStorage.removeItem("75hard_gc_"+gid+"_"+FB_UID);}catch(e){}
+      _$("grpOverlay").className="grp-overlay";
+      _$("commOverlay").className="comm-overlay show";
+      _toast("Challenge deleted");setTimeout(function(){_loadMyGroups();},800);
+    }).catch(function(e){_toast("Error: "+e.message);});
+  });
+  function _syncToGroups(){
+    if(!FB_UID||!APP_DATA.startDate)return;
+    FB_DB.collection("users").doc(FB_UID).get().then(function(me){
+      var md=me.data();var groups=md.groups||[];
+      if(groups.length===0)return;
+      var cur=_getCurrentDay()||0;if(cur<1)return;
+      groups.forEach(function(gid){
+        FB_DB.collection("groups").doc(gid).get().then(function(gDoc){
+          if(!gDoc.exists)return;
+          var gd=gDoc.data();
+          var result=_calcScore(gd.config,gd.config.days,cur);
+          FB_DB.collection("groups").doc(gid).collection("members").doc(FB_UID).update({
+            score:result.totalScore,currentStreak:result.currentStreak,completedDays:result.completedDays,lastSyncDay:cur,dayData:result.dayData
+          }).catch(function(){});
+        });
+      });
+    });
+  }
+
+  // ── INVITE LINK HANDLER ──
+  (function(){
+    var params=new URLSearchParams(window.location.search);
+    var joinCode=params.get("join");
+    if(joinCode){
+      // Wait for auth, then join
+      var _joinWait=setInterval(function(){
+        if(FB_UID){
+          clearInterval(_joinWait);
+          FB_DB.collection("groups").where("inviteCode","==",joinCode.toUpperCase()).limit(1).get().then(function(snap){
+            if(!snap.empty)_joinGroup(snap.docs[0].id);
+            else _toast("Invalid invite code");
+          });
+        }
+      },1000);
+      setTimeout(function(){clearInterval(_joinWait);},15000);
+    }
+  })();
+
+  /* ── AUTO-LOGIN (Firebase) ── */
+  FB_AUTH.onAuthStateChanged(function(user){
+    if(user){
+      FB_DB.collection("users").doc(user.uid).get().then(function(doc){
+        if(doc.exists){
+          var d=doc.data();
+          _showApp(user.uid,d.username,d.icon);
+        }else{
+          // Auth exists but no Firestore doc — show login
+          _showLogin();
+          _$("lErr").textContent="Profile not found. Please register again.";
+        }
+      }).catch(function(err){
+        console.error("Firestore read failed:",err);
+        _showLogin();
+        _$("lErr").textContent=err.message||"Firestore error. Check rules.";
+      });
+    }else{_showLogin();}
+  });
 
 }catch(e){
   var dbg=document.createElement("div");
