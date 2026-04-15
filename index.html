@@ -3715,14 +3715,6 @@ try{
   function _loadLeaderboard(gid,notStarted){
     var todayStr=new Date().toISOString().split("T")[0];
     var myKudosNames=[];
-    // Calculate max possible days since challenge started
-    var maxPossibleDays=0;
-    if(_curGrpData&&_curGrpData.config&&_curGrpData.config.startDate){
-      var csD=new Date(_curGrpData.config.startDate+"T00:00:00");
-      var now2=new Date();var today2=new Date(now2.getFullYear(),now2.getMonth(),now2.getDate());
-      maxPossibleDays=Math.max(0,Math.floor((today2-csD)/86400000)+1);
-      maxPossibleDays=Math.min(maxPossibleDays,_curGrpData.config.days);
-    }
     FB_DB.collection("groups").doc(gid).collection("members").orderBy("score","desc").get().then(function(snap){
       var el=_$("grpLeaderboard");el.innerHTML="";
       var rank=0;
@@ -3736,16 +3728,13 @@ try{
       }
       snap.forEach(function(doc){
         rank++;var d=doc.data();var isMe=doc.id===FB_UID;var memUid=doc.id;
-        // Detect impossible scores: completedDays can't exceed days the challenge has been active
-        var stale=false;
-        if(notStarted&&(d.score>0||d.completedDays>0))stale=true;
-        if(maxPossibleDays>0&&d.completedDays>maxPossibleDays)stale=true;
-        if(stale){
+        // Only reset if challenge literally hasn't started yet
+        if(notStarted&&(d.score>0||d.completedDays>0)){
           doc.ref.update({score:0,currentStreak:0,completedDays:0,lastSyncDay:0,dayData:{}}).catch(function(){});
         }
-        var score=stale?0:(d.score||0);
-        var cStreak=stale?0:(d.currentStreak||0);
-        var cDone=stale?0:(d.completedDays||0);
+        var score=notStarted?0:(d.score||0);
+        var cStreak=notStarted?0:(d.currentStreak||0);
+        var cDone=notStarted?0:(d.completedDays||0);
         var moodEmoji=d.todayMood||"";
         // Daily kudos
         var kt=d.kudosToday||{};
