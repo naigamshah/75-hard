@@ -566,8 +566,7 @@
   <div class="usr-bar" id="usrBar">
     <span><span class="uname" id="uName"></span> <span id="ctxLabel" style="font-size:.7rem;color:var(--accent);display:none">— Personal Challenge</span></span>
     <div style="display:-webkit-flex;display:flex;gap:.4rem">
-      <button class="logout-btn" id="backToChallenge" style="display:none;border-color:var(--green);color:var(--green)">&larr; Challenge</button>
-      <button class="logout-btn" id="backToPersonal" style="display:none;border-color:var(--accent);color:var(--accent)">&larr; Personal</button>
+      <button class="logout-btn" id="backToChallenge" style="display:none;border-color:var(--accent);color:var(--accent)">&larr; Back</button>
       <button class="logout-btn" id="logoutBtn">Logout</button>
     </div>
   </div>
@@ -2200,7 +2199,6 @@ try{
     });
     // Full re-init from clean state
     _$("ctxLabel").style.display="none";
-    _$("backToPersonal").style.display="none";
     _$("backToChallenge").style.display="none";
     _$("sScoreWrap").style.display="none";
     _$("grid").innerHTML="";
@@ -3041,10 +3039,6 @@ try{
     }
   });
 
-  _$("backToPersonal").addEventListener("click",function(){
-    _exitChallengeCtx();
-  });
-
   function _enterChallengeCtx(gid,gData){
     // Save personal context
     APP_CTX_BACKUP={skey:APP_SKEY,data:JSON.parse(JSON.stringify(APP_DATA)),day:APP_DAY};
@@ -3062,7 +3056,6 @@ try{
     // Update UI
     _$("ctxLabel").style.display="";
     _$("ctxLabel").textContent="\u2014 "+gData.name;
-    _$("backToPersonal").style.display="";
     _$("backToChallenge").style.display="";
     // Load group-specific data (will overwrite clean APP_DATA only if key exists)
     _load();
@@ -3121,24 +3114,29 @@ try{
     APP_DAY=APP_CTX_BACKUP.day;
     APP_CTX=null;APP_CTX_BACKUP=null;
     _$("ctxLabel").style.display="none";
-    _$("backToPersonal").style.display="none";
     _$("backToChallenge").style.display="none";
     _initApp();
   }
 
   function _syncSingleGroupAndWait(gid,callback){
     if(!FB_UID){if(callback)callback();return;}
+    // Snapshot group data NOW before async
+    var snapData=JSON.parse(JSON.stringify(APP_DATA));
+    var snapCtx=APP_CTX?JSON.parse(JSON.stringify(APP_CTX)):null;
     FB_DB.collection("groups").doc(gid).get().then(function(gDoc){
       if(!gDoc.exists){if(callback)callback();return;}
       var gd=gDoc.data();
-      if(!APP_DATA.startDate){if(callback)callback();return;}
-      var s=new Date(APP_DATA.startDate+"T00:00:00");
+      if(!snapData.startDate){if(callback)callback();return;}
+      var s=new Date(snapData.startDate+"T00:00:00");
       var now=new Date();
       var today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
       var diff=Math.floor((today-s)/86400000)+1;
       if(diff<1){if(callback)callback();return;}
       var cur=Math.min(gd.config.days,diff);
+      var savedData=APP_DATA;var savedCtx=APP_CTX;
+      APP_DATA=snapData;APP_CTX=snapCtx;
       var result=_calcScore(gd.config,gd.config.days,cur);
+      APP_DATA=savedData;APP_CTX=savedCtx;
       FB_DB.collection("groups").doc(gid).collection("members").doc(FB_UID).update({
         score:result.totalScore,currentStreak:result.currentStreak,completedDays:result.completedDays,lastSyncDay:cur,dayData:result.dayData
       }).then(function(){if(callback)callback();}).catch(function(){if(callback)callback();});
@@ -3147,18 +3145,24 @@ try{
 
   function _syncSingleGroup(gid){
     if(!FB_UID)return;
+    // CRITICAL: Snapshot group data NOW before any async call changes APP_DATA
+    var snapData=JSON.parse(JSON.stringify(APP_DATA));
+    var snapCtx=APP_CTX?JSON.parse(JSON.stringify(APP_CTX)):null;
     FB_DB.collection("groups").doc(gid).get().then(function(gDoc){
       if(!gDoc.exists)return;
       var gd=gDoc.data();
-      // Use group's start date to calculate current day
-      if(!APP_DATA.startDate)return;
-      var s=new Date(APP_DATA.startDate+"T00:00:00");
+      if(!snapData.startDate)return;
+      var s=new Date(snapData.startDate+"T00:00:00");
       var now=new Date();
       var today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
       var diff=Math.floor((today-s)/86400000)+1;
       if(diff<1)return;
       var cur=Math.min(gd.config.days,diff);
+      // Temporarily use snapshot data for score calculation
+      var savedData=APP_DATA;var savedCtx=APP_CTX;
+      APP_DATA=snapData;APP_CTX=snapCtx;
       var result=_calcScore(gd.config,gd.config.days,cur);
+      APP_DATA=savedData;APP_CTX=savedCtx;
       FB_DB.collection("groups").doc(gid).collection("members").doc(FB_UID).update({
         score:result.totalScore,currentStreak:result.currentStreak,completedDays:result.completedDays,lastSyncDay:cur,dayData:result.dayData
       }).catch(function(){});
