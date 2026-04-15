@@ -3044,6 +3044,10 @@ try{
     APP_CTX={gid:gid,config:gData.config,name:gData.name};
     APP_SKEY="75hard_gc_"+gid+"_"+FB_UID;
     APP_DAY=null;
+    // CRITICAL: Reset APP_DATA to clean state BEFORE _load()
+    // If the group key doesn't exist in localStorage yet, _load() won't overwrite APP_DATA
+    // Without this reset, personal data leaks into the group challenge
+    APP_DATA={goal:2000,startDate:null,customFoods:[],days:{},waterMode:"oz",reminders:{on:false,time:"09:00",freq:"daily"},profile:{}};
     // Close overlays
     _$("grpOverlay").className="grp-overlay";
     _$("commOverlay").className="comm-overlay";
@@ -3052,7 +3056,7 @@ try{
     _$("ctxLabel").textContent="\u2014 "+gData.name;
     _$("backToPersonal").style.display="";
     _$("backToChallenge").style.display="";
-    // Load group-specific data and ALWAYS enforce the correct startDate from group config
+    // Load group-specific data (will overwrite clean APP_DATA only if key exists)
     _load();
     if(gData.config.startDate){
       APP_DATA.startDate=gData.config.startDate;
