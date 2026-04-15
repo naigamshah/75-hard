@@ -3061,12 +3061,36 @@ try{
     if(gData.config.startDate){
       APP_DATA.startDate=gData.config.startDate;
     }
-    // Sanitize: if local data has days beyond the challenge length, it's from old buggy sync — clear them
-    if(APP_DATA.days){
+    // Robust sanitization: remove any day data that's impossible given challenge age
+    if(APP_DATA.days&&gData.config.startDate){
+      var csD=new Date(gData.config.startDate+"T00:00:00");
+      var nowD=new Date();var todD=new Date(nowD.getFullYear(),nowD.getMonth(),nowD.getDate());
+      var maxPossible=Math.floor((todD-csD)/86400000)+1;
+      if(maxPossible<1)maxPossible=0; // challenge hasn't started
       var maxD=gData.config.days||75;
+      var needsClean=false;
       for(var dk in APP_DATA.days){
         var dkn=parseInt(dk,10);
-        if(dkn>maxD)delete APP_DATA.days[dk];
+        // Remove days beyond challenge length OR beyond what's actually elapsed
+        if(dkn>maxD||dkn>maxPossible){
+          delete APP_DATA.days[dk];needsClean=true;
+        }
+      }
+      // Also check: if total completed days seems way too high for challenge age, wipe everything
+      // This catches the case where days 1-3 have personal data but challenge just started today
+      if(maxPossible<=1){
+        var completedCount=0;
+        for(var dk2 in APP_DATA.days){
+          var dd2=APP_DATA.days[dk2];
+          if(dd2&&dd2.tasks){
+            var tc2=0;for(var tk2 in dd2.tasks){if(dd2.tasks[tk2])tc2++;}
+            if(tc2>0)completedCount++;
+          }
+        }
+        if(completedCount>maxPossible){
+          // More completed days than possible — data is contaminated, wipe all days
+          APP_DATA.days={};needsClean=true;
+        }
       }
     }
     _save();
