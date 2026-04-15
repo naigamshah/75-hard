@@ -3029,8 +3029,16 @@ try{
   _$("backToChallenge").addEventListener("click",function(){
     if(!APP_CTX||!APP_CTX.gid)return;
     var gid=APP_CTX.gid;
-    _exitChallengeCtx();
-    _openGroupDetail(gid);
+    // Sync scores, then exit, then open group detail with a delay for Firestore propagation
+    if(APP_CTX&&APP_CTX.gid){
+      _syncSingleGroupAndWait(APP_CTX.gid,function(){
+        _exitChallengeCtxNoSync();
+        _openGroupDetail(gid);
+      });
+    }else{
+      _exitChallengeCtxNoSync();
+      _openGroupDetail(gid);
+    }
   });
 
   _$("backToPersonal").addEventListener("click",function(){
@@ -3100,20 +3108,41 @@ try{
 
   function _exitChallengeCtx(){
     if(!APP_CTX_BACKUP)return;
-    // Sync scores before leaving
     if(APP_CTX&&APP_CTX.gid){
       _syncSingleGroup(APP_CTX.gid);
     }
-    // Restore personal context
+    _exitChallengeCtxNoSync();
+  }
+
+  function _exitChallengeCtxNoSync(){
+    if(!APP_CTX_BACKUP)return;
     APP_SKEY=APP_CTX_BACKUP.skey;
     APP_DATA=APP_CTX_BACKUP.data;
     APP_DAY=APP_CTX_BACKUP.day;
     APP_CTX=null;APP_CTX_BACKUP=null;
-    // Update UI
     _$("ctxLabel").style.display="none";
     _$("backToPersonal").style.display="none";
     _$("backToChallenge").style.display="none";
     _initApp();
+  }
+
+  function _syncSingleGroupAndWait(gid,callback){
+    if(!FB_UID){if(callback)callback();return;}
+    FB_DB.collection("groups").doc(gid).get().then(function(gDoc){
+      if(!gDoc.exists){if(callback)callback();return;}
+      var gd=gDoc.data();
+      if(!APP_DATA.startDate){if(callback)callback();return;}
+      var s=new Date(APP_DATA.startDate+"T00:00:00");
+      var now=new Date();
+      var today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+      var diff=Math.floor((today-s)/86400000)+1;
+      if(diff<1){if(callback)callback();return;}
+      var cur=Math.min(gd.config.days,diff);
+      var result=_calcScore(gd.config,gd.config.days,cur);
+      FB_DB.collection("groups").doc(gid).collection("members").doc(FB_UID).update({
+        score:result.totalScore,currentStreak:result.currentStreak,completedDays:result.completedDays,lastSyncDay:cur,dayData:result.dayData
+      }).then(function(){if(callback)callback();}).catch(function(){if(callback)callback();});
+    }).catch(function(){if(callback)callback();});
   }
 
   function _syncSingleGroup(gid){
