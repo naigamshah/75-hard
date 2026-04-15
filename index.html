@@ -1678,9 +1678,8 @@ function _checkComplete(d){
       // In group challenge context — sync to that group
       if(typeof _syncSingleGroup==="function")_syncSingleGroup(APP_CTX.gid);
     }else{
-      // Personal context
+      // Personal context — only sync personal profile, NOT group scores
       if(typeof _syncPublicProfile==="function")_syncPublicProfile();
-      if(typeof _syncToGroups==="function")_syncToGroups();
     }
   },2000);
 }
@@ -3053,12 +3052,20 @@ try{
     _$("ctxLabel").textContent="\u2014 "+gData.name;
     _$("backToPersonal").style.display="";
     _$("backToChallenge").style.display="";
-    // Set startDate from group config if not already set in local data
+    // Load group-specific data and ALWAYS enforce the correct startDate from group config
     _load();
-    if(!APP_DATA.startDate&&gData.config.startDate){
+    if(gData.config.startDate){
       APP_DATA.startDate=gData.config.startDate;
-      _save();
     }
+    // Sanitize: if local data has days beyond the challenge length, it's from old buggy sync — clear them
+    if(APP_DATA.days){
+      var maxD=gData.config.days||75;
+      for(var dk in APP_DATA.days){
+        var dkn=parseInt(dk,10);
+        if(dkn>maxD)delete APP_DATA.days[dk];
+      }
+    }
+    _save();
     // Override goal days in grid builder
     _initApp();
   }
@@ -3650,8 +3657,15 @@ try{
 
   function _loadLeaderboard(gid,notStarted){
     var todayStr=new Date().toISOString().split("T")[0];
-    // Check for kudos received by current user (for popup)
     var myKudosNames=[];
+    // Calculate max possible days since challenge started
+    var maxPossibleDays=0;
+    if(_curGrpData&&_curGrpData.config&&_curGrpData.config.startDate){
+      var csD=new Date(_curGrpData.config.startDate+"T00:00:00");
+      var now2=new Date();var today2=new Date(now2.getFullYear(),now2.getMonth(),now2.getDate());
+      maxPossibleDays=Math.max(0,Math.floor((today2-csD)/86400000)+1);
+      maxPossibleDays=Math.min(maxPossibleDays,_curGrpData.config.days);
+    }
     FB_DB.collection("groups").doc(gid).collection("members").orderBy("score","desc").get().then(function(snap){
       var el=_$("grpLeaderboard");el.innerHTML="";
       var rank=0;
@@ -3665,9 +3679,23 @@ try{
       }
       snap.forEach(function(doc){
         rank++;var d=doc.data();var isMe=doc.id===FB_UID;var memUid=doc.id;
-        var score=notStarted?0:d.score;
-        var cStreak=notStarted?0:d.currentStreak;
-        var cDone=notStarted?0:d.completedDays;
+        // Detect impossible/stale scores:
+        // 1. lastSyncDay=0 but has score (never synced from group context)
+        // 2. completedDays > maxPossibleDays (personal data leak)
+        // 3. lastSyncDay > maxPossibleDays (synced from wrong context)
+        var stale=false;
+        if(d.score>0||d.completedDays>0){
+          if(!d.lastSyncDay||d.lastSyncDay===0)stale=true;
+          if(d.completedDays>maxPossibleDays)stale=true;
+          if(d.lastSyncDay>maxPossibleDays)stale=true;
+        }
+        if(notStarted&&(d.score>0||d.completedDays>0))stale=true;
+        if(stale){
+          doc.ref.update({score:0,currentStreak:0,completedDays:0,lastSyncDay:0,dayData:{}}).catch(function(){});
+        }
+        var score=stale?0:(d.score||0);
+        var cStreak=stale?0:(d.currentStreak||0);
+        var cDone=stale?0:(d.completedDays||0);
         var moodEmoji=d.todayMood||"";
         // Daily kudos
         var kt=d.kudosToday||{};
