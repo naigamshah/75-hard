@@ -3707,17 +3707,10 @@ try{
       }
       snap.forEach(function(doc){
         rank++;var d=doc.data();var isMe=doc.id===FB_UID;var memUid=doc.id;
-        // Detect impossible/stale scores:
-        // 1. lastSyncDay=0 but has score (never synced from group context)
-        // 2. completedDays > maxPossibleDays (personal data leak)
-        // 3. lastSyncDay > maxPossibleDays (synced from wrong context)
+        // Detect impossible scores: completedDays can't exceed days the challenge has been active
         var stale=false;
-        if(d.score>0||d.completedDays>0){
-          if(!d.lastSyncDay||d.lastSyncDay===0)stale=true;
-          if(d.completedDays>maxPossibleDays)stale=true;
-          if(d.lastSyncDay>maxPossibleDays)stale=true;
-        }
         if(notStarted&&(d.score>0||d.completedDays>0))stale=true;
+        if(maxPossibleDays>0&&d.completedDays>maxPossibleDays)stale=true;
         if(stale){
           doc.ref.update({score:0,currentStreak:0,completedDays:0,lastSyncDay:0,dayData:{}}).catch(function(){});
         }
