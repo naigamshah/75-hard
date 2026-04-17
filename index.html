@@ -518,6 +518,12 @@
     .badge-actions button.active { border-color: var(--accent); background: rgba(108,92,231,.1); color: var(--accent); }
     .badge-actions button.del { border-color: var(--red); color: var(--red); }
 
+    /* ── BADGE POPUP ── */
+    .badge-popup-bg { position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,.5); display: none; -webkit-align-items: center; align-items: center; -webkit-justify-content: center; justify-content: center; padding: 1rem; }
+    .badge-popup-bg.show { display: -webkit-flex; display: flex; }
+    .badge-popup { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 1.2rem; max-width: 340px; width: 100%; max-height: 70vh; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+    .badge-popup .bp-close { float: right; background: none; border: none; color: var(--dim); font-size: 1.2rem; cursor: pointer; -webkit-appearance: none; padding: 0; }
+
     /* ── CHALLENGE COMPLETION ── */
     .cc-popup { position: fixed; inset: 0; z-index: 9997; background: rgba(0,0,0,.85); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; -webkit-justify-content: center; justify-content: center; padding: 1rem; opacity: 0; pointer-events: none; -webkit-transition: opacity .5s; transition: opacity .5s; }
     .cc-popup.show { opacity: 1; pointer-events: auto; }
@@ -1017,7 +1023,7 @@
     </div>
     <div class="grp-actions">
       <button class="btn dng" id="grpLeave">Leave Challenge</button>
-      <button class="btn" id="grpEdit" style="display:none">Edit Goals</button>
+      <button class="btn" id="grpEdit" style="display:none">Edit Challenge</button>
       <button class="btn dng" id="grpKick" style="display:none">Kick Member</button>
       <button class="btn dng" id="grpEnd" style="display:none">End Challenge</button>
       <button class="btn dng" id="grpDelete" style="display:none">Delete Challenge</button>
@@ -1034,6 +1040,11 @@
     </div>
     <div id="cgContent"></div>
   </div>
+</div>
+
+<!-- Badge Detail Popup -->
+<div class="badge-popup-bg" id="badgePopupBg">
+  <div class="badge-popup" id="badgePopup"></div>
 </div>
 
 <!-- Challenge Completion Popup -->
@@ -1328,6 +1339,7 @@ var QUOTES_DB=[
 
 var BADGES_DB={
   genesis:{id:"genesis",emoji:"🌱",name:"Genesis",desc:"Complete Day 1 of any challenge",tier:1,source:"both",multi:true},
+  first_blood:{id:"first_blood",emoji:"🌱",name:"Genesis",desc:"Complete Day 1 of any challenge",tier:1,source:"both",multi:true},
   week_warrior:{id:"week_warrior",emoji:"⚔️",name:"Week Warrior",desc:"Achieve a 7-day streak",tier:2,source:"both",multi:true},
   iron_will:{id:"iron_will",emoji:"🛡️",name:"Iron Will",desc:"Achieve a 21-day streak",tier:3,source:"both",multi:true},
   unstoppable:{id:"unstoppable",emoji:"🔥",name:"Unstoppable",desc:"Achieve a 50-day streak",tier:4,source:"both",multi:true},
@@ -3264,9 +3276,10 @@ try{
       if(!localStorage.getItem(badgeKey)){
         localStorage.setItem(badgeKey,"1");
         var chalName=gData.name;
-        _awardBadge("challenge_complete",chalName,"group");
-        if(myRank<=3&&myRank>0)_awardBadge("podium_finish",chalName,"group");
-        if(myRank===1)_awardBadge("champion",chalName,"group");
+        var bmeta={gid:gid,days:gData.config.days};
+        _awardBadge("challenge_complete",chalName,"group",bmeta);
+        if(myRank<=3&&myRank>0)_awardBadge("podium_finish",chalName,"group",{gid:gid,days:gData.config.days,rank:myRank});
+        if(myRank===1)_awardBadge("champion",chalName,"group",{gid:gid,days:gData.config.days,rank:1});
         // Show earned badges
         var earned=[];
         earned.push("\ud83c\udfc1 Challenge Complete");
@@ -3739,7 +3752,7 @@ try{
     h+='</div>';
     h+='<div class="pf-card"><h3>\ud83d\udcc5 Schedule</h3>';
     h+='<div class="pf-field"><label>\ud83d\udcc6 Start Date</label><input class="pf-input" id="cgStart" type="date"></div>';
-    h+='<div class="pf-field"><label>\u23f3 Duration</label><div class="pf-slider-wrap"><input class="pf-slider" type="range" id="cgDays" min="1" max="75" value="75"><span class="pf-slider-val" id="cgDaysV">75 days</span></div></div>';
+    h+='<div class="pf-field"><label>\u23f3 Duration</label><div class="pf-slider-wrap"><input class="pf-slider" type="range" id="cgDays" min="7" max="75" value="75"><span class="pf-slider-val" id="cgDaysV">75 days</span></div></div>';
     h+='</div>';
     h+='<div class="pf-card"><h3>\ud83c\udfaf Daily Goals</h3>';
     h+='<div class="pf-field"><label>\ud83c\udfcb\ufe0f Workouts per day</label><div class="pf-slider-wrap"><input class="pf-slider" type="range" id="cgWorkouts" min="1" max="3" value="2"><span class="pf-slider-val" id="cgWorkoutsV">2</span></div></div>';
@@ -4148,14 +4161,21 @@ try{
     });
   });
 
-  // ── OWNER: EDIT GOALS ──
+  // ── OWNER: EDIT CHALLENGE ──
   _$("grpEdit").addEventListener("click",function(){
     if(!_curGrpId||!_curGrpData||_curGrpData.owner!==FB_UID)return;
     var gc=_curGrpData.config.dailyGoals;
     var sc=_curGrpData.config.scoring;
+    var curDays=_curGrpData.config.days;
     var ml=_curGrpData.config.milestones||{weekly:100,habit21:500,halfway:750,homeStretch:1000,complete:5000};
-    _$("cgTitle").textContent="\u270f\ufe0f Edit Goals";
-    var h='<div class="pf-card"><h3>\ud83c\udfaf Daily Goals</h3>';
+    _$("cgTitle").textContent="\u270f\ufe0f Edit Challenge";
+    var h='<div class="pf-card"><h3>\u23f3 Extend Challenge</h3>';
+    h+='<div style="font-size:.78rem;color:var(--dim);margin-bottom:.5rem">Current duration: <b style="color:var(--text)">'+curDays+' days</b>. Extensions cannot be reverted.</div>';
+    var maxExt=Math.max(0,75-curDays);
+    h+='<div class="pf-field"><label>Extend by</label><div class="pf-slider-wrap"><input class="pf-slider" type="range" id="egExtend" min="0" max="'+maxExt+'" step="1" value="0"><span class="pf-slider-val" id="egExtendV">0 days</span></div></div>';
+    h+='<div style="font-size:.72rem;color:var(--dim)" id="egExtendInfo">New total: '+curDays+' days</div>';
+    h+='</div>';
+    h+='<div class="pf-card"><h3>\ud83c\udfaf Daily Goals</h3>';
     h+='<div class="pf-field"><label>\ud83c\udfcb\ufe0f Workouts per day</label><div class="pf-slider-wrap"><input class="pf-slider" type="range" id="egWorkouts" min="1" max="3" value="'+(gc.workouts||2)+'"><span class="pf-slider-val" id="egWorkoutsV">'+(gc.workouts||2)+'</span></div></div>';
     h+='<div class="pf-field"><label>\ud83d\udca7 Water target</label><div class="pf-slider-wrap"><input class="pf-slider" type="range" id="egWater" min="64" max="256" step="8" value="'+(gc.waterOz||128)+'"><span class="pf-slider-val" id="egWaterV">'+(gc.waterOz||128)+' oz</span></div></div>';
     h+='<div class="pf-field"><label>\ud83d\udcda Reading pages</label><div class="pf-slider-wrap"><input class="pf-slider" type="range" id="egRead" min="5" max="50" step="5" value="'+(gc.readPages||10)+'"><span class="pf-slider-val" id="egReadV">'+(gc.readPages||10)+' pages</span></div></div>';
@@ -4177,19 +4197,34 @@ try{
     h+='<button class="pf-save" id="egSave">\u2705 Save Changes</button>';
     _$("cgContent").innerHTML=h;
     _$("cgOverlay").className="cg-overlay show";
+    // Wire extension slider
+    _$("egExtend").addEventListener("input",function(){
+      var ext=parseInt(this.value,10);
+      _$("egExtendV").textContent=ext+" days";
+      _$("egExtendInfo").textContent="New total: "+(curDays+ext)+" days";
+      _$("egExtendInfo").style.color=ext>0?"var(--accent)":"var(--dim)";
+    });
     var su={egWorkouts:"",egWater:" oz",egRead:" pages",egTaskPts:" pts",egCompPts:" pts",egMlWeekly:" pts",egMlHabit:" pts",egMlHalf:" pts",egMlHome:" pts",egMlDone:" pts"};
     ["egWorkouts","egWater","egRead","egTaskPts","egCompPts","egMlWeekly","egMlHabit","egMlHalf","egMlHome","egMlDone"].forEach(function(id){
       _$(id).addEventListener("input",function(){_$(id+"V").textContent=this.value+(su[id]||"");});
     });
     _$("egSave").addEventListener("click",function(){
+      var ext=parseInt(_$("egExtend").value,10)||0;
+      if(ext>0&&!confirm("Extend challenge by "+ext+" days to "+(curDays+ext)+" total? This cannot be reverted.")){return;}
       var newGoals={workouts:parseInt(_$("egWorkouts").value,10),waterOz:parseInt(_$("egWater").value,10),readPages:parseInt(_$("egRead").value,10),diet:_$("egDiet").checked,photo:_$("egPhoto").checked,outdoorWorkout:gc.outdoorWorkout!==undefined?gc.outdoorWorkout:true};
       var newScoring={taskPoints:parseInt(_$("egTaskPts").value,10),completionBonus:parseInt(_$("egCompPts").value,10)};
       var newMl={weekly:parseInt(_$("egMlWeekly").value,10),habit21:parseInt(_$("egMlHabit").value,10),halfway:parseInt(_$("egMlHalf").value,10),homeStretch:parseInt(_$("egMlHome").value,10),complete:parseInt(_$("egMlDone").value,10)};
-      FB_DB.collection("groups").doc(_curGrpId).update({
-        "config.dailyGoals":newGoals,"config.scoring":newScoring,"config.milestones":newMl
-      }).then(function(){
+      var updateObj={"config.dailyGoals":newGoals,"config.scoring":newScoring,"config.milestones":newMl};
+      if(ext>0){
+        updateObj["config.days"]=curDays+ext;
+        updateObj["status"]="active"; // un-end if it was ended
+        // Reset completion seen flags so users get the completion popup again at the new end
+        try{localStorage.removeItem("75h_cc_"+FB_UID+"_"+_curGrpId);}catch(e){}
+        try{localStorage.removeItem("75h_ccb_"+FB_UID+"_"+_curGrpId);}catch(e){}
+      }
+      FB_DB.collection("groups").doc(_curGrpId).update(updateObj).then(function(){
         _$("cgOverlay").className="cg-overlay";
-        _toast("Goals updated!");
+        _toast(ext>0?"Challenge extended to "+(curDays+ext)+" days!":"Challenge updated!");
         _openGroupDetail(_curGrpId);
       }).catch(function(e){_toast("Error: "+e.message);});
     });
@@ -4376,12 +4411,13 @@ try{
   });
 
   /* ── BADGES ── */
-  function _awardBadge(badgeId,challengeName,challengeType){
+  function _awardBadge(badgeId,challengeName,challengeType,meta){
     if(!FB_UID||!BADGES_DB[badgeId])return;
     var b=BADGES_DB[badgeId];
-    var now=new Date();
+    var now=_now();
     var dateStr=now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,"0")+"-"+String(now.getDate()).padStart(2,"0");
     var entry={challenge:challengeName||"Personal 75 Hard",type:challengeType||"personal",date:dateStr};
+    if(meta){if(meta.gid)entry.gid=meta.gid;if(meta.days)entry.days=meta.days;if(meta.rank)entry.rank=meta.rank;}
     FB_DB.collection("users").doc(FB_UID).collection("badges").doc(badgeId).get().then(function(doc){
       if(doc.exists){
         var d=doc.data();
@@ -4405,6 +4441,31 @@ try{
 
   function _loadTrophyCabinet(targetEl){
     if(!FB_UID)return;
+    // Migrate old badge IDs
+    FB_DB.collection("users").doc(FB_UID).collection("badges").doc("first_blood").get().then(function(oldDoc){
+      if(oldDoc.exists){
+        var oldData=oldDoc.data();
+        oldData.id="genesis";oldData.emoji="🌱";oldData.name="Genesis";
+        FB_DB.collection("users").doc(FB_UID).collection("badges").doc("genesis").get().then(function(newDoc){
+          if(newDoc.exists){
+            // Merge entries
+            var merged=newDoc.data();
+            var existingEntries=merged.entries||[];
+            var oldEntries=oldData.entries||[];
+            oldEntries.forEach(function(oe){
+              var dup=false;
+              existingEntries.forEach(function(ee){if(ee.challenge===oe.challenge&&ee.date===oe.date)dup=true;});
+              if(!dup)existingEntries.push(oe);
+            });
+            merged.entries=existingEntries;merged.count=existingEntries.length;
+            FB_DB.collection("users").doc(FB_UID).collection("badges").doc("genesis").update(merged);
+          }else{
+            FB_DB.collection("users").doc(FB_UID).collection("badges").doc("genesis").set(oldData);
+          }
+          oldDoc.ref.delete();
+        });
+      }
+    }).catch(function(){});
     FB_DB.collection("users").doc(FB_UID).collection("badges").orderBy("tier","desc").get().then(function(snap){
       if(snap.empty){
         targetEl.innerHTML='<div style="font-size:.82rem;color:var(--dim);text-align:center;padding:.5rem">No badges yet. Keep going!</div>';
@@ -4479,65 +4540,82 @@ try{
     var b=BADGES_DB[badgeId];
     FB_DB.collection("users").doc(FB_UID).collection("badges").doc(badgeId).get().then(function(doc){
       if(!doc.exists)return;var d=doc.data();
-      _$("mTt").textContent="";
-      var h='<div style="text-align:center;margin-bottom:1rem">';
-      h+='<div style="font-size:3.5rem;margin-bottom:.3rem">'+b.emoji+'</div>';
-      h+='<div style="font-size:1.2rem;font-weight:800">'+b.name+'</div>';
-      h+='<div style="font-size:.82rem;color:var(--dim);margin-top:.3rem">"'+b.desc+'"</div></div>';
-      var isHidden=d.visibility==="hide";
       var entries=d.entries||[];
+      var h='<button class="bp-close" id="bpClose">&times;</button>';
+      h+='<div style="text-align:center;margin-bottom:.6rem">';
+      h+='<div style="font-size:2.5rem">'+b.emoji+'</div>';
+      h+='<div style="font-size:1rem;font-weight:800">'+b.name+'</div>';
+      h+='<div style="font-size:.75rem;color:var(--dim);margin-top:.2rem">'+b.desc+'</div></div>';
       if(entries.length>0){
-        h+='<div style="font-size:.78rem;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.4rem">Earned '+entries.length+' time'+(entries.length!==1?"s":"")+'</div>';
+        h+='<div style="font-size:.7rem;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.3rem">Earned '+entries.length+'x</div>';
         for(var i=0;i<entries.length;i++){
           var e=entries[i];
-          h+='<div class="badge-detail-card bd-entry" data-idx="'+i+'" style="cursor:default">';
-          h+='<div class="bd-src">'+(e.type==="personal"?"🏠":"🏆")+" "+e.challenge+'</div><div class="bd-date">'+e.date+'</div>';
-          h+='</div>';
+          var extraInfo="";
+          if(e.days)extraInfo+=e.days+" days";
+          if(e.rank)extraInfo+=(extraInfo?" \u2022 ":"")+(e.rank<=3?["","🥇","🥈","🥉"][e.rank]:"#"+e.rank);
+          h+='<div class="badge-detail-card bd-entry" data-idx="'+i+'" data-gid="'+(e.gid||"")+'" style="padding:.5rem .7rem;margin-bottom:.3rem;background:var(--bg);border:1px solid var(--border);border-radius:10px;'+(e.gid?"cursor:pointer":"")+'">';
+          h+='<div style="font-size:.8rem;font-weight:600">'+(e.type==="personal"?"🏠":"🏆")+" "+e.challenge+'</div>';
+          h+='<div style="display:flex;justify-content:space-between;align-items:center;margin-top:.15rem">';
+          h+='<span style="font-size:.65rem;color:var(--dim)">'+e.date+'</span>';
+          if(extraInfo)h+='<span style="font-size:.65rem;color:var(--accent)">'+extraInfo+'</span>';
+          h+='</div></div>';
         }
       }
-      h+='<div style="text-align:center;margin-top:1rem"><button id="bdDeleteBtn" style="padding:6px 16px;border-radius:8px;font-size:.75rem;font-weight:600;cursor:pointer;-webkit-appearance:none;background:none;border:1px solid var(--red);color:var(--red)">Delete</button></div>';
-      _$("mCt").innerHTML=h;_$("modal").className="modal show";
-      var _bdDelMode=false;
-      _$("bdDeleteBtn").addEventListener("click",function(){
-        if(!_bdDelMode){
-          // Enter selection mode
-          _bdDelMode=true;
+      h+='<div style="text-align:center;margin-top:.6rem"><button id="bpDeleteBtn" style="padding:5px 14px;border-radius:8px;font-size:.72rem;font-weight:600;cursor:pointer;-webkit-appearance:none;background:none;border:1px solid var(--red);color:var(--red)">Delete</button></div>';
+      _$("badgePopup").innerHTML=h;
+      _$("badgePopupBg").className="badge-popup-bg show";
+      // Close
+      _$("bpClose").addEventListener("click",function(){_$("badgePopupBg").className="badge-popup-bg";});
+      _$("badgePopupBg").addEventListener("click",function(ev){if(ev.target===_$("badgePopupBg"))_$("badgePopupBg").className="badge-popup-bg";});
+      // Click entry to open challenge (if gid exists)
+      _$("badgePopup").querySelectorAll(".bd-entry[data-gid]").forEach(function(card){
+        var gid=card.getAttribute("data-gid");
+        if(!gid)return;
+        card.addEventListener("click",function(ev){
+          if(card._selected!==undefined)return; // in delete mode
+          _$("badgePopupBg").className="badge-popup-bg";
+          _$("myProfileOverlay").className="my-profile-overlay";
+          _openGroupDetail(gid);
+        });
+      });
+      // Delete mode
+      var _bpDelMode=false;
+      _$("bpDeleteBtn").addEventListener("click",function(){
+        if(!_bpDelMode){
+          _bpDelMode=true;
           this.textContent="Confirm Delete";
           this.style.background="var(--red)";this.style.color="#fff";
-          // Make entries tappable
-          document.querySelectorAll(".bd-entry").forEach(function(card){
-            card.style.cursor="pointer";
-            card._selected=false;
-            card.addEventListener("click",function(){
+          var instDiv=document.createElement("div");instDiv.id="bpDelInst";
+          instDiv.style.cssText="font-size:.68rem;color:var(--red);text-align:center;margin-bottom:.3rem";
+          instDiv.textContent="Tap entries to select, then press Confirm Delete";
+          var fe=_$("badgePopup").querySelector(".bd-entry");
+          if(fe)fe.parentNode.insertBefore(instDiv,fe);
+          _$("badgePopup").querySelectorAll(".bd-entry").forEach(function(card){
+            card.style.cursor="pointer";card._selected=false;
+            card.addEventListener("click",function(ev){
+              ev.stopPropagation();
               this._selected=!this._selected;
               this.style.outline=this._selected?"2px solid var(--red)":"";
-              this.style.opacity=this._selected?".5":"";
+              this.style.opacity=this._selected?".5":"1";
             });
           });
-          // Show inline instruction
-          var inst=document.createElement("div");inst.id="bdDelInst";
-          inst.style.cssText="font-size:.72rem;color:var(--red);text-align:center;margin-bottom:.4rem";
-          inst.textContent="Tap entries to select, then press Confirm Delete";
-          var firstEntry=document.querySelector(".bd-entry");
-          if(firstEntry)firstEntry.parentNode.insertBefore(inst,firstEntry);
         }else{
-          // Delete selected entries
-          var selected=[];
-          document.querySelectorAll(".bd-entry").forEach(function(card){
-            if(card._selected)selected.push(parseInt(card.getAttribute("data-idx"),10));
+          var sel=[];
+          _$("badgePopup").querySelectorAll(".bd-entry").forEach(function(card){
+            if(card._selected)sel.push(parseInt(card.getAttribute("data-idx"),10));
           });
-          if(selected.length===0){_toast("No entries selected");return;}
-          selected.sort(function(a,b){return b-a;}); // reverse order for safe splicing
-          var updated=entries.slice();
-          for(var si=0;si<selected.length;si++){updated.splice(selected[si],1);}
-          if(updated.length===0){
+          if(sel.length===0){_toast("No entries selected");return;}
+          sel.sort(function(a,b2){return b2-a;});
+          var upd=entries.slice();
+          for(var si=0;si<sel.length;si++){upd.splice(sel[si],1);}
+          if(upd.length===0){
             FB_DB.collection("users").doc(FB_UID).collection("badges").doc(badgeId).delete().then(function(){
-              _toast("Badge deleted");_$("modal").className="modal";
+              _toast("Badge deleted");_$("badgePopupBg").className="badge-popup-bg";
               if(_$("mpBadges"))_loadTrophyCabinet(_$("mpBadges"));
             });
           }else{
-            FB_DB.collection("users").doc(FB_UID).collection("badges").doc(badgeId).update({entries:updated,count:updated.length}).then(function(){
-              _toast(selected.length+" entr"+(selected.length!==1?"ies":"y")+" deleted");
+            FB_DB.collection("users").doc(FB_UID).collection("badges").doc(badgeId).update({entries:upd,count:upd.length}).then(function(){
+              _toast(sel.length+" entr"+(sel.length!==1?"ies":"y")+" deleted");
               _openBadgeDetail(badgeId);
               if(_$("mpBadges"))_loadTrophyCabinet(_$("mpBadges"));
             });
