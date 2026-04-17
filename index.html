@@ -525,7 +525,7 @@
     .cc-popup.show .cc-card { -webkit-transform: scale(1) translateY(0); transform: scale(1) translateY(0); }
     .cc-title { font-size: 1.5rem; font-weight: 900; text-align: center; margin-bottom: .2rem; }
     .cc-sub { font-size: .85rem; color: var(--dim); text-align: center; margin-bottom: 1rem; }
-    .cc-emojis { font-size: 2rem; text-align: center; margin-bottom: .5rem; }
+    .cc-emojis { font-size: 3rem; text-align: center; margin-bottom: .3rem; }
     .cc-stat { display: -webkit-flex; display: flex; -webkit-justify-content: space-between; justify-content: space-between; padding: .3rem 0; font-size: .85rem; }
     .cc-stat .cv { font-weight: 700; }
     .cc-section { background: var(--bg); border-radius: 12px; padding: .8rem; margin-bottom: .6rem; }
@@ -921,7 +921,7 @@
     </div>
     <div id="mpStats"></div>
     <div class="mp-card" id="mpTrophy" style="display:none">
-      <h3>🏆 Trophy Cabinet</h3>
+      <h3>🏆 Trophy Cabinet <button id="mpBadgeManage" style="background:none;border:1px solid var(--border);border-radius:6px;color:var(--dim);font-size:.68rem;padding:2px 8px;cursor:pointer;-webkit-appearance:none;font-weight:600">Manage</button></h3>
       <div id="mpBadges"></div>
     </div>
     <div class="mp-card" id="mpBodyStats" style="display:none">
@@ -994,7 +994,10 @@
         <span>Starts <b id="grpStart">—</b></span>
       </div>
     </div>
-    <button class="pf-save" id="grpTrack" style="margin-bottom:.8rem">&#127919; Track My Progress</button>
+    <div style="display:-webkit-flex;display:flex;gap:.5rem;margin-bottom:.8rem">
+      <button class="pf-save" id="grpTrack" style="flex:1">&#127919; Track My Progress</button>
+      <button class="pf-save" id="grpSummary" style="flex:1;background:linear-gradient(135deg,#ffd700,#f0932b);display:none">🏆 Summary</button>
+    </div>
     <div class="comm-card">
       <h4>&#127942; Leaderboard</h4>
       <div id="grpLeaderboard"></div>
@@ -1036,8 +1039,8 @@
 <!-- Challenge Completion Popup -->
 <div class="cc-popup" id="ccPopup">
   <div class="cc-card">
-    <div class="cc-emojis">🎉🎊🏆🎊🎉</div>
-    <div class="cc-title">CHALLENGE COMPLETE!</div>
+    <div class="cc-emojis">🎊 🏆 🎊</div>
+    <div class="cc-title">CHALLENGE COMPLETE</div>
     <div class="cc-sub" id="ccSub"></div>
     <div id="ccContent"></div>
     <button class="cc-close-btn" id="ccClose">Celebrate! 🎉</button>
@@ -1390,6 +1393,10 @@ function _save(){
   _toast("Saved");
 }
 
+// TEMP: Date offset for testing. Set to 0 for production.
+var DATE_OFFSET_DAYS=0;
+function _now(){var d=new Date();d.setDate(d.getDate()+DATE_OFFSET_DAYS);return d;}
+
 function _ensD(d){
   if(!APP_DATA.days[d])APP_DATA.days[d]={tasks:{},notes:"",foods:[],waterOz:0,mood:null};
   if(!APP_DATA.days[d].foods)APP_DATA.days[d].foods=[];
@@ -1407,7 +1414,7 @@ function _maxDays(){return(APP_CTX&&APP_CTX.config)?APP_CTX.config.days:75;}
 function _getCurrentDay(){
   if(!APP_DATA.startDate)return null;
   var s=new Date(APP_DATA.startDate+"T00:00:00");
-  var now=new Date();
+  var now=_now();
   var today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
   var diff=Math.floor((today-s)/86400000)+1;
   if(diff<1)return 0; // challenge hasn't started yet
@@ -2578,7 +2585,7 @@ try{
         // Challenge hasn't started yet — show countdown
         _hideDayPanels();
         var s=new Date(APP_DATA.startDate+"T00:00:00");
-        var today=new Date();today=new Date(today.getFullYear(),today.getMonth(),today.getDate());
+        var today=_now();today=new Date(today.getFullYear(),today.getMonth(),today.getDate());
         var daysUntil=Math.ceil((s-today)/86400000);
         _$("dayHdr").classList.remove("hide");
         _$("dayTitle").textContent="Starts in "+daysUntil+" day"+(daysUntil===1?"":"s");
@@ -3195,6 +3202,85 @@ try{
     _enterChallengeCtx(_curGrpId,_curGrpData);
   });
 
+  _$("grpSummary").addEventListener("click",function(){
+    if(!_curGrpId||!_curGrpData)return;
+    _showChallengeSummary(_curGrpId,_curGrpData);
+  });
+
+  function _showChallengeSummary(gid,gData){
+    _$("mTt").textContent="";
+    var members=(gData.memberUids||[]).length;
+    var h='<div style="text-align:center;margin-bottom:1rem">';
+    h+='<div style="font-size:2.5rem">🏆</div>';
+    h+='<div style="font-size:1.2rem;font-weight:800">Challenge Summary</div>';
+    h+='<div style="font-size:.85rem;color:var(--dim)">'+gData.name+' \u2022 '+gData.config.days+' day'+(gData.config.days!==1?"s":"")+(members?' \u2022 '+members+' member'+(members!==1?"s":""):'')+'</div>';
+    h+='</div>';
+    // Load group-specific localStorage for activity stats
+    var gcKey="75hard_gc_"+gid+"_"+FB_UID;
+    var gcData={days:{}};
+    try{var raw=localStorage.getItem(gcKey);if(raw)gcData=JSON.parse(raw);}catch(e){}
+    var totalWorkouts=0,totalWater=0,totalPages=0,totalCals=0,calDays2=0;
+    var maxD=gData.config.days;
+    for(var di=1;di<=maxD;di++){
+      var dd2=gcData.days?gcData.days[di]:null;
+      if(dd2){
+        if(dd2.tasks){
+          if(dd2.tasks.w1)totalWorkouts++;if(dd2.tasks.w2)totalWorkouts++;if(dd2.tasks.w3)totalWorkouts++;
+          if(dd2.tasks.read)totalPages+=10;
+        }
+        totalWater+=(dd2.waterOz||0);
+        if(dd2.foods){var dc2=0;for(var fi2=0;fi2<dd2.foods.length;fi2++)dc2+=(dd2.foods[fi2].totalCal||0);if(dc2>0){totalCals+=dc2;calDays2++;}}
+      }
+    }
+    var avgCals2=calDays2>0?Math.round(totalCals/calDays2):0;
+    // Load leaderboard
+    FB_DB.collection("groups").doc(gid).collection("members").orderBy("score","desc").get().then(function(snap){
+      var rank=0;var myRank=0;var myScore=0;var myDone=0;var myStreak=0;var total=snap.size;
+      // Your performance
+      h+='<div class="cc-section"><h4>YOUR PERFORMANCE</h4>';
+      snap.forEach(function(doc){
+        rank++;var d=doc.data();
+        if(doc.id===FB_UID){myRank=rank;myScore=d.score||0;myDone=d.completedDays||0;myStreak=d.currentStreak||0;}
+      });
+      h+='<div class="cc-stat"><span>\u2705 Days Completed</span><span class="cv" style="color:var(--green)">'+myDone+' / '+maxD+'</span></div>';
+      h+='<div class="cc-stat"><span>\ud83d\udd25 Best Streak</span><span class="cv" style="color:#fd7e14">'+myStreak+' day'+(myStreak!==1?"s":"")+'</span></div>';
+      h+='<div class="cc-stat"><span>\u2b50 Final Score</span><span class="cv" style="color:var(--accent)">'+myScore+' pts</span></div>';
+      if(myRank)h+='<div class="cc-stat"><span>\ud83c\udfc5 Rank</span><span class="cv">#'+myRank+' of '+total+'</span></div>';
+      h+='<div class="cc-stat"><span>\ud83c\udfcb\ufe0f Workouts Done</span><span class="cv">'+totalWorkouts+'</span></div>';
+      h+='<div class="cc-stat"><span>\ud83d\udca7 Water Consumed</span><span class="cv" style="color:var(--water)">'+totalWater+' oz</span></div>';
+      h+='<div class="cc-stat"><span>\ud83d\udcda Pages Read</span><span class="cv">'+totalPages+'</span></div>';
+      if(avgCals2)h+='<div class="cc-stat"><span>\ud83c\udf7d\ufe0f Avg Calories</span><span class="cv">'+avgCals2+' kcal</span></div>';
+      h+='</div>';
+      // Final standings
+      h+='<div class="cc-section"><h4>FINAL STANDINGS</h4>';
+      rank=0;
+      snap.forEach(function(doc){
+        rank++;var d=doc.data();var isMe=doc.id===FB_UID;
+        h+='<div class="cc-stat'+(isMe?' style="color:var(--accent);font-weight:700"':'')+'"><span>#'+rank+' '+d.icon+' '+d.username+(isMe?" (you)":"")+'</span><span class="cv">'+(d.score||0)+'</span></div>';
+      });
+      h+='</div>';
+      // Award badges on first view of summary (challenge has ended)
+      var badgeKey="75h_ccb_"+FB_UID+"_"+gid;
+      if(!localStorage.getItem(badgeKey)){
+        localStorage.setItem(badgeKey,"1");
+        var chalName=gData.name;
+        _awardBadge("challenge_complete",chalName,"group");
+        if(myRank<=3&&myRank>0)_awardBadge("podium_finish",chalName,"group");
+        if(myRank===1)_awardBadge("champion",chalName,"group");
+        // Show earned badges
+        var earned=[];
+        earned.push("\ud83c\udfc1 Challenge Complete");
+        if(myRank<=3&&myRank>0)earned.push("\ud83c\udfc5 Podium Finish (#"+myRank+")");
+        if(myRank===1)earned.push("\ud83d\udc51 Champion");
+        h+='<div class="cc-section"><h4>\ud83c\udfc5 BADGES EARNED</h4>';
+        for(var bi=0;bi<earned.length;bi++)h+='<div style="font-size:.85rem;padding:.2rem 0">'+earned[bi]+'</div>';
+        h+='</div>';
+      }
+      _$("mCt").innerHTML=h;
+      _$("modal").className="modal show";
+    });
+  }
+
   _$("backToChallenge").addEventListener("click",function(){
     if(!APP_CTX||!APP_CTX.gid)return;
     var gid=APP_CTX.gid;
@@ -3616,14 +3702,25 @@ try{
     el.innerHTML='<div class="comm-empty" style="color:var(--accent)">Loading...</div>';
     FB_DB.collection("groups").where("memberUids","array-contains",FB_UID).get().then(function(snap){
       el.innerHTML="";
-      if(snap.empty){el.innerHTML='<div class="comm-empty">No challenges yet. Create or join one!</div>';return;}
+      var activeCount=0;
       snap.forEach(function(doc){
         var d=doc.data();
+        // Skip ended challenges — they show in Completed section
+        if(d.status==="ended")return;
+        // Auto-detect ended: if start + days < now, it's ended
+        var startD2=new Date(d.config.startDate+"T00:00:00");
+        var endD2=new Date(startD2);endD2.setDate(endD2.getDate()+d.config.days);
+        if(d.status==="active"&&_now()>=endD2){
+          FB_DB.collection("groups").doc(doc.id).update({status:"ended"}).catch(function(){});
+          return; // will show in completed section
+        }
+        activeCount++;
         var card=document.createElement("div");card.className="grp-card";
         card.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center"><span class="grp-name">'+d.name+'</span><span class="grp-badge '+(d.status||"active")+'">'+(d.status||"active")+'</span></div><div class="grp-desc">'+d.description+'</div><div class="grp-meta"><span>&#128101; <b>'+(d.memberUids||[]).length+'</b></span><span>'+d.config.days+' days</span></div>';
         card.addEventListener("click",function(){_openGroupDetail(doc.id);});
         el.appendChild(card);
       });
+      if(activeCount===0)el.innerHTML='<div class="comm-empty">No active challenges. Create or join one!</div>';
     }).catch(function(err){
       console.error("loadMyGroups error:",err);
       el.innerHTML='<div class="comm-empty">Error loading. Close and reopen Community.</div>';
@@ -3642,7 +3739,7 @@ try{
     h+='</div>';
     h+='<div class="pf-card"><h3>\ud83d\udcc5 Schedule</h3>';
     h+='<div class="pf-field"><label>\ud83d\udcc6 Start Date</label><input class="pf-input" id="cgStart" type="date"></div>';
-    h+='<div class="pf-field"><label>\u23f3 Duration</label><div class="pf-slider-wrap"><input class="pf-slider" type="range" id="cgDays" min="7" max="75" value="75"><span class="pf-slider-val" id="cgDaysV">75 days</span></div></div>';
+    h+='<div class="pf-field"><label>\u23f3 Duration</label><div class="pf-slider-wrap"><input class="pf-slider" type="range" id="cgDays" min="1" max="75" value="75"><span class="pf-slider-val" id="cgDaysV">75 days</span></div></div>';
     h+='</div>';
     h+='<div class="pf-card"><h3>\ud83c\udfaf Daily Goals</h3>';
     h+='<div class="pf-field"><label>\ud83c\udfcb\ufe0f Workouts per day</label><div class="pf-slider-wrap"><input class="pf-slider" type="range" id="cgWorkouts" min="1" max="3" value="2"><span class="pf-slider-val" id="cgWorkoutsV">2</span></div></div>';
@@ -3849,22 +3946,45 @@ try{
       _$("grpStart").textContent=d.config.startDate;
       // Auto-update status if start date has arrived
       var startD=new Date(d.config.startDate+"T00:00:00");
-      var now=new Date();
+      var now=_now();
       var notStarted=startD>now;
       if(d.status==="upcoming"&&!notStarted){
         d.status="active";_curGrpData.status="active";
         FB_DB.collection("groups").doc(gid).update({status:"active"}).catch(function(){});
       }
+      // Auto-mark as ended if challenge duration has elapsed
+      var endD=new Date(startD);endD.setDate(endD.getDate()+d.config.days);
+      var isEnded=!notStarted&&now>=endD;
+      if(d.status==="active"&&isEnded){
+        d.status="ended";_curGrpData.status="ended";
+        FB_DB.collection("groups").doc(gid).update({status:"ended"}).catch(function(){});
+      }
       _$("grpStatus").textContent=d.status;_$("grpStatus").className="grp-badge "+(d.status||"active");
-      _$("grpTrack").disabled=notStarted;
-      _$("grpTrack").style.opacity=notStarted?".4":"";
-      _$("grpTrack").textContent=notStarted?"\u23f3 Starts "+d.config.startDate:"\ud83c\udfaf Track My Progress";
+      // Track/Summary buttons
+      if(notStarted){
+        _$("grpTrack").disabled=true;
+        _$("grpTrack").style.opacity=".4";
+        _$("grpTrack").textContent="\u23f3 Starts "+d.config.startDate;
+        _$("grpSummary").style.display="none";
+      }else if(d.status==="ended"){
+        _$("grpTrack").disabled=false;
+        _$("grpTrack").style.opacity="";
+        _$("grpTrack").textContent="\ud83c\udfaf View My Progress";
+        _$("grpSummary").style.display="";
+      }else{
+        _$("grpTrack").disabled=false;
+        _$("grpTrack").style.opacity="";
+        _$("grpTrack").textContent="\ud83c\udfaf Track My Progress";
+        _$("grpSummary").style.display="none";
+      }
       // If challenge hasn't started, reset stale scores for current user
       if(notStarted){
         FB_DB.collection("groups").doc(gid).collection("members").doc(FB_UID).update({
           score:0,currentStreak:0,completedDays:0,lastSyncDay:0,dayData:{}
         }).catch(function(){});
       }
+      // Hide invite card and action buttons for ended challenges
+      _$("grpShareCard").style.display=d.status==="ended"?"none":"";
       _$("grpPIN").textContent=d.password;
       _$("grpInvCode").textContent=d.inviteCode;
       // Goals
@@ -3878,12 +3998,14 @@ try{
       var ml=d.config.milestones||{weekly:100,habit21:500,halfway:750,homeStretch:1000,complete:5000};
       var homeDay=Math.round(d.config.days*0.8);
       _$("grpScoring").innerHTML='<div style="font-size:.8rem;color:var(--dim)">Per task: <b style="color:var(--text)">'+sc.taskPoints+'pts</b> &bull; All done: <b style="color:var(--text)">'+sc.completionBonus+'pts</b></div><div style="font-size:.75rem;color:var(--dim);margin-top:.5rem;line-height:1.6"><b style="color:var(--yellow)">\ud83c\udfc5 Milestones:</b><br>\u2b50 7-day perfect streak: <b style="color:var(--green)">+'+ml.weekly+'</b> (repeats)<br>\ud83e\udde0 Habit Builder (21-day streak): <b style="color:var(--green)">+'+ml.habit21+'</b><br>\ud83c\udfaf Halfway (Day '+halfDay+'): <b style="color:var(--green)">+'+ml.halfway+'</b>'+(homeDay!==halfDay?'<br>\ud83d\ude80 Home Stretch (Day '+homeDay+'): <b style="color:var(--green)">+'+ml.homeStretch+'</b>':'')+'<br>\ud83c\udfc6 Complete (Day '+d.config.days+'): <b style="color:var(--green)">+'+ml.complete+'</b></div>';
-      // Owner controls
+      // Owner controls — hide all for ended challenges
       var isOwner=d.owner===FB_UID;
-      _$("grpEdit").style.display=isOwner?"":"none";
-      _$("grpKick").style.display=isOwner?"":"none";
-      _$("grpEnd").style.display=isOwner?"":"none";
+      var isActive=d.status==="active";
+      _$("grpEdit").style.display=(isOwner&&isActive)?"":"none";
+      _$("grpKick").style.display=(isOwner&&isActive)?"":"none";
+      _$("grpEnd").style.display=(isOwner&&isActive)?"":"none";
       _$("grpDelete").style.display=isOwner?"":"none";
+      _$("grpLeave").style.display=(d.status==="ended")?"none":"";
       // Leaderboard
       _loadLeaderboard(gid,notStarted);
     });
@@ -4279,19 +4401,24 @@ try{
     });
   }
 
+  var _badgeManageMode=false;
+
   function _loadTrophyCabinet(targetEl){
     if(!FB_UID)return;
     FB_DB.collection("users").doc(FB_UID).collection("badges").orderBy("tier","desc").get().then(function(snap){
       if(snap.empty){
         targetEl.innerHTML='<div style="font-size:.82rem;color:var(--dim);text-align:center;padding:.5rem">No badges yet. Keep going!</div>';
-        _$("mpTrophy").style.display="";return;
+        _$("mpTrophy").style.display="";_$("mpBadgeManage").style.display="none";return;
       }
+      _$("mpBadgeManage").style.display="";
       var h='<div class="badge-grid">';var total=0;var shown=0;
+      var badgeList=[];
       snap.forEach(function(doc){
         var d=doc.data();if(d.visibility==="deleted")return;
         total+=d.count||1;shown++;
+        badgeList.push({id:d.id,emoji:d.emoji,tier:d.tier,count:d.count||1,hidden:d.visibility==="hide"});
         var hidden=d.visibility==="hide";
-        h+='<div class="badge-slot tier'+d.tier+(hidden?" hidden":"")+'" data-bid="'+d.id+'">';
+        h+='<div class="badge-slot tier'+d.tier+(hidden?" hidden":"")+'" data-bid="'+d.id+'" style="position:relative">';
         h+='<span class="be">'+d.emoji+'</span>';
         if((d.count||1)>1)h+='<span class="bcount">\u00d7'+d.count+'</span>';
         h+='</div>';
@@ -4300,11 +4427,52 @@ try{
       h+='<div style="font-size:.68rem;color:var(--dim);margin-top:.4rem;text-align:center">'+shown+' badge'+(shown!==1?"s":"")+(total>shown?" \u00b7 "+total+" total earned":"")+'</div>';
       targetEl.innerHTML=h;
       _$("mpTrophy").style.display="";
+      _badgeManageMode=false;
+      _$("mpBadgeManage").textContent="Manage";
       targetEl.querySelectorAll(".badge-slot").forEach(function(slot){
-        slot.addEventListener("click",function(){_openBadgeDetail(this.getAttribute("data-bid"));});
+        slot.addEventListener("click",function(){
+          if(_badgeManageMode){
+            this.classList.toggle("hidden");
+          }else{
+            _openBadgeDetail(this.getAttribute("data-bid"));
+          }
+        });
       });
+      // Store badge list for manage mode
+      targetEl._badgeList=badgeList;
     });
   }
+
+  _$("mpBadgeManage").addEventListener("click",function(){
+    var targetEl=_$("mpBadges");
+    if(!_badgeManageMode){
+      // Enter manage mode
+      _badgeManageMode=true;
+      this.textContent="Done";
+      this.style.borderColor="var(--green)";this.style.color="var(--green)";
+      // Add instruction
+      var inst=document.createElement("div");inst.id="mpManageInst";
+      inst.style.cssText="font-size:.72rem;color:var(--accent);text-align:center;margin-bottom:.4rem";
+      inst.textContent="Tap badges to hide/unhide, then press Done";
+      targetEl.insertBefore(inst,targetEl.firstChild);
+    }else{
+      // Exit manage mode — save visibility changes
+      _badgeManageMode=false;
+      this.textContent="Manage";
+      this.style.borderColor="";this.style.color="";
+      var inst2=document.getElementById("mpManageInst");
+      if(inst2)inst2.remove();
+      // Read current state from DOM and update Firestore
+      targetEl.querySelectorAll(".badge-slot").forEach(function(slot){
+        var bid=slot.getAttribute("data-bid");
+        var isHidden=slot.classList.contains("hidden");
+        FB_DB.collection("users").doc(FB_UID).collection("badges").doc(bid).update({visibility:isHidden?"hide":"show"}).catch(function(){});
+      });
+      _toast("Visibility updated");
+      // Reload after a beat
+      setTimeout(function(){_loadTrophyCabinet(targetEl);},500);
+    }
+  });
 
   function _openBadgeDetail(badgeId){
     if(!FB_UID||!BADGES_DB[badgeId])return;
@@ -4317,52 +4485,64 @@ try{
       h+='<div style="font-size:1.2rem;font-weight:800">'+b.name+'</div>';
       h+='<div style="font-size:.82rem;color:var(--dim);margin-top:.3rem">"'+b.desc+'"</div></div>';
       var isHidden=d.visibility==="hide";
-      // Entries with per-entry delete
       var entries=d.entries||[];
       if(entries.length>0){
         h+='<div style="font-size:.78rem;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.4rem">Earned '+entries.length+' time'+(entries.length!==1?"s":"")+'</div>';
         for(var i=0;i<entries.length;i++){
           var e=entries[i];
-          h+='<div class="badge-detail-card" style="display:flex;align-items:center;justify-content:space-between">';
-          h+='<div><div class="bd-src">'+(e.type==="personal"?"🏠":"🏆")+" "+e.challenge+'</div><div class="bd-date">'+e.date+'</div></div>';
-          h+='<button class="bd-del-entry" data-idx="'+i+'" style="background:none;border:none;color:var(--dim);font-size:1rem;cursor:pointer;padding:4px;-webkit-appearance:none">🗑️</button>';
+          h+='<div class="badge-detail-card bd-entry" data-idx="'+i+'" style="cursor:default">';
+          h+='<div class="bd-src">'+(e.type==="personal"?"🏠":"🏆")+" "+e.challenge+'</div><div class="bd-date">'+e.date+'</div>';
           h+='</div>';
         }
       }
-      // Hide/Unhide button (pressed = hidden, unpressed = visible)
-      h+='<div style="text-align:center;margin-top:.8rem">';
-      if(isHidden){
-        h+='<button id="bdVisBtn" style="padding:8px 24px;border-radius:10px;font-size:.82rem;font-weight:700;cursor:pointer;-webkit-appearance:none;background:var(--card2);border:2px solid var(--dim);color:var(--dim);box-shadow:inset 0 2px 4px rgba(0,0,0,.3)">🙈 Hidden</button>';
-      }else{
-        h+='<button id="bdVisBtn" style="padding:8px 24px;border-radius:10px;font-size:.82rem;font-weight:700;cursor:pointer;-webkit-appearance:none;background:var(--card);border:2px solid var(--border);color:var(--text);box-shadow:0 2px 4px rgba(0,0,0,.2)">👁️ Hide</button>';
-      }
-      h+='</div>';
+      h+='<div style="text-align:center;margin-top:1rem"><button id="bdDeleteBtn" style="padding:6px 16px;border-radius:8px;font-size:.75rem;font-weight:600;cursor:pointer;-webkit-appearance:none;background:none;border:1px solid var(--red);color:var(--red)">Delete</button></div>';
       _$("mCt").innerHTML=h;_$("modal").className="modal show";
-      // Wire hide/unhide button
-      _$("bdVisBtn").addEventListener("click",function(){
-        var newVis=isHidden?"show":"hide";
-        FB_DB.collection("users").doc(FB_UID).collection("badges").doc(badgeId).update({visibility:newVis}).then(function(){
-          _toast(newVis==="show"?"Badge visible":"Badge hidden");
-          _openBadgeDetail(badgeId);
-        });
-      });
-      // Wire per-entry delete buttons
-      document.querySelectorAll(".bd-del-entry").forEach(function(btn){
-        btn.addEventListener("click",function(){
-          var idx=parseInt(this.getAttribute("data-idx"),10);
-          if(!confirm("Remove this badge entry?"))return;
-          var updatedEntries=entries.slice();
-          updatedEntries.splice(idx,1);
-          if(updatedEntries.length===0){
-            // Last entry — delete entire badge
-            FB_DB.collection("users").doc(FB_UID).collection("badges").doc(badgeId).delete();
-            _toast("Badge removed");_$("modal").className="modal";
+      var _bdDelMode=false;
+      _$("bdDeleteBtn").addEventListener("click",function(){
+        if(!_bdDelMode){
+          // Enter selection mode
+          _bdDelMode=true;
+          this.textContent="Confirm Delete";
+          this.style.background="var(--red)";this.style.color="#fff";
+          // Make entries tappable
+          document.querySelectorAll(".bd-entry").forEach(function(card){
+            card.style.cursor="pointer";
+            card._selected=false;
+            card.addEventListener("click",function(){
+              this._selected=!this._selected;
+              this.style.outline=this._selected?"2px solid var(--red)":"";
+              this.style.opacity=this._selected?".5":"";
+            });
+          });
+          // Show inline instruction
+          var inst=document.createElement("div");inst.id="bdDelInst";
+          inst.style.cssText="font-size:.72rem;color:var(--red);text-align:center;margin-bottom:.4rem";
+          inst.textContent="Tap entries to select, then press Confirm Delete";
+          var firstEntry=document.querySelector(".bd-entry");
+          if(firstEntry)firstEntry.parentNode.insertBefore(inst,firstEntry);
+        }else{
+          // Delete selected entries
+          var selected=[];
+          document.querySelectorAll(".bd-entry").forEach(function(card){
+            if(card._selected)selected.push(parseInt(card.getAttribute("data-idx"),10));
+          });
+          if(selected.length===0){_toast("No entries selected");return;}
+          selected.sort(function(a,b){return b-a;}); // reverse order for safe splicing
+          var updated=entries.slice();
+          for(var si=0;si<selected.length;si++){updated.splice(selected[si],1);}
+          if(updated.length===0){
+            FB_DB.collection("users").doc(FB_UID).collection("badges").doc(badgeId).delete().then(function(){
+              _toast("Badge deleted");_$("modal").className="modal";
+              if(_$("mpBadges"))_loadTrophyCabinet(_$("mpBadges"));
+            });
           }else{
-            FB_DB.collection("users").doc(FB_UID).collection("badges").doc(badgeId).update({entries:updatedEntries,count:updatedEntries.length});
-            _toast("Entry removed");
-            _openBadgeDetail(badgeId); // refresh
+            FB_DB.collection("users").doc(FB_UID).collection("badges").doc(badgeId).update({entries:updated,count:updated.length}).then(function(){
+              _toast(selected.length+" entr"+(selected.length!==1?"ies":"y")+" deleted");
+              _openBadgeDetail(badgeId);
+              if(_$("mpBadges"))_loadTrophyCabinet(_$("mpBadges"));
+            });
           }
-        });
+        }
       });
     });
   }
@@ -4422,9 +4602,8 @@ try{
     if(!FB_UID)return;
     var cur=_getCurrentDay()||0;
     var mx=_maxDays();
-    if(cur<mx)return; // not last day yet
-    if(!_isDayComplete(mx))return; // last day not complete
-    // Check if already archived
+    if(cur<mx)return;
+    if(!_isDayComplete(mx))return;
     var ctx=APP_CTX;
     var chalId=ctx?ctx.gid:"personal";
     var seenKey="75h_cc_"+FB_UID+"_"+chalId;
@@ -4432,66 +4611,64 @@ try{
     localStorage.setItem(seenKey,"1");
 
     var chalName=ctx?ctx.name:"Personal 75 Hard";
-    var chalType=ctx?"group":"personal";
     var days=mx;
 
-    // Calculate final stats
-    var done=0,streak=0,bestStreak=0,cStreak=0;
+    // Calculate stats
+    var done=0,bestStreak=0,cStreak=0;
+    var totalWorkouts=0,totalWater=0,totalPages=0,totalCals=0,calDays=0,totalPhotos=0;
     for(var i=1;i<=mx;i++){
       if(_isDayComplete(i)){done++;cStreak++;if(cStreak>bestStreak)bestStreak=cStreak;}
       else{cStreak=0;}
+      var dd=APP_DATA.days[i];
+      if(dd){
+        if(dd.tasks){
+          if(dd.tasks.w1)totalWorkouts++;
+          if(dd.tasks.w2)totalWorkouts++;
+          if(dd.tasks.w3)totalWorkouts++;
+          if(dd.tasks.read)totalPages+=10;
+        }
+        totalWater+=(dd.waterOz||0);
+        if(dd.foods){var dc=0;for(var fi=0;fi<dd.foods.length;fi++)dc+=(dd.foods[fi].totalCal||0);if(dc>0){totalCals+=dc;calDays++;}}
+      }
     }
-    streak=cStreak;
-    var score=0;
-    if(ctx&&ctx.config){
-      var result=_calcScore(ctx.config,mx,mx);
-      score=result.totalScore;
+    var avgCals=calDays>0?Math.round(totalCals/calDays):0;
+    // Count photos within this challenge's date range
+    var photoCount=0;
+    if(APP_DATA.startDate){
+      var cStart=new Date(APP_DATA.startDate+"T00:00:00");
+      for(var pi=0;pi<mx;pi++){
+        var pDate=new Date(cStart);pDate.setDate(cStart.getDate()+pi);
+        var pKey=pDate.getFullYear()+"-"+String(pDate.getMonth()+1).padStart(2,"0")+"-"+String(pDate.getDate()).padStart(2,"0");
+        // Check if photo task was done on this day (proxy for photo uploaded)
+        var pdd=APP_DATA.days[pi+1];
+        if(pdd&&pdd.tasks&&pdd.tasks.photo)photoCount++;
+      }
     }
-
-    // Award badges
-    _awardBadge("challenge_complete",chalName,chalType);
-    if(chalType==="personal"&&mx===75&&done===75)_awardBadge("legend_75",chalName,chalType);
-
-    // For group: get rank
-    var rank=0;var totalMembers=0;var leaderboard=[];
+    var totalMembers=0;
     if(ctx&&ctx.gid){
-      FB_DB.collection("groups").doc(ctx.gid).collection("members").orderBy("score","desc").get().then(function(snap){
-        var r=0;
-        snap.forEach(function(doc){
-          r++;totalMembers++;
-          leaderboard.push({rank:r,icon:doc.data().icon,name:doc.data().username,score:doc.data().score||0});
-          if(doc.id===FB_UID)rank=r;
-        });
-        // Podium/Champion badges
-        if(rank<=3)_awardBadge("podium_finish",chalName,chalType);
-        if(rank===1)_awardBadge("champion",chalName,chalType);
-        _showCompletionPopup(chalName,chalType,days,done,bestStreak,score,rank,totalMembers,leaderboard);
-        _archiveChallenge(chalId,chalName,chalType,days,done,bestStreak,score,rank,totalMembers);
+      FB_DB.collection("groups").doc(ctx.gid).get().then(function(gDoc){
+        if(gDoc.exists)totalMembers=(gDoc.data().memberUids||[]).length;
+        _showCompletionPopup(chalName,days,done,bestStreak,totalWorkouts,totalWater,totalPages,avgCals,photoCount,totalMembers);
       });
     }else{
-      _showCompletionPopup(chalName,chalType,days,done,bestStreak,score,0,0,[]);
-      _archiveChallenge(chalId,chalName,chalType,days,done,bestStreak,score,0,0);
+      _showCompletionPopup(chalName,days,done,bestStreak,totalWorkouts,totalWater,totalPages,avgCals,photoCount,0);
     }
+    // Archive (no badges yet — those come when challenge period ends)
+    _archiveChallenge(chalId,chalName,ctx?"group":"personal",days,done,bestStreak,0,0,totalMembers);
   }
 
-  function _showCompletionPopup(name,type,days,done,bestStreak,score,rank,totalMembers,leaderboard){
-    _$("ccSub").textContent="── "+name+" ──\n"+days+" days"+(totalMembers?" \u00b7 "+totalMembers+" members":"");
-    var h='<div class="cc-section"><h4>Your Stats</h4>';
-    h+='<div class="cc-stat"><span>Days Completed</span><span class="cv" style="color:var(--green)">'+done+' / '+days+'</span></div>';
-    h+='<div class="cc-stat"><span>Best Streak</span><span class="cv" style="color:#fd7e14">\ud83d\udd25 '+bestStreak+' days</span></div>';
-    if(score)h+='<div class="cc-stat"><span>Final Score</span><span class="cv" style="color:var(--accent)">'+score+' pts</span></div>';
-    if(rank)h+='<div class="cc-stat"><span>Final Rank</span><span class="cv" style="color:var(--green)">'+(rank<=3?["","🥇","🥈","🥉"][rank]:"#"+rank)+' of '+totalMembers+'</span></div>';
+  function _showCompletionPopup(name,days,done,bestStreak,workouts,water,pages,avgCals,photos,members){
+    _$("ccSub").textContent=name+"\n"+days+" day"+(days!==1?"s":"")+(members?" \u00b7 "+members+" member"+(members!==1?"s":""):"");
+    var h='<div class="cc-section"><h4>YOUR JOURNEY</h4>';
+    h+='<div class="cc-stat"><span>\u2705 Days Completed</span><span class="cv" style="color:var(--green)">'+done+' / '+days+'</span></div>';
+    h+='<div class="cc-stat"><span>\ud83d\udd25 Best Streak</span><span class="cv" style="color:#fd7e14">'+bestStreak+' day'+(bestStreak!==1?"s":"")+'</span></div>';
+    h+='<div class="cc-stat"><span>\ud83c\udfcb\ufe0f Workouts Done</span><span class="cv">'+workouts+'</span></div>';
+    h+='<div class="cc-stat"><span>\ud83d\udca7 Water Consumed</span><span class="cv" style="color:var(--water)">'+water+' oz</span></div>';
+    h+='<div class="cc-stat"><span>\ud83d\udcda Pages Read</span><span class="cv">'+pages+'</span></div>';
+    if(avgCals)h+='<div class="cc-stat"><span>\ud83c\udf7d\ufe0f Avg Calories</span><span class="cv">'+avgCals+' kcal</span></div>';
+    if(photos)h+='<div class="cc-stat"><span>\ud83d\udcf8 Photos Taken</span><span class="cv">'+photos+'</span></div>';
     h+='</div>';
-    // Leaderboard for group
-    if(leaderboard.length>0){
-      h+='<div class="cc-section"><h4>Final Leaderboard</h4>';
-      for(var i=0;i<Math.min(leaderboard.length,5);i++){
-        var lb=leaderboard[i];
-        var medal=lb.rank<=3?["","🥇","🥈","🥉"][lb.rank]:"";
-        h+='<div class="cc-stat"><span>'+medal+(medal?" ":"#"+lb.rank+" ")+lb.icon+' '+lb.name+'</span><span class="cv">'+lb.score+'</span></div>';
-      }
-      h+='</div>';
-    }
+    h+='<div style="text-align:center;font-size:.78rem;color:var(--dim);margin-top:.5rem">Come back tomorrow to see final standings and earn your badges!</div>';
     _$("ccContent").innerHTML=h;
     _$("ccPopup").className="cc-popup show";
   }
@@ -4511,34 +4688,20 @@ try{
   }
 
   function _loadCompletedChallenges(){
-    var key="75h_completed_"+(FB_UID||"x");
-    var list=[];
-    try{var raw=localStorage.getItem(key);if(raw)list=JSON.parse(raw);}catch(e){}
-    if(list.length===0){_$("completedSection").style.display="none";return;}
-    _$("completedSection").style.display="";
-    var el=_$("completedList");el.innerHTML="";
-    for(var i=0;i<list.length;i++){
-      (function(item,idx){
-        var card=document.createElement("div");card.className="completed-card";
-        var medal="";
-        if(item.type==="group"&&item.rank){medal=item.rank<=3?["","🥇","🥈","🥉"][item.rank]+" ":"#"+item.rank+" ";}
-        if(item.type==="personal")medal=item.done===item.days?"💎 ":"🏁 ";
-        var h='<button class="cc-del" data-idx="'+idx+'">Delete</button>';
-        h+='<div class="cc-name">'+medal+item.name+'</div>';
-        h+='<div class="cc-meta">'+item.days+' days \u2022 '+item.done+'/'+item.days+' done \u2022 \ud83d\udd25 '+item.bestStreak+(item.score?" \u2022 "+item.score+" pts":"")+'</div>';
-        h+='<div class="cc-meta">Completed '+item.completedDate+'</div>';
-        card.innerHTML=h;
-        card.querySelector(".cc-del").addEventListener("click",function(e){
-          e.stopPropagation();
-          if(!confirm("Delete this from completed challenges?"))return;
-          list.splice(idx,1);
-          localStorage.setItem(key,JSON.stringify(list));
-          _loadCompletedChallenges();
-          _toast("Removed");
-        });
+    if(!FB_UID){_$("completedSection").style.display="none";return;}
+    // Query Firestore for ended challenges where user is a member
+    FB_DB.collection("groups").where("memberUids","array-contains",FB_UID).where("status","==","ended").get().then(function(snap){
+      var el=_$("completedList");el.innerHTML="";
+      if(snap.empty){_$("completedSection").style.display="none";return;}
+      _$("completedSection").style.display="";
+      snap.forEach(function(doc){
+        var d=doc.data();var gid=doc.id;
+        var card=document.createElement("div");card.className="completed-card";card.style.cursor="pointer";
+        card.innerHTML='<div class="cc-name">\ud83c\udfc1 '+d.name+'</div><div class="cc-meta">'+d.config.days+' days \u2022 '+(d.memberUids||[]).length+' members</div>';
+        card.addEventListener("click",function(){_openGroupDetail(gid);});
         el.appendChild(card);
-      })(list[i],i);
-    }
+      });
+    }).catch(function(){_$("completedSection").style.display="none";});
   }
 
   /* ── WORKOUT TIMER ── */
