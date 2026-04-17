@@ -1327,7 +1327,7 @@ var QUOTES_DB=[
 ];
 
 var BADGES_DB={
-  first_blood:{id:"first_blood",emoji:"🩸",name:"First Blood",desc:"Complete Day 1 of any challenge",tier:1,source:"both",multi:true},
+  genesis:{id:"genesis",emoji:"🌱",name:"Genesis",desc:"Complete Day 1 of any challenge",tier:1,source:"both",multi:true},
   week_warrior:{id:"week_warrior",emoji:"⚔️",name:"Week Warrior",desc:"Achieve a 7-day streak",tier:2,source:"both",multi:true},
   iron_will:{id:"iron_will",emoji:"🛡️",name:"Iron Will",desc:"Achieve a 21-day streak",tier:3,source:"both",multi:true},
   unstoppable:{id:"unstoppable",emoji:"🔥",name:"Unstoppable",desc:"Achieve a 50-day streak",tier:4,source:"both",multi:true},
@@ -4576,7 +4576,7 @@ try{
     var chalType=ctx?"group":"personal";
     var cur=_getCurrentDay()||0;if(cur<1)return;
     // First Blood
-    if(APP_DATA.days[1]){var d1tc=0;var d1t=APP_DATA.days[1].tasks||{};for(var k in d1t){if(d1t[k])d1tc++;}if(d1tc>0)_awardBadge("first_blood",chalName,chalType);}
+    if(APP_DATA.days[1]){var d1tc=0;var d1t=APP_DATA.days[1].tasks||{};for(var k in d1t){if(d1t[k])d1tc++;}if(d1tc>0)_awardBadge("genesis",chalName,chalType);}
     // Streak badges
     var streak=0;
     for(var si=1;si<=cur;si++){if(_isDayComplete(si))streak++;else streak=0;}
