@@ -478,6 +478,64 @@
     .fp-icon { font-size: 4rem; text-align: center; margin-bottom: .5rem; }
     .fp-name { font-size: 1.2rem; font-weight: 800; text-align: center; margin-bottom: .8rem; }
 
+    /* ── USER PROFILE ── */
+    .my-profile-overlay { position: fixed; inset: 0; z-index: 997; background: var(--bg); overflow-y: auto; -webkit-overflow-scrolling: touch; display: none; }
+    .my-profile-overlay.show { display: block; }
+    .my-profile-inner { max-width: 520px; margin: 0 auto; padding: calc(1rem + var(--sat)) 1rem 5rem; }
+    .mp-header { background: linear-gradient(135deg, rgba(108,92,231,.15), rgba(0,230,118,.08)); border-radius: var(--radius); padding: 1.5rem 1rem; text-align: center; margin-bottom: 1rem; }
+    .mp-icon { font-size: 4rem; margin-bottom: .3rem; cursor: pointer; }
+    .mp-icon:active { -webkit-transform: scale(.9); transform: scale(.9); }
+    .mp-name { font-size: 1.4rem; font-weight: 800; }
+    .mp-email { font-size: .75rem; color: var(--dim); margin-top: .2rem; }
+    .mp-since { font-size: .72rem; color: var(--dim); margin-top: .15rem; }
+    .mp-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; margin-bottom: .8rem; }
+    .mp-card h3 { font-size: .88rem; font-weight: 700; margin-bottom: .6rem; display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; -webkit-justify-content: space-between; justify-content: space-between; }
+    .mp-stat-row { display: -webkit-flex; display: flex; -webkit-justify-content: space-between; justify-content: space-between; padding: .25rem 0; font-size: .82rem; }
+    .mp-stat-row .mv { font-weight: 700; }
+    .mp-actions { display: -webkit-flex; display: flex; gap: .5rem; -webkit-justify-content: center; justify-content: center; margin-top: 1rem; }
+    .mp-btn { padding: .6rem 1.2rem; border-radius: 12px; font-size: .8rem; font-weight: 600; cursor: pointer; border: 1px solid var(--border); background: var(--card); color: var(--text); min-height: 44px; -webkit-appearance: none; }
+    .mp-btn:active { border-color: var(--accent); }
+    .mp-btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .usr-icon-btn { background: none; border: none; font-size: 1.3rem; cursor: pointer; -webkit-appearance: none; padding: 2px; margin-right: .3rem; }
+
+    /* ── BADGES ── */
+    .badge-grid { display: -webkit-flex; display: flex; -webkit-flex-wrap: wrap; flex-wrap: wrap; gap: 6px; }
+    .badge-slot { width: 56px; height: 56px; border-radius: 14px; background: var(--bg); border: 2px solid var(--border); display: -webkit-flex; display: flex; -webkit-flex-direction: column; flex-direction: column; -webkit-align-items: center; align-items: center; -webkit-justify-content: center; justify-content: center; cursor: pointer; position: relative; -webkit-transition: all .15s; transition: all .15s; }
+    .badge-slot:active { -webkit-transform: scale(.92); transform: scale(.92); }
+    .badge-slot .be { font-size: 1.5rem; }
+    .badge-slot .bcount { position: absolute; bottom: 2px; right: 4px; font-size: .55rem; font-weight: 800; color: var(--accent); }
+    .badge-slot.hidden { opacity: .3; }
+    .badge-slot.tier1 { border-color: #cd7f32; }
+    .badge-slot.tier2 { border-color: #c0c0c0; }
+    .badge-slot.tier3 { border-color: #ffd700; }
+    .badge-slot.tier4 { border-color: var(--accent); box-shadow: 0 0 8px rgba(108,92,231,.3); }
+    .badge-slot.tier5 { border-color: var(--green); box-shadow: 0 0 12px rgba(0,230,118,.3); }
+    .badge-detail-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: .7rem; margin-bottom: .4rem; }
+    .badge-detail-card .bd-src { font-size: .78rem; font-weight: 600; }
+    .badge-detail-card .bd-date { font-size: .68rem; color: var(--dim); }
+    .badge-actions { display: -webkit-flex; display: flex; gap: .4rem; -webkit-justify-content: center; justify-content: center; margin-top: .8rem; }
+    .badge-actions button { padding: 8px 16px; border-radius: 10px; font-size: .78rem; font-weight: 600; cursor: pointer; -webkit-appearance: none; border: 1px solid var(--border); background: var(--card); color: var(--text); min-height: 36px; }
+    .badge-actions button.active { border-color: var(--accent); background: rgba(108,92,231,.1); color: var(--accent); }
+    .badge-actions button.del { border-color: var(--red); color: var(--red); }
+
+    /* ── CHALLENGE COMPLETION ── */
+    .cc-popup { position: fixed; inset: 0; z-index: 9997; background: rgba(0,0,0,.85); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; -webkit-justify-content: center; justify-content: center; padding: 1rem; opacity: 0; pointer-events: none; -webkit-transition: opacity .5s; transition: opacity .5s; }
+    .cc-popup.show { opacity: 1; pointer-events: auto; }
+    .cc-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 1.5rem; max-width: 400px; width: 100%; max-height: 85vh; overflow-y: auto; -webkit-overflow-scrolling: touch; -webkit-transform: scale(.8) translateY(30px); transform: scale(.8) translateY(30px); -webkit-transition: -webkit-transform .5s cubic-bezier(.175,.885,.32,1.275); transition: transform .5s cubic-bezier(.175,.885,.32,1.275); }
+    .cc-popup.show .cc-card { -webkit-transform: scale(1) translateY(0); transform: scale(1) translateY(0); }
+    .cc-title { font-size: 1.5rem; font-weight: 900; text-align: center; margin-bottom: .2rem; }
+    .cc-sub { font-size: .85rem; color: var(--dim); text-align: center; margin-bottom: 1rem; }
+    .cc-emojis { font-size: 2rem; text-align: center; margin-bottom: .5rem; }
+    .cc-stat { display: -webkit-flex; display: flex; -webkit-justify-content: space-between; justify-content: space-between; padding: .3rem 0; font-size: .85rem; }
+    .cc-stat .cv { font-weight: 700; }
+    .cc-section { background: var(--bg); border-radius: 12px; padding: .8rem; margin-bottom: .6rem; }
+    .cc-section h4 { font-size: .78rem; font-weight: 700; color: var(--dim); text-transform: uppercase; letter-spacing: .5px; margin-bottom: .4rem; }
+    .cc-close-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, var(--green), #69f0ae); color: #000; border: none; border-radius: 14px; font-weight: 800; font-size: .95rem; cursor: pointer; -webkit-appearance: none; margin-top: .5rem; }
+    .completed-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: .8rem; margin-bottom: .5rem; }
+    .completed-card .cc-name { font-weight: 700; font-size: .9rem; }
+    .completed-card .cc-meta { font-size: .72rem; color: var(--dim); margin-top: .2rem; }
+    .completed-card .cc-del { background: none; border: 1px solid var(--border); border-radius: 6px; color: var(--dim); font-size: .7rem; padding: 3px 8px; cursor: pointer; -webkit-appearance: none; float: right; }
+
     /* ── MOOD TRACKER ── */
     .mood-sec { display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; -webkit-justify-content: center; justify-content: center; gap: .4rem; margin-bottom: .8rem; padding: .5rem; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); }
     .mood-sec.hide { display: none; }
@@ -564,7 +622,7 @@
 <div class="page hide" id="appPage">
 
   <div class="usr-bar" id="usrBar">
-    <span><span class="uname" id="uName"></span> <span id="ctxLabel" style="font-size:.7rem;color:var(--accent);display:none">— Personal Challenge</span></span>
+    <span><button class="usr-icon-btn" id="myProfileBtn" title="My Profile"></button><span class="uname" id="uName" style="cursor:pointer"></span> <span id="ctxLabel" style="font-size:.7rem;color:var(--accent);display:none">— Personal Challenge</span></span>
     <div style="display:-webkit-flex;display:flex;gap:.4rem">
       <button class="logout-btn" id="backToChallenge" style="display:none;border-color:var(--accent);color:var(--accent)">&larr; Back</button>
       <button class="logout-btn" id="logoutBtn">Logout</button>
@@ -756,7 +814,6 @@
   <div class="ctrls" id="ctrlSec">
     <button class="ana-btn" id="anaBtn">&#128202; Analytics</button>
     <button class="ana-btn" id="commBtn" style="background:linear-gradient(135deg,#00b894,#00cec9)">&#128101; Community</button>
-    <button class="btn" id="pfBtn">&#9878;&#65039; Profile</button>
     <button class="btn" id="wirBtn">&#128203; Review</button>
     <button class="btn" id="expB">Export</button>
     <button class="btn" id="impB">Import</button>
@@ -850,6 +907,39 @@
   </div>
 </div>
 
+<!-- My Profile Overlay -->
+<div class="my-profile-overlay" id="myProfileOverlay">
+  <div class="my-profile-inner">
+    <div style="display:-webkit-flex;display:flex;-webkit-justify-content:space-between;justify-content:space-between;-webkit-align-items:center;align-items:center;margin-bottom:.8rem">
+      <button class="comm-close" id="myProfileClose">&larr; Back</button>
+    </div>
+    <div class="mp-header">
+      <div class="mp-icon" id="mpIcon"></div>
+      <div class="mp-name" id="mpName"></div>
+      <div class="mp-email" id="mpEmail"></div>
+      <div class="mp-since" id="mpSince"></div>
+    </div>
+    <div id="mpStats"></div>
+    <div class="mp-card" id="mpTrophy" style="display:none">
+      <h3>🏆 Trophy Cabinet</h3>
+      <div id="mpBadges"></div>
+    </div>
+    <div class="mp-card" id="mpBodyStats" style="display:none">
+      <h3>📊 My Stats</h3>
+      <div id="mpBodyContent"></div>
+    </div>
+    <div class="mp-card" id="mpChallenges">
+      <h3>🏆 Active Challenges</h3>
+      <div id="mpChalContent"></div>
+    </div>
+    <div class="mp-actions">
+      <button class="mp-btn" id="mpChangeIcon">Change Icon</button>
+      <button class="mp-btn" id="mpBodyProfile">Body Profile</button>
+      <button class="mp-btn" id="mpLogout" style="border-color:var(--red);color:var(--red)">Logout</button>
+    </div>
+  </div>
+</div>
+
 <!-- Community Overlay -->
 <div class="comm-overlay" id="commOverlay">
   <div class="comm-inner">
@@ -880,6 +970,10 @@
         <button class="btn" id="joinGrpBtn" style="flex:1;font-size:.82rem">Join Challenge</button>
       </div>
       <div id="myGroups"><div class="comm-empty">No challenges yet. Create or join one!</div></div>
+      <div id="completedSection" style="margin-top:1rem;display:none">
+        <div style="font-size:.82rem;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.4rem">🏁 Completed Challenges</div>
+        <div id="completedList"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -936,6 +1030,17 @@
       <button class="comm-close" id="cgClose">Close</button>
     </div>
     <div id="cgContent"></div>
+  </div>
+</div>
+
+<!-- Challenge Completion Popup -->
+<div class="cc-popup" id="ccPopup">
+  <div class="cc-card">
+    <div class="cc-emojis">🎉🎊🏆🎊🎉</div>
+    <div class="cc-title">CHALLENGE COMPLETE!</div>
+    <div class="cc-sub" id="ccSub"></div>
+    <div id="ccContent"></div>
+    <button class="cc-close-btn" id="ccClose">Celebrate! 🎉</button>
   </div>
 </div>
 
@@ -1218,6 +1323,23 @@ var QUOTES_DB=[
   {q:"DAY 75. YOU DID IT. Anything is possible.",a:""}
 ];
 
+var BADGES_DB={
+  first_blood:{id:"first_blood",emoji:"🩸",name:"First Blood",desc:"Complete Day 1 of any challenge",tier:1,source:"both",multi:true},
+  week_warrior:{id:"week_warrior",emoji:"⚔️",name:"Week Warrior",desc:"Achieve a 7-day streak",tier:2,source:"both",multi:true},
+  iron_will:{id:"iron_will",emoji:"🛡️",name:"Iron Will",desc:"Achieve a 21-day streak",tier:3,source:"both",multi:true},
+  unstoppable:{id:"unstoppable",emoji:"🔥",name:"Unstoppable",desc:"Achieve a 50-day streak",tier:4,source:"both",multi:true},
+  halfway_hero:{id:"halfway_hero",emoji:"🏔️",name:"Halfway Hero",desc:"Reach the halfway point",tier:3,source:"both",multi:true},
+  hydration_pro:{id:"hydration_pro",emoji:"💧",name:"Hydration Pro",desc:"Hit water goal 14 days",tier:2,source:"both",multi:false},
+  bookworm:{id:"bookworm",emoji:"📖",name:"Bookworm",desc:"Complete reading task 30 days",tier:2,source:"both",multi:false},
+  photographer:{id:"photographer",emoji:"📸",name:"Photographer",desc:"Upload 10+ progress photos",tier:1,source:"both",multi:false},
+  social_butterfly:{id:"social_butterfly",emoji:"🦋",name:"Social Butterfly",desc:"Join 3 group challenges",tier:2,source:"group",multi:false},
+  hype_machine:{id:"hype_machine",emoji:"🤝",name:"Hype Machine",desc:"Send 10 kudos total",tier:1,source:"group",multi:false},
+  podium_finish:{id:"podium_finish",emoji:"🏅",name:"Podium Finish",desc:"Finish top 3 in a group challenge",tier:3,source:"group",multi:true},
+  champion:{id:"champion",emoji:"👑",name:"Champion",desc:"Finish #1 in a group challenge",tier:4,source:"group",multi:true},
+  legend_75:{id:"legend_75",emoji:"💎",name:"75 Hard Legend",desc:"Complete all 75 days of personal challenge",tier:5,source:"personal",multi:false},
+  challenge_complete:{id:"challenge_complete",emoji:"🏁",name:"Challenge Complete",desc:"Complete any challenge (all days done)",tier:3,source:"both",multi:true}
+};
+
 var UNIT_DEFS=[
   {key:"g",label:"g",getG:function(){return 1;}},
   {key:"tbsp",label:"tbsp",getG:function(){return 15;}},
@@ -1239,6 +1361,7 @@ var APP_STM=null;
 var APP_UNIT="piece";
 var APP_CTX=null; // null=personal, {gid,config,name} for group challenge
 var APP_CTX_BACKUP=null; // saves personal context when switching
+var APP_ICON="";
 </script>
 
 <!-- ====== SCRIPT 2: Core Logic ====== -->
@@ -1674,12 +1797,12 @@ function _checkComplete(d){
   clearTimeout(_checkComplete._t);
   _checkComplete._t=setTimeout(function(){
     if(APP_CTX&&APP_CTX.gid){
-      // In group challenge context — sync to that group
       if(typeof _syncSingleGroup==="function")_syncSingleGroup(APP_CTX.gid);
     }else{
-      // Personal context — only sync personal profile, NOT group scores
       if(typeof _syncPublicProfile==="function")_syncPublicProfile();
     }
+    if(typeof _checkBadges==="function")_checkBadges();
+    if(typeof _checkChallengeCompletion==="function")_checkChallengeCompletion();
   },2000);
 }
 
@@ -1775,31 +1898,77 @@ function _openPDB(cb){
     r.onerror=function(){cb(null);};
   }catch(e){cb(null);}
 }
+// Convert day number to calendar date string using current challenge's startDate
+function _dayToDateKey(dayNum){
+  if(!APP_DATA.startDate)return String(dayNum); // fallback
+  var s=new Date(APP_DATA.startDate+"T00:00:00");
+  s.setDate(s.getDate()+(dayNum-1));
+  return s.getFullYear()+"-"+String(s.getMonth()+1).padStart(2,"0")+"-"+String(s.getDate()).padStart(2,"0");
+}
 function _savePh(day,blob,cb){
+  var key=_dayToDateKey(day);
   _openPDB(function(db){
     if(!db)return cb&&cb();
-    try{var tx=db.transaction("ph","readwrite");tx.objectStore("ph").put({day:Number(day),blob:blob,ts:Date.now()});tx.oncomplete=function(){cb&&cb();};tx.onerror=function(){cb&&cb();};}
+    try{var tx=db.transaction("ph","readwrite");tx.objectStore("ph").put({day:key,blob:blob,ts:Date.now()});tx.oncomplete=function(){cb&&cb();};tx.onerror=function(){cb&&cb();};}
     catch(e){cb&&cb();}
   });
 }
 function _getPh(day,cb){
+  var key=_dayToDateKey(day);
   _openPDB(function(db){
     if(!db)return cb(null);
-    try{var tx=db.transaction("ph","readonly");var r=tx.objectStore("ph").get(Number(day));r.onsuccess=function(){cb(r.result||null);};r.onerror=function(){cb(null);};}
+    try{
+      var tx=db.transaction("ph","readonly");
+      var r=tx.objectStore("ph").get(key);
+      r.onsuccess=function(){
+        if(r.result){cb(r.result);return;}
+        // Fallback: try old numeric key for backward compatibility
+        try{
+          var tx2=db.transaction("ph","readonly");
+          var r2=tx2.objectStore("ph").get(Number(day));
+          r2.onsuccess=function(){
+            if(r2.result){
+              try{var tx3=db.transaction("ph","readwrite");tx3.objectStore("ph").put({day:key,blob:r2.result.blob,ts:r2.result.ts});}catch(e3){}
+              cb(r2.result);
+            }else{cb(null);}
+          };
+          r2.onerror=function(){cb(null);};
+        }catch(e2){cb(null);}
+      };
+      r.onerror=function(){cb(null);};
+    }catch(e){cb(null);}
+  });
+}
+// Get photo by raw key (used by compare/timeline which get keys from _allPhDays)
+function _getPhByKey(rawKey,cb){
+  _openPDB(function(db){
+    if(!db)return cb(null);
+    try{var tx=db.transaction("ph","readonly");var r=tx.objectStore("ph").get(rawKey);r.onsuccess=function(){cb(r.result||null);};r.onerror=function(){cb(null);};}
     catch(e){cb(null);}
   });
 }
 function _delPh(day,cb){
+  var key=_dayToDateKey(day);
   _openPDB(function(db){
     if(!db)return cb&&cb();
-    try{var tx=db.transaction("ph","readwrite");tx.objectStore("ph").delete(Number(day));tx.oncomplete=function(){cb&&cb();};tx.onerror=function(){cb&&cb();};}
-    catch(e){cb&&cb();}
+    try{
+      var tx=db.transaction("ph","readwrite");
+      tx.objectStore("ph").delete(key);
+      // Also delete old numeric key if it exists
+      try{tx.objectStore("ph").delete(Number(day));}catch(e2){}
+      tx.oncomplete=function(){cb&&cb();};tx.onerror=function(){cb&&cb();};
+    }catch(e){cb&&cb();}
   });
 }
 function _allPhDays(cb){
   _openPDB(function(db){
     if(!db)return cb([]);
-    try{var tx=db.transaction("ph","readonly");var r=tx.objectStore("ph").getAllKeys();r.onsuccess=function(){var a=r.result||[];a.sort(function(x,y){return x-y;});cb(a);};r.onerror=function(){cb([]);};}
+    try{var tx=db.transaction("ph","readonly");var r=tx.objectStore("ph").getAllKeys();r.onsuccess=function(){
+      var a=r.result||[];
+      // Convert any old numeric keys to date strings for display, but keep originals for lookup
+      a.sort(function(x,y){return String(x).localeCompare(String(y));});
+      cb(a);
+    };r.onerror=function(){cb([]);};}
     catch(e){cb([]);}
   });
 }
@@ -1854,6 +2023,8 @@ function _handlePh(file){
       APP_DATA.days[APP_DAY].tasks.photo=true;
       _save();_renderTasks(APP_DAY);_colorGrid();_updateStats();_checkComplete(APP_DAY);
       _toast("Photo saved!");
+      // Check photographer badge (10+ photos)
+      _allPhDays(function(days){if(days.length>=10&&typeof _awardBadge==="function")_awardBadge("photographer",APP_CTX?APP_CTX.name:"Personal 75 Hard",APP_CTX?"group":"personal");});
     });
   });
 }
@@ -2084,13 +2255,13 @@ try{
   _$("cpB").addEventListener("click",function(){
     _allPhDays(function(days){
       if(days.length<2)return;
-      _getPh(days[0],function(first){
-        _getPh(days[days.length-1],function(last){
+      _getPhByKey(days[0],function(first){
+        _getPhByKey(days[days.length-1],function(last){
           if(!first||!last)return;
-          _$("mTt").textContent="Day "+days[0]+" vs Day "+days[days.length-1];
+          _$("mTt").textContent=days[0]+" vs "+days[days.length-1];
           var cnt=_$("mCt");cnt.innerHTML='<div class="cmpg"></div>';
           var g=cnt.firstChild;
-          var pairs=[{r:first,l:"Day "+days[0]},{r:last,l:"Day "+days[days.length-1]}];
+          var pairs=[{r:first,l:days[0]},{r:last,l:days[days.length-1]}];
           for(var i=0;i<pairs.length;i++){
             var cd=document.createElement("div");cd.className="cmpc";
             var im=document.createElement("img");im.src=URL.createObjectURL(pairs[i].r.blob);
@@ -2112,12 +2283,12 @@ try{
       var loaded=0;
       for(var i=0;i<days.length;i++){
         (function(day){
-          _getPh(day,function(rec){
+          _getPhByKey(day,function(rec){
             loaded++;
             if(rec&&rec.blob){
               var c2=document.createElement("div");c2.className="tc";
               var im=document.createElement("img");im.src=URL.createObjectURL(rec.blob);
-              var la=document.createElement("div");la.className="tl";la.textContent="Day "+day;
+              var la=document.createElement("div");la.className="tl";la.textContent=day;
               c2.appendChild(im);c2.appendChild(la);_$("tlgC").appendChild(c2);
             }
             if(loaded>=days.length)_$("modal").className="modal show";
@@ -2138,7 +2309,7 @@ try{
       var loaded=0;
       for(var i=0;i<days.length;i++){
         (function(day){
-          _getPh(day,function(rec){
+          _getPhByKey(day,function(rec){
             loaded++;
             if(rec&&rec.blob){
               var reader=new FileReader();
@@ -2261,12 +2432,13 @@ try{
   }
 
   function _showApp(uid,username,icon){
-    FB_UID=uid;APP_USER=username;
+    FB_UID=uid;APP_USER=username;APP_ICON=icon||"";
     APP_SKEY="75hard_u_"+uid;
     _pDB=null;
     _$("loginScreen").className="login-screen hide";
     _$("appPage").className="page";
-    _$("uName").textContent=(icon||"")+' '+username;
+    _$("uName").textContent=username;
+    _$("myProfileBtn").textContent=APP_ICON;
     _initApp();
     _syncPublicProfile();
     // Auto-show week in review on review day
@@ -2425,7 +2597,6 @@ try{
   var MACRO_PRESETS={weight_loss:{p:.33,f:.25,c:.42},maintenance:{p:.27,f:.27,c:.46},muscle_gain:{p:.28,f:.27,c:.45}};
   var _pfHUnit="cm",_pfWUnit="kg";
 
-  _$("pfBtn").addEventListener("click",function(){_openProfile();_$("pfOverlay").className="profile-overlay show";});
   _$("pfClose").addEventListener("click",function(){_$("pfOverlay").className="profile-overlay";});
 
   // Unit toggles
@@ -3189,7 +3360,7 @@ try{
   }
 
   /* ── COMMUNITY ── */
-  _$("commBtn").addEventListener("click",function(){_$("commOverlay").className="comm-overlay show";_loadFriends();_loadPendingReqs();_loadMyGroups();});
+  _$("commBtn").addEventListener("click",function(){_$("commOverlay").className="comm-overlay show";_loadFriends();_loadPendingReqs();_loadMyGroups();if(typeof _loadCompletedChallenges==="function")_loadCompletedChallenges();});
   _$("commClose").addEventListener("click",function(){_$("commOverlay").className="comm-overlay";});
 
   // Tab switching
@@ -3200,7 +3371,7 @@ try{
     document.querySelectorAll(".comm-panel").forEach(function(p){p.classList.remove("active");});
     _$(tab==="friends"?"ctFriends":"ctGroups").classList.add("active");
     _$(tab==="friends"?"panFriends":"panGroups").classList.add("active");
-    if(tab==="groups")_loadMyGroups();
+    if(tab==="groups"){_loadMyGroups();if(typeof _loadCompletedChallenges==="function")_loadCompletedChallenges();}
   }
 
   // ── USER SEARCH ──
@@ -3360,8 +3531,13 @@ try{
           h+='<div style="text-align:center;color:var(--dim);font-size:.82rem;margin-bottom:1rem">Add as a friend to see detailed stats</div>';
           h+='<div style="text-align:center"><button class="cu-btn add" id="fpAddFriend" style="padding:10px 28px;font-size:.88rem">+ Add Friend</button></div>';
         }
+        // Trophy cabinet (shown for everyone)
+        h+='<div id="fpTrophyCabinet" style="margin-bottom:.8rem"></div>';
 
         _$("mCt").innerHTML=h;
+
+        // Load friend's trophy cabinet (visible badges only)
+        _loadFriendBadges(uid);
 
         // Wire action buttons
         if(isFriend){
@@ -3422,7 +3598,11 @@ try{
           h+=_chalSection("Active Challenges","\ud83c\udfc6",active,"var(--green)");
           h+=_chalSection("Upcoming Challenges","\u23f3",upcoming,"var(--accent)");
           h+=_chalSection("Past Challenges","\ud83c\udfc1",ended,"var(--dim)");
-          if(h)_$("mCt").innerHTML+=h;
+          if(h){
+            var chalDiv=document.createElement("div");
+            chalDiv.innerHTML=h;
+            _$("mCt").appendChild(chalDiv);
+          }
         }
         _$("modal").className="modal show";
       });
@@ -3772,9 +3952,18 @@ try{
           })(doc.ref,kBtn,kudosFromToday);
           infoDiv.appendChild(kBtn);
         }
-        row.querySelector(".lb-name").addEventListener("click",function(){
-          if(!isMe)_viewUserProfile(memUid);
-        });
+        (function(myIsMe,myMemUid){
+          row.querySelector(".lb-name").addEventListener("click",function(e){
+            e.stopPropagation();
+            if(myIsMe){
+              _$("grpOverlay").className="grp-overlay";
+              _profileReturnTo="grp";
+              _openMyProfile();
+            }else{
+              _viewUserProfile(myMemUid);
+            }
+          });
+        })(isMe,memUid);
         el.appendChild(row);
       });
       if(rank===0)el.innerHTML='<div class="comm-empty">No members yet</div>';
@@ -3944,6 +4133,412 @@ try{
         });
       });
     });
+  }
+
+  /* ── MY PROFILE ── */
+  _$("myProfileBtn").addEventListener("click",function(){_openMyProfile();});
+  _$("uName").addEventListener("click",function(){_openMyProfile();});
+  var _profileReturnTo=null;
+  _$("myProfileClose").addEventListener("click",function(){
+    _$("myProfileOverlay").className="my-profile-overlay";
+    if(_profileReturnTo==="grp"&&_curGrpId){
+      _$("grpOverlay").className="grp-overlay show";
+      _profileReturnTo=null;
+    }
+  });
+  _$("mpLogout").addEventListener("click",function(){
+    _$("myProfileOverlay").className="my-profile-overlay";
+    _$("logoutBtn").click();
+  });
+  _$("mpChangeIcon").addEventListener("click",function(){
+    _$("mpIcon").click();
+  });
+  _$("mpBodyProfile").addEventListener("click",function(){
+    _$("myProfileOverlay").className="my-profile-overlay";
+    _openProfile();_$("pfOverlay").className="profile-overlay show";
+  });
+
+  function _openMyProfile(){
+    if(!FB_UID)return;
+    _$("mpIcon").textContent=APP_ICON;
+    _$("mpName").textContent=APP_USER;
+    FB_DB.collection("users").doc(FB_UID).get().then(function(doc){
+      if(!doc.exists)return;
+      var d=doc.data();
+      _$("mpEmail").textContent=d.email||"";
+      _$("mpSince").textContent=d.challengeStartDate?"Challenged since "+d.challengeStartDate:"";
+      var p=d.profilePublic||{};
+      var pct=p.completionRate||0;
+      var r2=40,circ2=2*Math.PI*r2,off2=circ2-(pct/100)*circ2;
+      var sh='<div style="position:relative;width:90px;height:90px;margin:0 auto .8rem">';
+      sh+='<svg width="90" height="90" viewBox="0 0 90 90" style="-webkit-transform:rotate(-90deg);transform:rotate(-90deg)">';
+      sh+='<circle cx="45" cy="45" r="'+r2+'" fill="none" stroke="var(--border)" stroke-width="6"/>';
+      sh+='<circle cx="45" cy="45" r="'+r2+'" fill="none" stroke="var(--green)" stroke-width="6" stroke-linecap="round" stroke-dasharray="'+circ2.toFixed(1)+'" stroke-dashoffset="'+off2.toFixed(1)+'"/>';
+      sh+='</svg>';
+      sh+='<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">';
+      sh+='<div style="font-size:1.2rem;font-weight:800">'+pct+'%</div>';
+      sh+='</div></div>';
+      sh+='<div class="ana-metric" style="margin-bottom:.8rem">';
+      sh+='<div class="ana-stat good"><div class="av">'+(p.completedDays||0)+'</div><div class="al">Done</div></div>';
+      sh+='<div class="ana-stat info"><div class="av">'+(p.currentStreak||0)+'</div><div class="al">Streak</div></div>';
+      sh+='</div>';
+      _$("mpStats").innerHTML=sh;
+      var bp=APP_DATA.profile||{};
+      if(bp.bmr||bp.weight_kg){
+        _$("mpBodyStats").style.display="";
+        var bh='';
+        if(bp.bmr)bh+='<div class="mp-stat-row"><span>BMR</span><span class="mv">'+bp.bmr+' kcal</span></div>';
+        if(bp.tdee)bh+='<div class="mp-stat-row"><span>TDEE</span><span class="mv" style="color:var(--accent)">'+bp.tdee+' kcal</span></div>';
+        if(bp.target)bh+='<div class="mp-stat-row"><span>Target</span><span class="mv" style="color:var(--green)">'+bp.target+' kcal</span></div>';
+        if(bp.weight_kg)bh+='<div class="mp-stat-row"><span>Weight</span><span class="mv">'+bp.weight_kg+' kg</span></div>';
+        if(bp.height_cm)bh+='<div class="mp-stat-row"><span>Height</span><span class="mv">'+bp.height_cm+' cm</span></div>';
+        _$("mpBodyContent").innerHTML=bh;
+      }else{_$("mpBodyStats").style.display="none";}
+      var groups=d.groups||[];
+      if(groups.length>0){
+        var loaded=0;var ch='';
+        groups.forEach(function(gid){
+          FB_DB.collection("groups").doc(gid).get().then(function(gDoc){
+            loaded++;
+            if(gDoc.exists){
+              var gd=gDoc.data();
+              if(gd.status!=="ended"){
+                ch+='<div class="mp-stat-row"><span>'+gd.name+'</span><span class="mv" style="color:var(--accent)">'+(gd.status||"active")+'</span></div>';
+              }
+            }
+            if(loaded>=groups.length)_$("mpChalContent").innerHTML=ch||'<div style="font-size:.8rem;color:var(--dim)">No active challenges</div>';
+          }).catch(function(){loaded++;if(loaded>=groups.length)_$("mpChalContent").innerHTML=ch||'<div style="font-size:.8rem;color:var(--dim)">No active challenges</div>';});
+        });
+      }else{_$("mpChalContent").innerHTML='<div style="font-size:.8rem;color:var(--dim)">No active challenges</div>';}
+    });
+    _$("myProfileOverlay").className="my-profile-overlay show";
+    // Load trophy cabinet
+    _loadTrophyCabinet(_$("mpBadges"));
+  }
+
+  _$("mpIcon").addEventListener("click",function(){
+    var h='<div style="text-align:center;margin-bottom:.5rem;font-weight:700">Choose your avatar</div>';
+    h+='<div class="icon-grid" style="max-height:200px">';
+    for(var i=0;i<AVATAR_ICONS.length;i++){
+      h+='<button class="icon-opt'+(AVATAR_ICONS[i]===APP_ICON?' sel':'')+'" data-ic="'+AVATAR_ICONS[i]+'" style="font-size:1.3rem">'+AVATAR_ICONS[i]+'</button>';
+    }
+    h+='</div>';
+    _$("mTt").textContent="";
+    _$("mCt").innerHTML=h;
+    _$("modal").className="modal show";
+    _$("mCt").querySelectorAll(".icon-opt").forEach(function(btn){
+      btn.addEventListener("click",function(){
+        var ic=this.getAttribute("data-ic");
+        APP_ICON=ic;
+        FB_DB.collection("users").doc(FB_UID).update({icon:ic}).then(function(){
+          _$("myProfileBtn").textContent=ic;
+          _$("mpIcon").textContent=ic;
+          _$("modal").className="modal";
+          _toast("Icon updated!");
+          // Propagate icon to all group member docs
+          FB_DB.collection("users").doc(FB_UID).get().then(function(me){
+            var groups=(me.data()||{}).groups||[];
+            groups.forEach(function(gid){
+              FB_DB.collection("groups").doc(gid).collection("members").doc(FB_UID).update({icon:ic}).catch(function(){});
+            });
+          });
+          // Propagate icon to friends' friend subcollection docs
+          FB_DB.collection("users").doc(FB_UID).collection("friends").get().then(function(snap){
+            snap.forEach(function(fDoc){
+              FB_DB.collection("users").doc(fDoc.id).collection("friends").doc(FB_UID).update({icon:ic}).catch(function(){});
+            });
+          });
+        });
+      });
+    });
+  });
+
+  /* ── BADGES ── */
+  function _awardBadge(badgeId,challengeName,challengeType){
+    if(!FB_UID||!BADGES_DB[badgeId])return;
+    var b=BADGES_DB[badgeId];
+    var now=new Date();
+    var dateStr=now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,"0")+"-"+String(now.getDate()).padStart(2,"0");
+    var entry={challenge:challengeName||"Personal 75 Hard",type:challengeType||"personal",date:dateStr};
+    FB_DB.collection("users").doc(FB_UID).collection("badges").doc(badgeId).get().then(function(doc){
+      if(doc.exists){
+        var d=doc.data();
+        if(!b.multi)return;
+        var existing=d.entries||[];
+        for(var i=0;i<existing.length;i++){if(existing[i].challenge===entry.challenge)return;}
+        existing.push(entry);
+        doc.ref.update({entries:existing,count:existing.length});
+        _toast(b.emoji+" "+b.name+" earned again!");
+      }else{
+        FB_DB.collection("users").doc(FB_UID).collection("badges").doc(badgeId).set({
+          id:badgeId,emoji:b.emoji,name:b.name,tier:b.tier,
+          visibility:"show",entries:[entry],count:1,firstEarned:dateStr
+        });
+        _toast(b.emoji+" Badge unlocked: "+b.name+"!");
+      }
+    });
+  }
+
+  function _loadTrophyCabinet(targetEl){
+    if(!FB_UID)return;
+    FB_DB.collection("users").doc(FB_UID).collection("badges").orderBy("tier","desc").get().then(function(snap){
+      if(snap.empty){
+        targetEl.innerHTML='<div style="font-size:.82rem;color:var(--dim);text-align:center;padding:.5rem">No badges yet. Keep going!</div>';
+        _$("mpTrophy").style.display="";return;
+      }
+      var h='<div class="badge-grid">';var total=0;var shown=0;
+      snap.forEach(function(doc){
+        var d=doc.data();if(d.visibility==="deleted")return;
+        total+=d.count||1;shown++;
+        var hidden=d.visibility==="hide";
+        h+='<div class="badge-slot tier'+d.tier+(hidden?" hidden":"")+'" data-bid="'+d.id+'">';
+        h+='<span class="be">'+d.emoji+'</span>';
+        if((d.count||1)>1)h+='<span class="bcount">\u00d7'+d.count+'</span>';
+        h+='</div>';
+      });
+      h+='</div>';
+      h+='<div style="font-size:.68rem;color:var(--dim);margin-top:.4rem;text-align:center">'+shown+' badge'+(shown!==1?"s":"")+(total>shown?" \u00b7 "+total+" total earned":"")+'</div>';
+      targetEl.innerHTML=h;
+      _$("mpTrophy").style.display="";
+      targetEl.querySelectorAll(".badge-slot").forEach(function(slot){
+        slot.addEventListener("click",function(){_openBadgeDetail(this.getAttribute("data-bid"));});
+      });
+    });
+  }
+
+  function _openBadgeDetail(badgeId){
+    if(!FB_UID||!BADGES_DB[badgeId])return;
+    var b=BADGES_DB[badgeId];
+    FB_DB.collection("users").doc(FB_UID).collection("badges").doc(badgeId).get().then(function(doc){
+      if(!doc.exists)return;var d=doc.data();
+      _$("mTt").textContent="";
+      var h='<div style="text-align:center;margin-bottom:1rem">';
+      h+='<div style="font-size:3.5rem;margin-bottom:.3rem">'+b.emoji+'</div>';
+      h+='<div style="font-size:1.2rem;font-weight:800">'+b.name+'</div>';
+      h+='<div style="font-size:.82rem;color:var(--dim);margin-top:.3rem">"'+b.desc+'"</div></div>';
+      var isHidden=d.visibility==="hide";
+      // Entries with per-entry delete
+      var entries=d.entries||[];
+      if(entries.length>0){
+        h+='<div style="font-size:.78rem;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.4rem">Earned '+entries.length+' time'+(entries.length!==1?"s":"")+'</div>';
+        for(var i=0;i<entries.length;i++){
+          var e=entries[i];
+          h+='<div class="badge-detail-card" style="display:flex;align-items:center;justify-content:space-between">';
+          h+='<div><div class="bd-src">'+(e.type==="personal"?"🏠":"🏆")+" "+e.challenge+'</div><div class="bd-date">'+e.date+'</div></div>';
+          h+='<button class="bd-del-entry" data-idx="'+i+'" style="background:none;border:none;color:var(--dim);font-size:1rem;cursor:pointer;padding:4px;-webkit-appearance:none">🗑️</button>';
+          h+='</div>';
+        }
+      }
+      // Hide/Unhide button (pressed = hidden, unpressed = visible)
+      h+='<div style="text-align:center;margin-top:.8rem">';
+      if(isHidden){
+        h+='<button id="bdVisBtn" style="padding:8px 24px;border-radius:10px;font-size:.82rem;font-weight:700;cursor:pointer;-webkit-appearance:none;background:var(--card2);border:2px solid var(--dim);color:var(--dim);box-shadow:inset 0 2px 4px rgba(0,0,0,.3)">🙈 Hidden</button>';
+      }else{
+        h+='<button id="bdVisBtn" style="padding:8px 24px;border-radius:10px;font-size:.82rem;font-weight:700;cursor:pointer;-webkit-appearance:none;background:var(--card);border:2px solid var(--border);color:var(--text);box-shadow:0 2px 4px rgba(0,0,0,.2)">👁️ Hide</button>';
+      }
+      h+='</div>';
+      _$("mCt").innerHTML=h;_$("modal").className="modal show";
+      // Wire hide/unhide button
+      _$("bdVisBtn").addEventListener("click",function(){
+        var newVis=isHidden?"show":"hide";
+        FB_DB.collection("users").doc(FB_UID).collection("badges").doc(badgeId).update({visibility:newVis}).then(function(){
+          _toast(newVis==="show"?"Badge visible":"Badge hidden");
+          _openBadgeDetail(badgeId);
+        });
+      });
+      // Wire per-entry delete buttons
+      document.querySelectorAll(".bd-del-entry").forEach(function(btn){
+        btn.addEventListener("click",function(){
+          var idx=parseInt(this.getAttribute("data-idx"),10);
+          if(!confirm("Remove this badge entry?"))return;
+          var updatedEntries=entries.slice();
+          updatedEntries.splice(idx,1);
+          if(updatedEntries.length===0){
+            // Last entry — delete entire badge
+            FB_DB.collection("users").doc(FB_UID).collection("badges").doc(badgeId).delete();
+            _toast("Badge removed");_$("modal").className="modal";
+          }else{
+            FB_DB.collection("users").doc(FB_UID).collection("badges").doc(badgeId).update({entries:updatedEntries,count:updatedEntries.length});
+            _toast("Entry removed");
+            _openBadgeDetail(badgeId); // refresh
+          }
+        });
+      });
+    });
+  }
+
+  function _loadFriendBadges(friendUid){
+    FB_DB.collection("users").doc(friendUid).collection("badges").orderBy("tier","desc").get().then(function(snap){
+      var el=document.getElementById("fpTrophyCabinet");
+      if(!el)return;
+      if(snap.empty){el.innerHTML="";return;}
+      var h='<div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:.8rem;"><div style="font-size:.82rem;font-weight:700;margin-bottom:.4rem">\ud83c\udfc6 Trophy Cabinet</div><div class="badge-grid">';
+      var count=0;
+      snap.forEach(function(doc){
+        var d=doc.data();
+        if(d.visibility==="hide"||d.visibility==="deleted")return;
+        count++;
+        h+='<div class="badge-slot tier'+d.tier+'">';
+        h+='<span class="be">'+d.emoji+'</span>';
+        if((d.count||1)>1)h+='<span class="bcount">\u00d7'+d.count+'</span>';
+        h+='</div>';
+      });
+      h+='</div></div>';
+      if(count>0)el.innerHTML=h;
+      else el.innerHTML="";
+    }).catch(function(){});
+  }
+
+  function _checkBadges(){
+    if(!FB_UID||!APP_DATA.startDate)return;
+    var ctx=APP_CTX;
+    var chalName=ctx?ctx.name:"Personal 75 Hard";
+    var chalType=ctx?"group":"personal";
+    var cur=_getCurrentDay()||0;if(cur<1)return;
+    // First Blood
+    if(APP_DATA.days[1]){var d1tc=0;var d1t=APP_DATA.days[1].tasks||{};for(var k in d1t){if(d1t[k])d1tc++;}if(d1tc>0)_awardBadge("first_blood",chalName,chalType);}
+    // Streak badges
+    var streak=0;
+    for(var si=1;si<=cur;si++){if(_isDayComplete(si))streak++;else streak=0;}
+    if(streak>=7)_awardBadge("week_warrior",chalName,chalType);
+    if(streak>=21)_awardBadge("iron_will",chalName,chalType);
+    if(streak>=50)_awardBadge("unstoppable",chalName,chalType);
+    // Halfway
+    var mx=_maxDays();var half=Math.ceil(mx/2);
+    if(cur>=half&&_isDayComplete(half))_awardBadge("halfway_hero",chalName,chalType);
+    // Water: 14 days
+    var wGoal2=(ctx&&ctx.config)?ctx.config.dailyGoals.waterOz||128:128;
+    var wDays=0;for(var wi=1;wi<=cur;wi++){var wd=APP_DATA.days[wi];if(wd&&wd.waterOz>=wGoal2)wDays++;}
+    if(wDays>=14)_awardBadge("hydration_pro",chalName,chalType);
+    // Read: 30 days
+    var rDays=0;for(var ri=1;ri<=cur;ri++){var rd=APP_DATA.days[ri];if(rd&&rd.tasks&&rd.tasks.read)rDays++;}
+    if(rDays>=30)_awardBadge("bookworm",chalName,chalType);
+  }
+
+  /* ── CHALLENGE COMPLETION ── */
+  _$("ccClose").addEventListener("click",function(){_$("ccPopup").className="cc-popup";});
+
+  function _checkChallengeCompletion(){
+    if(!FB_UID)return;
+    var cur=_getCurrentDay()||0;
+    var mx=_maxDays();
+    if(cur<mx)return; // not last day yet
+    if(!_isDayComplete(mx))return; // last day not complete
+    // Check if already archived
+    var ctx=APP_CTX;
+    var chalId=ctx?ctx.gid:"personal";
+    var seenKey="75h_cc_"+FB_UID+"_"+chalId;
+    if(localStorage.getItem(seenKey))return;
+    localStorage.setItem(seenKey,"1");
+
+    var chalName=ctx?ctx.name:"Personal 75 Hard";
+    var chalType=ctx?"group":"personal";
+    var days=mx;
+
+    // Calculate final stats
+    var done=0,streak=0,bestStreak=0,cStreak=0;
+    for(var i=1;i<=mx;i++){
+      if(_isDayComplete(i)){done++;cStreak++;if(cStreak>bestStreak)bestStreak=cStreak;}
+      else{cStreak=0;}
+    }
+    streak=cStreak;
+    var score=0;
+    if(ctx&&ctx.config){
+      var result=_calcScore(ctx.config,mx,mx);
+      score=result.totalScore;
+    }
+
+    // Award badges
+    _awardBadge("challenge_complete",chalName,chalType);
+    if(chalType==="personal"&&mx===75&&done===75)_awardBadge("legend_75",chalName,chalType);
+
+    // For group: get rank
+    var rank=0;var totalMembers=0;var leaderboard=[];
+    if(ctx&&ctx.gid){
+      FB_DB.collection("groups").doc(ctx.gid).collection("members").orderBy("score","desc").get().then(function(snap){
+        var r=0;
+        snap.forEach(function(doc){
+          r++;totalMembers++;
+          leaderboard.push({rank:r,icon:doc.data().icon,name:doc.data().username,score:doc.data().score||0});
+          if(doc.id===FB_UID)rank=r;
+        });
+        // Podium/Champion badges
+        if(rank<=3)_awardBadge("podium_finish",chalName,chalType);
+        if(rank===1)_awardBadge("champion",chalName,chalType);
+        _showCompletionPopup(chalName,chalType,days,done,bestStreak,score,rank,totalMembers,leaderboard);
+        _archiveChallenge(chalId,chalName,chalType,days,done,bestStreak,score,rank,totalMembers);
+      });
+    }else{
+      _showCompletionPopup(chalName,chalType,days,done,bestStreak,score,0,0,[]);
+      _archiveChallenge(chalId,chalName,chalType,days,done,bestStreak,score,0,0);
+    }
+  }
+
+  function _showCompletionPopup(name,type,days,done,bestStreak,score,rank,totalMembers,leaderboard){
+    _$("ccSub").textContent="── "+name+" ──\n"+days+" days"+(totalMembers?" \u00b7 "+totalMembers+" members":"");
+    var h='<div class="cc-section"><h4>Your Stats</h4>';
+    h+='<div class="cc-stat"><span>Days Completed</span><span class="cv" style="color:var(--green)">'+done+' / '+days+'</span></div>';
+    h+='<div class="cc-stat"><span>Best Streak</span><span class="cv" style="color:#fd7e14">\ud83d\udd25 '+bestStreak+' days</span></div>';
+    if(score)h+='<div class="cc-stat"><span>Final Score</span><span class="cv" style="color:var(--accent)">'+score+' pts</span></div>';
+    if(rank)h+='<div class="cc-stat"><span>Final Rank</span><span class="cv" style="color:var(--green)">'+(rank<=3?["","🥇","🥈","🥉"][rank]:"#"+rank)+' of '+totalMembers+'</span></div>';
+    h+='</div>';
+    // Leaderboard for group
+    if(leaderboard.length>0){
+      h+='<div class="cc-section"><h4>Final Leaderboard</h4>';
+      for(var i=0;i<Math.min(leaderboard.length,5);i++){
+        var lb=leaderboard[i];
+        var medal=lb.rank<=3?["","🥇","🥈","🥉"][lb.rank]:"";
+        h+='<div class="cc-stat"><span>'+medal+(medal?" ":"#"+lb.rank+" ")+lb.icon+' '+lb.name+'</span><span class="cv">'+lb.score+'</span></div>';
+      }
+      h+='</div>';
+    }
+    _$("ccContent").innerHTML=h;
+    _$("ccPopup").className="cc-popup show";
+  }
+
+  function _archiveChallenge(chalId,name,type,days,done,bestStreak,score,rank,totalMembers){
+    var now=new Date();
+    var dateStr=now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,"0")+"-"+String(now.getDate()).padStart(2,"0");
+    var archive={id:chalId,name:name,type:type,days:days,done:done,bestStreak:bestStreak,score:score,rank:rank,totalMembers:totalMembers,completedDate:dateStr};
+    // Save to localStorage
+    var key="75h_completed_"+FB_UID;
+    var list=[];
+    try{var raw=localStorage.getItem(key);if(raw)list=JSON.parse(raw);}catch(e){}
+    // Don't duplicate
+    for(var i=0;i<list.length;i++){if(list[i].id===chalId)return;}
+    list.push(archive);
+    localStorage.setItem(key,JSON.stringify(list));
+  }
+
+  function _loadCompletedChallenges(){
+    var key="75h_completed_"+(FB_UID||"x");
+    var list=[];
+    try{var raw=localStorage.getItem(key);if(raw)list=JSON.parse(raw);}catch(e){}
+    if(list.length===0){_$("completedSection").style.display="none";return;}
+    _$("completedSection").style.display="";
+    var el=_$("completedList");el.innerHTML="";
+    for(var i=0;i<list.length;i++){
+      (function(item,idx){
+        var card=document.createElement("div");card.className="completed-card";
+        var medal="";
+        if(item.type==="group"&&item.rank){medal=item.rank<=3?["","🥇","🥈","🥉"][item.rank]+" ":"#"+item.rank+" ";}
+        if(item.type==="personal")medal=item.done===item.days?"💎 ":"🏁 ";
+        var h='<button class="cc-del" data-idx="'+idx+'">Delete</button>';
+        h+='<div class="cc-name">'+medal+item.name+'</div>';
+        h+='<div class="cc-meta">'+item.days+' days \u2022 '+item.done+'/'+item.days+' done \u2022 \ud83d\udd25 '+item.bestStreak+(item.score?" \u2022 "+item.score+" pts":"")+'</div>';
+        h+='<div class="cc-meta">Completed '+item.completedDate+'</div>';
+        card.innerHTML=h;
+        card.querySelector(".cc-del").addEventListener("click",function(e){
+          e.stopPropagation();
+          if(!confirm("Delete this from completed challenges?"))return;
+          list.splice(idx,1);
+          localStorage.setItem(key,JSON.stringify(list));
+          _loadCompletedChallenges();
+          _toast("Removed");
+        });
+        el.appendChild(card);
+      })(list[i],i);
+    }
   }
 
   /* ── WORKOUT TIMER ── */
