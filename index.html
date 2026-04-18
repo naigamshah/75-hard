@@ -4063,23 +4063,8 @@ try{
       _$("grpEnd").style.display=(isOwner&&isActive)?"":"none";
       _$("grpDelete").style.display=isOwner?"":"none";
       _$("grpLeave").style.display=(d.status==="ended")?"none":"";
-      // Quick sync current user's scores before loading leaderboard
-      if(!notStarted&&d.status!=="ended"){
-        var gcKey2="75hard_gc_"+gid+"_"+FB_UID;
-        var gcD2={days:{}};
-        try{var raw2=localStorage.getItem(gcKey2);if(raw2)gcD2=JSON.parse(raw2);}catch(e){}
-        if(gcD2.startDate){
-          var savedD=APP_DATA;var savedC=APP_CTX;
-          APP_DATA=gcD2;APP_CTX={config:d.config};
-          var syncResult=_calcScore(d.config,d.config.days,Math.min(d.config.days,Math.max(1,Math.floor((_now()-new Date(gcD2.startDate+"T00:00:00"))/86400000)+1)));
-          APP_DATA=savedD;APP_CTX=savedC;
-          FB_DB.collection("groups").doc(gid).collection("members").doc(FB_UID).update({
-            score:syncResult.totalScore,currentStreak:syncResult.currentStreak,bestStreak:syncResult.bestStreak,completedDays:syncResult.completedDays
-          }).catch(function(){});
-        }
-      }
-      // Leaderboard (small delay to let sync propagate)
-      setTimeout(function(){_loadLeaderboard(gid,notStarted);},300);
+      // Leaderboard
+      _loadLeaderboard(gid,notStarted);
     });
   }
 
