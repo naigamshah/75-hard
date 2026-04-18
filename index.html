@@ -676,7 +676,7 @@
     <div class="hero-stats">
       <div class="hst c1"><div class="n" id="sDone">0</div><div class="l">Done</div></div>
       <div class="hst c2"><div class="n" id="sLeft">75</div><div class="l">Left</div></div>
-      <div class="hst c3"><div class="n" id="sStrk">0</div><div class="l">Streak</div></div>
+      <div class="hst c3"><div class="n" id="sStrk">🔥 0</div><div class="l">Best</div></div>
       <div class="hst c1" id="sScoreWrap" style="display:none"><div class="n" id="sScore">0</div><div class="l">Score</div></div>
     </div>
   </div>
@@ -1496,17 +1496,22 @@ function _updateRing(pct,day,streak){
 
 /* Stats */
 function _updateStats(){
-  var done=0,streak=0,brk=false;var mx=_maxDays();
+  var done=0,bestStreak=0,cStr=0;var mx=_maxDays();
+  var cur=_getCurrentDay()||1;
   for(var i=1;i<=mx;i++){
-    if(_isDayComplete(i)){done++;if(!brk)streak++;}
-    else brk=true;
+    if(_isDayComplete(i)){done++;cStr++;if(cStr>bestStreak)bestStreak=cStr;}
+    else{cStr=0;}
+  }
+  // Current streak: count backward from current day
+  var curStreak=0;
+  for(var sb=cur;sb>=1;sb--){
+    if(_isDayComplete(sb))curStreak++;else break;
   }
   var pct=Math.round(done/mx*100);
   _$("sDone").textContent=String(done);
   _$("sLeft").textContent=String(mx-done);
-  _$("sStrk").textContent=String(streak);
-  var cur=_getCurrentDay()||1;
-  _updateRing(pct,cur,streak);
+  _$("sStrk").textContent="\ud83d\udd25 "+bestStreak;
+  _updateRing(pct,cur,curStreak);
   // Score (group challenge only)
   if(APP_CTX&&APP_CTX.config){
     _$("sScoreWrap").style.display="";
@@ -1532,7 +1537,7 @@ function _calcScore(config,maxDays,curDay){
 
   var halfDay=Math.ceil(maxDays/2);
   var homeDay=Math.round(maxDays*0.8);
-  var totalScore=0,cStreak=0,cDone=0,dayData={};
+  var totalScore=0,cStreak=0,cDone=0,bestStreak=0,dayData={};
   for(var d=1;d<=Math.min(curDay,maxDays);d++){
     var dd=APP_DATA.days[d];var tc=0;
     if(dd&&dd.tasks){for(var k in dd.tasks){if(dd.tasks[k])tc++;}}
@@ -1541,6 +1546,7 @@ function _calcScore(config,maxDays,curDay){
     if(allDone){
       dayScore+=sc.completionBonus;
       cStreak++;cDone++;
+      if(cStreak>bestStreak)bestStreak=cStreak;
       // ── MILESTONE BONUSES (only awarded when cDone reaches the milestone) ──
       if(cStreak>0&&cStreak%7===0)dayScore+=(ml.weekly||100);
       if(cStreak===21)dayScore+=(ml.habit21||500);
@@ -1553,7 +1559,12 @@ function _calcScore(config,maxDays,curDay){
     totalScore+=dayScore;
     dayData[String(d)]={tasksCompleted:tc,allTasksDone:allDone,score:dayScore};
   }
-  return{totalScore:totalScore,currentStreak:cStreak,completedDays:cDone,dayData:dayData};
+  // Calculate current streak counting backward from latest completed day
+  var curStreak=0;
+  for(var sb=Math.min(curDay,maxDays);sb>=1;sb--){
+    if(_isDayComplete(sb))curStreak++;else break;
+  }
+  return{totalScore:totalScore,currentStreak:curStreak,bestStreak:bestStreak,completedDays:cDone,dayData:dayData};
 }
 
 /* Grid colors */
@@ -1755,10 +1766,26 @@ var MOOD_META={
 };
 
 // Mood is shared across all contexts — stored in a global localStorage key per date
+function _getMoodKeyForDate(dateStr){
+  if(!FB_UID)return null;
+  return "75h_mood_"+FB_UID+"_"+dateStr;
+}
 function _getMoodKey(){
   if(!FB_UID)return null;
-  var today=new Date();
-  return "75h_mood_"+FB_UID+"_"+today.getFullYear()+"-"+String(today.getMonth()+1).padStart(2,"0")+"-"+String(today.getDate()).padStart(2,"0");
+  var n=_now();
+  return _getMoodKeyForDate(n.getFullYear()+"-"+String(n.getMonth()+1).padStart(2,"0")+"-"+String(n.getDate()).padStart(2,"0"));
+}
+function _getDayMood(dayNum){
+  var dateStr=_dayToDateKey(dayNum);
+  var k=_getMoodKeyForDate(dateStr);
+  if(!k)return null;
+  return localStorage.getItem(k)||null;
+}
+function _setDayMood(dayNum,val){
+  var dateStr=_dayToDateKey(dayNum);
+  var k=_getMoodKeyForDate(dateStr);
+  if(!k)return;
+  if(val)localStorage.setItem(k,val);else localStorage.removeItem(k);
 }
 function _getTodayMood(){
   var k=_getMoodKey();if(!k)return null;
@@ -1771,7 +1798,10 @@ function _setTodayMood(val){
 
 function _renderMood(d){
   var btns=document.querySelectorAll(".mood-btn");
-  var curMood=_getTodayMood();
+  var curMood=_getDayMood(d);
+  var dayDate=_dayToDateKey(d);
+  var _tn=_now();var todayDate2=_tn.getFullYear()+"-"+String(_tn.getMonth()+1).padStart(2,"0")+"-"+String(_tn.getDate()).padStart(2,"0");
+  var isToday=(dayDate===todayDate2);
   for(var i=0;i<btns.length;i++){
     btns[i].classList.remove("sel");
     if(btns[i].getAttribute("data-mood")===curMood)btns[i].classList.add("sel");
@@ -1779,23 +1809,26 @@ function _renderMood(d){
       var nb=btn.cloneNode(true);
       btn.parentNode.replaceChild(nb,btn);
       if(nb.getAttribute("data-mood")===curMood)nb.classList.add("sel");
+      // Reset styles from previous renders
+      nb.style.opacity="";nb.style.cursor="";
+      if(!isToday){nb.style.opacity=".5";nb.style.cursor="default";return;} // read-only for past/future days
       nb.addEventListener("click",function(){
         var val=this.getAttribute("data-mood");
-        var wasSet=_getTodayMood()===val;
-        _setTodayMood(wasSet?null:val);
+        var wasSet=_getDayMood(d)===val;
+        _setDayMood(d,wasSet?null:val);
         _renderMood(d);
         if(!wasSet&&MOOD_META[val]){
           _toast(MOOD_META[val].emoji+" "+MOOD_META[val].msg);
         }
-        // Sync mood to Firestore (user profile + all group member docs)
+        // Sync today's mood to Firestore
         var moodEmoji=(!wasSet&&MOOD_META[val])?MOOD_META[val].emoji:"";
+        var _mn=_now();var moodDateStr=_mn.getFullYear()+"-"+String(_mn.getMonth()+1).padStart(2,"0")+"-"+String(_mn.getDate()).padStart(2,"0");
         if(FB_UID){
-          FB_DB.collection("users").doc(FB_UID).update({todayMood:moodEmoji}).catch(function(){});
-          // Sync to all groups
+          FB_DB.collection("users").doc(FB_UID).update({todayMood:moodEmoji,todayMoodDate:moodDateStr}).catch(function(){});
           FB_DB.collection("users").doc(FB_UID).get().then(function(me){
             var groups=(me.data()||{}).groups||[];
             groups.forEach(function(gid){
-              FB_DB.collection("groups").doc(gid).collection("members").doc(FB_UID).update({todayMood:moodEmoji}).catch(function(){});
+              FB_DB.collection("groups").doc(gid).collection("members").doc(FB_UID).update({todayMood:moodEmoji,todayMoodDate:moodDateStr}).catch(function(){});
             });
           }).catch(function(){});
         }
@@ -2470,13 +2503,16 @@ try{
     if(!email||!p){_$("lErr").textContent="Enter email and password.";return;}
     if(email.indexOf("@")===-1){_$("lErr").textContent="Please enter your email address.";return;}
     _$("lErr").textContent="Signing in...";
+    var _loginTimeout=setTimeout(function(){_$("lErr").textContent="Taking too long. Check your connection and try again.";},10000);
     FB_AUTH.signInWithEmailAndPassword(email,p).then(function(cred){
       return FB_DB.collection("users").doc(cred.user.uid).get();
     }).then(function(doc){
+      clearTimeout(_loginTimeout);
       if(doc.exists){
         var d=doc.data();_showApp(doc.id,d.username,d.icon);
       }else{_$("lErr").textContent="Account found but profile missing. Re-register.";}
     }).catch(function(err){
+      clearTimeout(_loginTimeout);
       _$("lErr").textContent=err.message.replace("Firebase: ","").replace(/ \(auth\/.*\)/,"");
     });
   });
@@ -3245,15 +3281,19 @@ try{
       }
     }
     var avgCals2=calDays2>0?Math.round(totalCals/calDays2):0;
-    // Load leaderboard
-    FB_DB.collection("groups").doc(gid).collection("members").orderBy("score","desc").get().then(function(snap){
-      var rank=0;var myRank=0;var myScore=0;var myDone=0;var myStreak=0;var total=snap.size;
+    // Load leaderboard with tiebreaking
+    FB_DB.collection("groups").doc(gid).collection("members").get().then(function(snap){
+      var sMembers=[];
+      snap.forEach(function(doc){var d=doc.data();sMembers.push({uid:doc.id,d:d,score:d.score||0,cDone:d.completedDays||0,bStreak:d.bestStreak||0,cStreak:d.currentStreak||0});});
+      sMembers.sort(function(a,b){if(b.score!==a.score)return b.score-a.score;if(b.cDone!==a.cDone)return b.cDone-a.cDone;return b.bStreak-a.bStreak;});
+      for(var sri=0;sri<sMembers.length;sri++){
+        if(sri===0)sMembers[sri].rank=1;
+        else{var spr=sMembers[sri-1];sMembers[sri].rank=(sMembers[sri].score===spr.score&&sMembers[sri].cDone===spr.cDone&&sMembers[sri].bStreak===spr.bStreak)?spr.rank:sri+1;}
+      }
+      var total=sMembers.length;var myRank=0;var myScore=0;var myDone=0;var myStreak=0;
+      for(var smi=0;smi<sMembers.length;smi++){if(sMembers[smi].uid===FB_UID){myRank=sMembers[smi].rank;myScore=sMembers[smi].score;myDone=sMembers[smi].cDone;myStreak=sMembers[smi].bStreak;}}
       // Your performance
       h+='<div class="cc-section"><h4>YOUR PERFORMANCE</h4>';
-      snap.forEach(function(doc){
-        rank++;var d=doc.data();
-        if(doc.id===FB_UID){myRank=rank;myScore=d.score||0;myDone=d.completedDays||0;myStreak=d.currentStreak||0;}
-      });
       h+='<div class="cc-stat"><span>\u2705 Days Completed</span><span class="cv" style="color:var(--green)">'+myDone+' / '+maxD+'</span></div>';
       h+='<div class="cc-stat"><span>\ud83d\udd25 Best Streak</span><span class="cv" style="color:#fd7e14">'+myStreak+' day'+(myStreak!==1?"s":"")+'</span></div>';
       h+='<div class="cc-stat"><span>\u2b50 Final Score</span><span class="cv" style="color:var(--accent)">'+myScore+' pts</span></div>';
@@ -3265,25 +3305,26 @@ try{
       h+='</div>';
       // Final standings
       h+='<div class="cc-section"><h4>FINAL STANDINGS</h4>';
-      rank=0;
-      snap.forEach(function(doc){
-        rank++;var d=doc.data();var isMe=doc.id===FB_UID;
-        h+='<div class="cc-stat'+(isMe?' style="color:var(--accent);font-weight:700"':'')+'"><span>#'+rank+' '+d.icon+' '+d.username+(isMe?" (you)":"")+'</span><span class="cv">'+(d.score||0)+'</span></div>';
-      });
+      for(var si2=0;si2<sMembers.length;si2++){
+        var sm=sMembers[si2];var smIsMe=sm.uid===FB_UID;
+        h+='<div class="cc-stat'+(smIsMe?' style="color:var(--accent);font-weight:700"':'')+'"><span>#'+sm.rank+' '+sm.d.icon+' '+sm.d.username+(smIsMe?" (you)":"")+'</span><span class="cv">'+sm.score+'</span></div>';
+      }
       h+='</div>';
-      // Award badges on first view of summary (challenge has ended)
+      // Award badges — podium = top 3 positions (by array index, not rank — handles ties)
       var badgeKey="75h_ccb_"+FB_UID+"_"+gid;
       if(!localStorage.getItem(badgeKey)){
         localStorage.setItem(badgeKey,"1");
         var chalName=gData.name;
         var bmeta={gid:gid,days:gData.config.days};
         _awardBadge("challenge_complete",chalName,"group",bmeta);
-        if(myRank<=3&&myRank>0)_awardBadge("podium_finish",chalName,"group",{gid:gid,days:gData.config.days,rank:myRank});
+        // Podium: top 3 people regardless of tied ranks
+        var myIdx=-1;for(var pi2=0;pi2<sMembers.length;pi2++){if(sMembers[pi2].uid===FB_UID){myIdx=pi2;break;}}
+        if(myIdx>=0&&myIdx<3)_awardBadge("podium_finish",chalName,"group",{gid:gid,days:gData.config.days,rank:myRank});
+        // Champion: rank === 1 (all tied at #1 get it)
         if(myRank===1)_awardBadge("champion",chalName,"group",{gid:gid,days:gData.config.days,rank:1});
-        // Show earned badges
         var earned=[];
         earned.push("\ud83c\udfc1 Challenge Complete");
-        if(myRank<=3&&myRank>0)earned.push("\ud83c\udfc5 Podium Finish (#"+myRank+")");
+        if(myIdx>=0&&myIdx<3)earned.push("\ud83c\udfc5 Podium Finish (#"+myRank+")");
         if(myRank===1)earned.push("\ud83d\udc51 Champion");
         h+='<div class="cc-section"><h4>\ud83c\udfc5 BADGES EARNED</h4>';
         for(var bi=0;bi<earned.length;bi++)h+='<div style="font-size:.85rem;padding:.2rem 0">'+earned[bi]+'</div>';
@@ -3408,7 +3449,7 @@ try{
       var result=_calcScore(gd.config,gd.config.days,cur);
       APP_DATA=savedData;APP_CTX=savedCtx;
       FB_DB.collection("groups").doc(gid).collection("members").doc(FB_UID).update({
-        score:result.totalScore,currentStreak:result.currentStreak,completedDays:result.completedDays,lastSyncDay:cur,dayData:result.dayData
+        score:result.totalScore,currentStreak:result.currentStreak,bestStreak:result.bestStreak,completedDays:result.completedDays,lastSyncDay:cur,dayData:result.dayData
       }).then(function(){if(callback)callback();}).catch(function(){if(callback)callback();});
     }).catch(function(){if(callback)callback();});
   }
@@ -3434,7 +3475,7 @@ try{
       var result=_calcScore(gd.config,gd.config.days,cur);
       APP_DATA=savedData;APP_CTX=savedCtx;
       FB_DB.collection("groups").doc(gid).collection("members").doc(FB_UID).update({
-        score:result.totalScore,currentStreak:result.currentStreak,completedDays:result.completedDays,lastSyncDay:cur,dayData:result.dayData
+        score:result.totalScore,currentStreak:result.currentStreak,bestStreak:result.bestStreak,completedDays:result.completedDays,lastSyncDay:cur,dayData:result.dayData
       }).catch(function(){});
     });
   }
@@ -3455,7 +3496,8 @@ try{
     // Get today's mood from shared storage
     var todayMoodVal=_getTodayMood();
     var todayMoodEmoji=(todayMoodVal&&MOOD_META[todayMoodVal])?MOOD_META[todayMoodVal].emoji:"";
-    FB_DB.collection("users").doc(FB_UID).update({profilePublic:pub,challengeStartDate:APP_DATA.startDate||null,todayMood:todayMoodEmoji}).catch(function(){});
+    var moodSyncDate=_now().toISOString().split("T")[0];
+    FB_DB.collection("users").doc(FB_UID).update({profilePublic:pub,challengeStartDate:APP_DATA.startDate||null,todayMood:todayMoodEmoji,todayMoodDate:moodSyncDate}).catch(function(){});
   }
 
   /* ── COMMUNITY ── */
@@ -3600,7 +3642,9 @@ try{
         // Gradient header
         h+='<div style="background:linear-gradient(135deg,rgba(108,92,231,.2),rgba(0,230,118,.1));border-radius:16px;padding:1.5rem 1rem;text-align:center;margin-bottom:1rem">';
         h+='<div style="font-size:4rem;margin-bottom:.3rem">'+d.icon+'</div>';
-        h+='<div style="font-size:1.3rem;font-weight:800">'+d.username+(d.todayMood?' <span style="font-size:1rem">'+d.todayMood+'</span>':'')+'</div>';
+        var fpTodayStr=_now().toISOString().split("T")[0];
+        var fpMood=(d.todayMoodDate===fpTodayStr)?d.todayMood||"":"";
+        h+='<div style="font-size:1.3rem;font-weight:800">'+d.username+(fpMood?' <span style="font-size:1rem">'+fpMood+'</span>':'')+'</div>';
         if(d.challengeStartDate)h+='<div style="font-size:.72rem;color:var(--dim);margin-top:.3rem">Challenged since '+d.challengeStartDate+'</div>';
         h+='</div>';
 
@@ -4010,7 +4054,7 @@ try{
       var halfDay=Math.ceil(d.config.days/2);
       var ml=d.config.milestones||{weekly:100,habit21:500,halfway:750,homeStretch:1000,complete:5000};
       var homeDay=Math.round(d.config.days*0.8);
-      _$("grpScoring").innerHTML='<div style="font-size:.8rem;color:var(--dim)">Per task: <b style="color:var(--text)">'+sc.taskPoints+'pts</b> &bull; All done: <b style="color:var(--text)">'+sc.completionBonus+'pts</b></div><div style="font-size:.75rem;color:var(--dim);margin-top:.5rem;line-height:1.6"><b style="color:var(--yellow)">\ud83c\udfc5 Milestones:</b><br>\u2b50 7-day perfect streak: <b style="color:var(--green)">+'+ml.weekly+'</b> (repeats)<br>\ud83e\udde0 Habit Builder (21-day streak): <b style="color:var(--green)">+'+ml.habit21+'</b><br>\ud83c\udfaf Halfway ('+halfDay+' days done): <b style="color:var(--green)">+'+ml.halfway+'</b>'+(homeDay!==halfDay?'<br>\ud83d\ude80 Home Stretch ('+homeDay+' days done): <b style="color:var(--green)">+'+ml.homeStretch+'</b>':'')+'<br>\ud83c\udfc6 Complete ('+d.config.days+' days done): <b style="color:var(--green)">+'+ml.complete+'</b></div><div style="font-size:.65rem;color:var(--dim);margin-top:.4rem;font-style:italic">\u2139\ufe0f Milestone bonuses are awarded only when you fully complete that many days \u2014 skipped days don\u2019t count.</div>';
+      _$("grpScoring").innerHTML='<div style="font-size:.8rem;color:var(--dim)">Per task: <b style="color:var(--text)">'+sc.taskPoints+'pts</b> &bull; All done: <b style="color:var(--text)">'+sc.completionBonus+'pts</b></div><div style="font-size:.75rem;color:var(--dim);margin-top:.5rem;line-height:1.6"><b style="color:var(--yellow)">\ud83c\udfc5 Milestones:</b><br>\u2b50 7-day perfect streak: <b style="color:var(--green)">+'+ml.weekly+'</b> (repeats)<br>\ud83e\udde0 Habit Builder (21-day streak): <b style="color:var(--green)">+'+ml.habit21+'</b><br>\ud83c\udfaf Halfway ('+halfDay+' days done): <b style="color:var(--green)">+'+ml.halfway+'</b>'+(homeDay!==halfDay?'<br>\ud83d\ude80 Home Stretch ('+homeDay+' days done): <b style="color:var(--green)">+'+ml.homeStretch+'</b>':'')+'<br>\ud83c\udfc6 Complete ('+d.config.days+' days done): <b style="color:var(--green)">+'+ml.complete+'</b></div><div style="font-size:.65rem;color:var(--dim);margin-top:.4rem;font-style:italic">\u2139\ufe0f Milestones require fully completing that many days. Ties are broken by days completed, then best streak. Consistency is king!</div>';
       // Owner controls — hide all for ended challenges
       var isOwner=d.owner===FB_UID;
       var isActive=d.status==="active";
@@ -4032,86 +4076,40 @@ try{
   _$("cgClose").addEventListener("click",function(){_$("cgOverlay").className="cg-overlay";});
 
   function _loadLeaderboard(gid,notStarted){
-    var todayStr=new Date().toISOString().split("T")[0];
+    var _n=_now();var todayStr=_n.getFullYear()+"-"+String(_n.getMonth()+1).padStart(2,"0")+"-"+String(_n.getDate()).padStart(2,"0");
     var myKudosNames=[];
-    FB_DB.collection("groups").doc(gid).collection("members").orderBy("score","desc").get().then(function(snap){
+    FB_DB.collection("groups").doc(gid).collection("members").get().then(function(snap){
       var el=_$("grpLeaderboard");el.innerHTML="";
-      var rank=0;
-      if(notStarted){
-        snap.forEach(function(doc2){
-          var d2=doc2.data();
-          if(d2.score>0||d2.completedDays>0){
-            doc2.ref.update({score:0,currentStreak:0,completedDays:0,lastSyncDay:0,dayData:{}}).catch(function(){});
-          }
-        });
+      if(notStarted){snap.forEach(function(doc2){var d2=doc2.data();if(d2.score>0||d2.completedDays>0){doc2.ref.update({score:0,currentStreak:0,bestStreak:0,completedDays:0,lastSyncDay:0,dayData:{}}).catch(function(){});}});}
+      // Collect members, sort with tiebreaking, assign ranks
+      var members=[];
+      snap.forEach(function(doc){var d=doc.data();members.push({uid:doc.id,ref:doc.ref,d:d,score:notStarted?0:(d.score||0),cDone:notStarted?0:(d.completedDays||0),bStreak:notStarted?0:(d.bestStreak||0),cStreak:notStarted?0:(d.currentStreak||0)});});
+      members.sort(function(a,b){if(b.score!==a.score)return b.score-a.score;if(b.cDone!==a.cDone)return b.cDone-a.cDone;return b.bStreak-a.bStreak;});
+      for(var ri=0;ri<members.length;ri++){
+        if(ri===0)members[ri].rank=1;
+        else{var pr=members[ri-1];members[ri].rank=(members[ri].score===pr.score&&members[ri].cDone===pr.cDone&&members[ri].bStreak===pr.bStreak)?pr.rank:ri+1;}
       }
-      snap.forEach(function(doc){
-        rank++;var d=doc.data();var isMe=doc.id===FB_UID;var memUid=doc.id;
-        // Only reset if challenge literally hasn't started yet
-        if(notStarted&&(d.score>0||d.completedDays>0)){
-          doc.ref.update({score:0,currentStreak:0,completedDays:0,lastSyncDay:0,dayData:{}}).catch(function(){});
-        }
-        var score=notStarted?0:(d.score||0);
-        var cStreak=notStarted?0:(d.currentStreak||0);
-        var cDone=notStarted?0:(d.completedDays||0);
-        var moodEmoji=d.todayMood||"";
-        // Daily kudos
-        var kt=d.kudosToday||{};
-        var kudosFromToday=(kt.date===todayStr)?kt.from||[]:[];
-        var alreadySent=kudosFromToday.indexOf(FB_UID)!==-1;
-        // Collect who sent kudos to me
-        if(isMe&&kudosFromToday.length>0){
-          snap.forEach(function(sd){if(kudosFromToday.indexOf(sd.id)!==-1)myKudosNames.push(sd.data().username);});
-        }
+      // Render
+      for(var mi2=0;mi2<members.length;mi2++){
+        var m=members[mi2];var d=m.d;var isMe=m.uid===FB_UID;var memUid=m.uid;var rank=m.rank;
+        var moodEmoji=(d.todayMoodDate===todayStr)?d.todayMood||"":"";
+        var kt=d.kudosToday||{};var kudosFromToday=(kt.date===todayStr)?kt.from||[]:[];var alreadySent=kudosFromToday.indexOf(FB_UID)!==-1;
+        if(isMe&&kudosFromToday.length>0){snap.forEach(function(sd){if(kudosFromToday.indexOf(sd.id)!==-1)myKudosNames.push(sd.data().username);});}
         var row=document.createElement("div");row.className="lb-row"+(isMe?" me":"");
-        var statsH='\ud83d\udd25 '+cStreak+' streak \u2022 '+cDone+' days done';
-        row.innerHTML='<span class="lb-rank'+(rank<=3?" g":"")+'">'+rank+'</span><span class="lb-icon">'+d.icon+'</span><div class="lb-info"><div class="lb-name" style="cursor:pointer">'+d.username+(isMe?" (you)":"")+(moodEmoji?" "+moodEmoji:"")+'</div><div class="lb-stats">'+statsH+'</div></div><span class="lb-score">'+score+'</span>';
-        // Kudos button below stats (inside lb-info)
+        var streakText=m.cStreak===m.bStreak?'\ud83d\udd25 '+m.cStreak:'\ud83d\udd25 '+m.cStreak+' (best '+m.bStreak+')';
+        var statsH=streakText+' \u2022 '+m.cDone+' days';
+        row.innerHTML='<span class="lb-rank'+(rank<=3?" g":"")+'">'+rank+'</span><span class="lb-icon">'+d.icon+'</span><div class="lb-info"><div class="lb-name" style="cursor:pointer">'+d.username+(isMe?" (you)":"")+(moodEmoji?" "+moodEmoji:"")+'</div><div class="lb-stats">'+statsH+'</div></div><span class="lb-score">'+m.score+'</span>';
         if(!isMe){
-          var infoDiv=row.querySelector(".lb-info");
-          var kBtn=document.createElement("button");
-          kBtn.className="lb-kudos"+(alreadySent?" sent":"");
-          kBtn.textContent=alreadySent?"\ud83d\udc4f Sent":"Send \ud83d\udc4f";
-          (function(mRef,btn,fromArr){
-            btn.addEventListener("click",function(e){
-              e.stopPropagation();
-              if(fromArr.indexOf(FB_UID)!==-1){_toast("Already sent today!");return;}
-              // Write daily kudos
-              var newFrom=fromArr.slice();newFrom.push(FB_UID);
-              mRef.update({"kudosToday":{date:todayStr,from:newFrom}}).then(function(){
-                btn.className="lb-kudos sent";
-                btn.textContent="\ud83d\udc4f Sent";
-                _toast("\ud83d\udc4f Kudos sent!");
-              });
-            });
-          })(doc.ref,kBtn,kudosFromToday);
+          var infoDiv=row.querySelector(".lb-info");var kBtn=document.createElement("button");
+          kBtn.className="lb-kudos"+(alreadySent?" sent":"");kBtn.textContent=alreadySent?"\ud83d\udc4f Sent":"Send \ud83d\udc4f";
+          (function(mRef,btn,fromArr){btn.addEventListener("click",function(e){e.stopPropagation();if(fromArr.indexOf(FB_UID)!==-1){_toast("Already sent today!");return;}var newFrom=fromArr.slice();newFrom.push(FB_UID);mRef.update({"kudosToday":{date:todayStr,from:newFrom}}).then(function(){btn.className="lb-kudos sent";btn.textContent="\ud83d\udc4f Sent";_toast("\ud83d\udc4f Kudos sent!");});});})(m.ref,kBtn,kudosFromToday);
           infoDiv.appendChild(kBtn);
         }
-        (function(myIsMe,myMemUid){
-          row.querySelector(".lb-name").addEventListener("click",function(e){
-            e.stopPropagation();
-            if(myIsMe){
-              _$("grpOverlay").className="grp-overlay";
-              _profileReturnTo="grp";
-              _openMyProfile();
-            }else{
-              _viewUserProfile(myMemUid);
-            }
-          });
-        })(isMe,memUid);
+        (function(myIsMe,myMemUid){row.querySelector(".lb-name").addEventListener("click",function(e){e.stopPropagation();if(myIsMe){_$("grpOverlay").className="grp-overlay";_profileReturnTo="grp";_openMyProfile();}else{_viewUserProfile(myMemUid);}});})(isMe,memUid);
         el.appendChild(row);
-      });
-      if(rank===0)el.innerHTML='<div class="comm-empty">No members yet</div>';
-      // Show kudos popup once per group per day (persisted)
-      if(myKudosNames.length>0){
-        var kudosKey="75h_kudos_seen_"+gid+"_"+todayStr;
-        if(!localStorage.getItem(kudosKey)){
-          localStorage.setItem(kudosKey,"1");
-          setTimeout(function(){
-            _toast("\ud83d\udc4f "+myKudosNames.join(", ")+" sent you kudos today!");
-          },500);
-        }
       }
+      if(members.length===0)el.innerHTML='<div class="comm-empty">No members yet</div>';
+      if(myKudosNames.length>0){var kudosKey="75h_kudos_seen_"+gid+"_"+todayStr;if(!localStorage.getItem(kudosKey)){localStorage.setItem(kudosKey,"1");setTimeout(function(){_toast("\ud83d\udc4f "+myKudosNames.join(", ")+" sent you kudos today!");},500);}}
     });
   }
 
@@ -4285,7 +4283,7 @@ try{
           var result=_calcScore(gd.config,gd.config.days,cur);
           APP_DATA=savedData; // restore
           FB_DB.collection("groups").doc(gid).collection("members").doc(FB_UID).update({
-            score:result.totalScore,currentStreak:result.currentStreak,completedDays:result.completedDays,lastSyncDay:cur,dayData:result.dayData
+            score:result.totalScore,currentStreak:result.currentStreak,bestStreak:result.bestStreak,completedDays:result.completedDays,lastSyncDay:cur,dayData:result.dayData
           }).catch(function(){});
         });
       });
@@ -4654,7 +4652,7 @@ try{
     var chalType=ctx?"group":"personal";
     var cur=_getCurrentDay()||0;if(cur<1)return;
     // First Blood
-    if(APP_DATA.days[1]){var d1tc=0;var d1t=APP_DATA.days[1].tasks||{};for(var k in d1t){if(d1t[k])d1tc++;}if(d1tc>0)_awardBadge("genesis",chalName,chalType);}
+    if(_isDayComplete(1))_awardBadge("genesis",chalName,chalType);
     // Streak badges
     var streak=0;
     for(var si=1;si<=cur;si++){if(_isDayComplete(si))streak++;else streak=0;}
