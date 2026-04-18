@@ -1541,12 +1541,12 @@ function _calcScore(config,maxDays,curDay){
     if(allDone){
       dayScore+=sc.completionBonus;
       cStreak++;cDone++;
-      // ── MILESTONE BONUSES ──
+      // ── MILESTONE BONUSES (only awarded when cDone reaches the milestone) ──
       if(cStreak>0&&cStreak%7===0)dayScore+=(ml.weekly||100);
       if(cStreak===21)dayScore+=(ml.habit21||500);
-      if(d===halfDay)dayScore+=(ml.halfway||750);
-      if(d===homeDay&&homeDay!==halfDay)dayScore+=(ml.homeStretch||1000);
-      if(d===maxDays)dayScore+=(ml.complete||5000);
+      if(cDone===halfDay)dayScore+=(ml.halfway||750);
+      if(cDone===homeDay&&homeDay!==halfDay)dayScore+=(ml.homeStretch||1000);
+      if(cDone===maxDays)dayScore+=(ml.complete||5000);
     }else{
       cStreak=0;
     }
@@ -4010,7 +4010,7 @@ try{
       var halfDay=Math.ceil(d.config.days/2);
       var ml=d.config.milestones||{weekly:100,habit21:500,halfway:750,homeStretch:1000,complete:5000};
       var homeDay=Math.round(d.config.days*0.8);
-      _$("grpScoring").innerHTML='<div style="font-size:.8rem;color:var(--dim)">Per task: <b style="color:var(--text)">'+sc.taskPoints+'pts</b> &bull; All done: <b style="color:var(--text)">'+sc.completionBonus+'pts</b></div><div style="font-size:.75rem;color:var(--dim);margin-top:.5rem;line-height:1.6"><b style="color:var(--yellow)">\ud83c\udfc5 Milestones:</b><br>\u2b50 7-day perfect streak: <b style="color:var(--green)">+'+ml.weekly+'</b> (repeats)<br>\ud83e\udde0 Habit Builder (21-day streak): <b style="color:var(--green)">+'+ml.habit21+'</b><br>\ud83c\udfaf Halfway (Day '+halfDay+'): <b style="color:var(--green)">+'+ml.halfway+'</b>'+(homeDay!==halfDay?'<br>\ud83d\ude80 Home Stretch (Day '+homeDay+'): <b style="color:var(--green)">+'+ml.homeStretch+'</b>':'')+'<br>\ud83c\udfc6 Complete (Day '+d.config.days+'): <b style="color:var(--green)">+'+ml.complete+'</b></div>';
+      _$("grpScoring").innerHTML='<div style="font-size:.8rem;color:var(--dim)">Per task: <b style="color:var(--text)">'+sc.taskPoints+'pts</b> &bull; All done: <b style="color:var(--text)">'+sc.completionBonus+'pts</b></div><div style="font-size:.75rem;color:var(--dim);margin-top:.5rem;line-height:1.6"><b style="color:var(--yellow)">\ud83c\udfc5 Milestones:</b><br>\u2b50 7-day perfect streak: <b style="color:var(--green)">+'+ml.weekly+'</b> (repeats)<br>\ud83e\udde0 Habit Builder (21-day streak): <b style="color:var(--green)">+'+ml.habit21+'</b><br>\ud83c\udfaf Halfway ('+halfDay+' days done): <b style="color:var(--green)">+'+ml.halfway+'</b>'+(homeDay!==halfDay?'<br>\ud83d\ude80 Home Stretch ('+homeDay+' days done): <b style="color:var(--green)">+'+ml.homeStretch+'</b>':'')+'<br>\ud83c\udfc6 Complete ('+d.config.days+' days done): <b style="color:var(--green)">+'+ml.complete+'</b></div><div style="font-size:.65rem;color:var(--dim);margin-top:.4rem;font-style:italic">\u2139\ufe0f Milestone bonuses are awarded only when you fully complete that many days \u2014 skipped days don\u2019t count.</div>';
       // Owner controls — hide all for ended challenges
       var isOwner=d.owner===FB_UID;
       var isActive=d.status==="active";
