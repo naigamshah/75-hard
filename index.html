@@ -1406,7 +1406,7 @@ function _save(){
 }
 
 // TEMP: Date offset for testing. Set to 0 for production.
-var DATE_OFFSET_DAYS=0;
+var DATE_OFFSET_DAYS=1;
 function _now(){var d=new Date();d.setDate(d.getDate()+DATE_OFFSET_DAYS);return d;}
 
 function _ensD(d){
@@ -1502,9 +1502,10 @@ function _updateStats(){
     if(_isDayComplete(i)){done++;cStr++;if(cStr>bestStreak)bestStreak=cStr;}
     else{cStr=0;}
   }
-  // Current streak: count backward from current day
+  // Current streak: if today is incomplete, start counting from yesterday
   var curStreak=0;
-  for(var sb=cur;sb>=1;sb--){
+  var streakStart=_isDayComplete(cur)?cur:cur-1;
+  for(var sb=streakStart;sb>=1;sb--){
     if(_isDayComplete(sb))curStreak++;else break;
   }
   var pct=Math.round(done/mx*100);
@@ -1559,9 +1560,11 @@ function _calcScore(config,maxDays,curDay){
     totalScore+=dayScore;
     dayData[String(d)]={tasksCompleted:tc,allTasksDone:allDone,score:dayScore};
   }
-  // Calculate current streak counting backward from latest completed day
+  // Calculate current streak: if today incomplete, start from yesterday
   var curStreak=0;
-  for(var sb=Math.min(curDay,maxDays);sb>=1;sb--){
+  var sEnd=Math.min(curDay,maxDays);
+  var sStart2=_isDayComplete(sEnd)?sEnd:sEnd-1;
+  for(var sb=sStart2;sb>=1;sb--){
     if(_isDayComplete(sb))curStreak++;else break;
   }
   return{totalScore:totalScore,currentStreak:curStreak,bestStreak:bestStreak,completedDays:cDone,dayData:dayData};
