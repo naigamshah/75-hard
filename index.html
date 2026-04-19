@@ -5156,11 +5156,14 @@ try{
 
   function _generateWeekReview(revDateStr,callback){
     var revDate=new Date(revDateStr+"T00:00:00");
-    var monDate=new Date(revDate);monDate.setDate(revDate.getDate()-6);
-    var review={weekEnding:revDateStr,personal:null,groups:[],moods:[]};
-    // Moods (shared)
+    // Review covers previous Sunday through Saturday (not including current Sunday)
+    var weekStart=new Date(revDate);weekStart.setDate(revDate.getDate()-7); // last Sunday
+    var weekEnd=new Date(revDate);weekEnd.setDate(revDate.getDate()-1); // Saturday
+    var weekEndStr=weekEnd.getFullYear()+"-"+String(weekEnd.getMonth()+1).padStart(2,"0")+"-"+String(weekEnd.getDate()).padStart(2,"0");
+    var review={weekEnding:weekEndStr,personal:null,groups:[],moods:[]};
+    // Moods: S M T W T F S (Sunday first)
     for(var mi=0;mi<7;mi++){
-      var cd2=new Date(monDate);cd2.setDate(monDate.getDate()+mi);
+      var cd2=new Date(weekStart);cd2.setDate(weekStart.getDate()+mi);
       var ds2=cd2.getFullYear()+"-"+String(cd2.getMonth()+1).padStart(2,"0")+"-"+String(cd2.getDate()).padStart(2,"0");
       var mv=localStorage.getItem("75h_mood_"+(FB_UID||"x")+"_"+ds2);
       review.moods.push(mv&&MOOD_META[mv]?MOOD_META[mv].emoji:"\u00b7");
@@ -5171,7 +5174,7 @@ try{
       var p={daysCompleted:0,avgCals:0,totalWater:0,calGoal:APP_DATA.goal||2000,daysOnGoal:0,totalPages:0,streak:0};
       var tc2=0,cd3=0;
       for(var i=0;i<7;i++){
-        var calDay=new Date(monDate);calDay.setDate(monDate.getDate()+i);
+        var calDay=new Date(weekStart);calDay.setDate(weekStart.getDate()+i);
         var chDay=Math.floor((calDay-startD)/86400000)+1;
         if(chDay<1||chDay>_maxDays())continue;
         var dd=APP_DATA.days[chDay];
@@ -5183,10 +5186,12 @@ try{
         }
       }
       p.avgCals=cd3>0?Math.round(tc2/cd3):0;
-      // Calculate current streak (consecutive complete days counting from most recent)
+      // Calculate current streak using same logic as _updateStats
+      var pCur=_getCurrentDay()||0;
       var pStreak=0;
-      for(var si=_maxDays();si>=1;si--){
-        if(APP_DATA.days[si]&&_isDayComplete(si))pStreak++;else break;
+      var pStreakStart=pCur>0&&_isDayComplete(pCur)?pCur:pCur-1;
+      for(var si=pStreakStart;si>=1;si--){
+        if(_isDayComplete(si))pStreak++;else break;
       }
       p.streak=pStreak;
       review.personal=p;
@@ -5211,19 +5216,17 @@ try{
             var gS=new Date(gcD.startDate+"T00:00:00");
             var gp={gid:item.gid,name:item.gid,daysCompleted:0,totalTasks:0,score:0,streak:0,exists:false};
             for(var gi=0;gi<7;gi++){
-              var gcd=new Date(monDate);gcd.setDate(monDate.getDate()+gi);
+              var gcd=new Date(weekStart);gcd.setDate(weekStart.getDate()+gi);
               var gch=Math.floor((gcd-gS)/86400000)+1;
               if(gch<1)continue;
               var gdd=gcD.days?gcD.days[gch]:null;
               if(gdd&&gdd.tasks){var gtc=0;for(var tk in gdd.tasks){if(gdd.tasks[tk])gtc++;}gp.totalTasks+=gtc;if(gtc>=4){gp.daysCompleted++;gp.score+=gtc*10+50;}else{gp.score+=gtc*10;}}
             }
-            // Group streak (count backwards from latest day in group data)
-            if(gcD.days){var gMaxD=0;for(var gdk in gcD.days){var gdkn=parseInt(gdk,10);if(gdkn>gMaxD)gMaxD=gdkn;}for(var gsi=gMaxD;gsi>=1;gsi--){var gsdd=gcD.days[gsi];if(gsdd&&gsdd.tasks){var gstc=0;for(var gstk in gsdd.tasks){if(gsdd.tasks[gstk])gstc++;}if(gstc>=4)gp.streak++;else break;}else break;}}
             review.groups.push(gp);
           }catch(e2){}
         });
       }catch(e3){}
-      // Verify groups exist in Firestore and get names; remove deleted ones
+      // Verify groups exist and import rank + streak from Firestore
       var validGroups=[];
       var checked=0;
       if(review.groups.length===0){APP_DATA.weekReview=review;_save();if(callback)callback();}
@@ -5234,10 +5237,21 @@ try{
             if(gDoc.exists){
               g.name=gDoc.data().name;g.exists=true;
               validGroups.push(g);
-              // Fetch rank
-              FB_DB.collection("groups").doc(g.gid).collection("members").orderBy("score","desc").get().then(function(mSnap){
-                var rk=0;
-                mSnap.forEach(function(md){rk++;if(md.id===FB_UID)g.rank=rk;});
+              // Import rank + streak + score directly from Firestore members
+              FB_DB.collection("groups").doc(g.gid).collection("members").get().then(function(mSnap){
+                var mArr=[];
+                mSnap.forEach(function(md){
+                  var mdd=md.data();
+                  var cs=mdd.currentStreak||0;var bs=Math.max(mdd.bestStreak||0,cs);
+                  mArr.push({uid:md.id,score:mdd.score||0,cDone:mdd.completedDays||0,bStreak:bs,cStreak:cs});
+                  if(md.id===FB_UID){g.streak=cs;g.score=mdd.score||0;g.daysCompleted=mdd.completedDays||0;}
+                });
+                mArr.sort(function(a,b){if(b.score!==a.score)return b.score-a.score;if(b.cDone!==a.cDone)return b.cDone-a.cDone;return b.bStreak-a.bStreak;});
+                for(var ri=0;ri<mArr.length;ri++){
+                  if(ri===0)mArr[ri].rank=1;
+                  else{var pr=mArr[ri-1];mArr[ri].rank=(mArr[ri].score===pr.score&&mArr[ri].cDone===pr.cDone&&mArr[ri].bStreak===pr.bStreak)?pr.rank:ri+1;}
+                  if(mArr[ri].uid===FB_UID)g.rank=mArr[ri].rank;
+                }
                 if(checked>=review.groups.length){review.groups=validGroups;APP_DATA.weekReview=review;_save();if(callback)callback();}
               }).catch(function(){if(checked>=review.groups.length){review.groups=validGroups;APP_DATA.weekReview=review;_save();if(callback)callback();}});
             }else{
@@ -5257,7 +5271,7 @@ try{
     // Mood
     if(r.moods&&r.moods.length>0){
       h+='<div class="wir-card"><h3>\ud83e\udde0 Mood</h3><div class="wir-mood-row">';
-      var dl=["M","T","W","T","F","S","S"];
+      var dl=["S","M","T","W","T","F","S"];
       for(var mi=0;mi<r.moods.length;mi++)h+='<div style="text-align:center;min-width:30px"><div style="font-size:1.2rem">'+r.moods[mi]+'</div><div style="font-size:.55rem;color:var(--dim)">'+dl[mi]+'</div></div>';
       h+='</div></div>';
     }
