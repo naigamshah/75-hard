@@ -521,6 +521,34 @@
     /* ── BADGE POPUP ── */
     .badge-popup-bg { position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,.5); display: none; -webkit-align-items: center; align-items: center; -webkit-justify-content: center; justify-content: center; padding: 1rem; }
     .badge-popup-bg.show { display: -webkit-flex; display: flex; }
+
+    /* ── SYNC ── */
+    .sync-card { background: linear-gradient(135deg, rgba(108,92,231,.08), rgba(168,85,247,.06)); border: 1px solid rgba(108,92,231,.35); border-radius: 12px; padding: .7rem 1rem; margin-bottom: .8rem; cursor: pointer; -webkit-transition: all .2s; transition: all .2s; display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; -webkit-justify-content: center; justify-content: center; gap: .5rem; box-shadow: 0 0 18px rgba(108,92,231,.2), 0 0 40px rgba(108,92,231,.08), inset 0 0 15px rgba(108,92,231,.06); -webkit-animation: syncGlow 3s ease-in-out infinite; animation: syncGlow 3s ease-in-out infinite; }
+    .sync-card:active { -webkit-transform: scale(.97); transform: scale(.97); box-shadow: 0 0 25px rgba(108,92,231,.35); -webkit-animation: none; animation: none; }
+    @-webkit-keyframes syncGlow { 0%,100% { box-shadow: 0 0 18px rgba(108,92,231,.2), 0 0 40px rgba(108,92,231,.08); } 50% { box-shadow: 0 0 24px rgba(168,85,247,.3), 0 0 50px rgba(108,92,231,.12); } }
+    @keyframes syncGlow { 0%,100% { box-shadow: 0 0 18px rgba(108,92,231,.2), 0 0 40px rgba(108,92,231,.08); } 50% { box-shadow: 0 0 24px rgba(168,85,247,.3), 0 0 50px rgba(108,92,231,.12); } }
+    .sync-card .sync-title { font-size: .88rem; font-weight: 700; color: var(--accent); }
+    .sync-card .sync-icon { font-size: 1.1rem; }
+    .sync-card .sync-icon.spinning { -webkit-animation: syncSpin .8s ease-in-out; animation: syncSpin .8s ease-in-out; }
+    @-webkit-keyframes syncSpin { 0% { -webkit-transform: scale(1); } 50% { -webkit-transform: scale(1.3) rotate(180deg); } 100% { -webkit-transform: scale(1) rotate(360deg); } }
+    @keyframes syncSpin { 0% { transform: scale(1); } 50% { transform: scale(1.3) rotate(180deg); } 100% { transform: scale(1) rotate(360deg); } }
+    .sync-popup { position: fixed; inset: 0; z-index: 9998; background: rgba(0,0,0,.7); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; -webkit-justify-content: center; justify-content: center; padding: 1rem; opacity: 0; pointer-events: none; -webkit-transition: opacity .3s; transition: opacity .3s; }
+    .sync-popup.show { opacity: 1; pointer-events: auto; }
+    .sync-popup-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 1.2rem; max-width: 400px; width: 100%; max-height: 80vh; overflow-y: auto; -webkit-overflow-scrolling: touch; -webkit-transform: scale(.9); transform: scale(.9); -webkit-transition: -webkit-transform .3s cubic-bezier(.175,.885,.32,1.275); transition: transform .3s cubic-bezier(.175,.885,.32,1.275); }
+    .sync-popup.show .sync-popup-card { -webkit-transform: scale(1); transform: scale(1); }
+    .sync-q { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: .7rem; margin-bottom: .5rem; }
+    .sync-q .sq-title { font-size: .8rem; font-weight: 700; margin-bottom: .2rem; }
+    .sync-q .sq-desc { font-size: .72rem; color: var(--dim); margin-bottom: .4rem; line-height: 1.4; }
+    .sync-q .sq-btns { display: -webkit-flex; display: flex; gap: .4rem; }
+    .sync-q .sq-btn { padding: 5px 14px; border-radius: 8px; font-size: .75rem; font-weight: 600; cursor: pointer; border: 1px solid var(--border); background: var(--card); color: var(--text); -webkit-appearance: none; min-height: 32px; }
+    .sync-q .sq-btn.sel { background: var(--green); color: #000; border-color: var(--green); }
+    .sync-q .sq-btn.sel.no { background: var(--red); color: #fff; border-color: var(--red); }
+    .sync-change { padding: .3rem 0; font-size: .78rem; display: -webkit-flex; display: flex; gap: .4rem; -webkit-align-items: center; align-items: center; }
+    .sync-change .sc-emoji { font-size: 1rem; -webkit-flex-shrink: 0; flex-shrink: 0; width: 22px; text-align: center; }
+    .sync-apply { width: 100%; padding: 13px; background: linear-gradient(135deg, var(--accent), #a855f7); color: #fff; border: none; border-radius: 12px; font-weight: 700; font-size: .9rem; cursor: pointer; -webkit-appearance: none; margin-top: .6rem; }
+    .sync-apply:active { opacity: .8; }
+    .sync-cancel { width: 100%; padding: 10px; background: none; border: 1px solid var(--border); border-radius: 10px; color: var(--dim); font-size: .8rem; font-weight: 600; cursor: pointer; -webkit-appearance: none; margin-top: .3rem; }
+
     .badge-popup { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 1.2rem; max-width: 340px; width: 100%; max-height: 70vh; overflow-y: auto; -webkit-overflow-scrolling: touch; }
     .badge-popup .bp-close { float: right; background: none; border: none; color: var(--dim); font-size: 1.2rem; cursor: pointer; -webkit-appearance: none; padding: 0; }
 
@@ -926,6 +954,10 @@
       <div class="mp-since" id="mpSince"></div>
     </div>
     <div id="mpStats"></div>
+    <div class="sync-card" id="mpSyncBtn">
+      <span class="sync-icon" id="mpSyncIcon">⚡</span>
+      <span class="sync-title">Sync Today</span>
+    </div>
     <div class="mp-card" id="mpTrophy" style="display:none">
       <h3>🏆 Trophy Cabinet <button id="mpBadgeManage" style="background:none;border:1px solid var(--border);border-radius:6px;color:var(--dim);font-size:.68rem;padding:2px 8px;cursor:pointer;-webkit-appearance:none;font-weight:600">Manage</button></h3>
       <div id="mpBadges"></div>
@@ -1040,6 +1072,11 @@
     </div>
     <div id="cgContent"></div>
   </div>
+</div>
+
+<!-- Sync Popup -->
+<div class="sync-popup" id="syncOverlay">
+  <div class="sync-popup-card" id="syncContent"></div>
 </div>
 
 <!-- Badge Detail Popup -->
@@ -4370,7 +4407,8 @@ try{
       }else{_$("mpChalContent").innerHTML='<div style="font-size:.8rem;color:var(--dim)">No active challenges</div>';}
     });
     _$("myProfileOverlay").className="my-profile-overlay show";
-    // Load trophy cabinet
+    // Load trophy cabinet + sync status
+    if(typeof _updateSyncSub==="function")_updateSyncSub();
     _loadTrophyCabinet(_$("mpBadges"));
   }
 
@@ -4410,6 +4448,242 @@ try{
       });
     });
   });
+
+  /* ── SYNC ── */
+  _$("mpSyncBtn").addEventListener("click",function(){_startSync();});
+  _$("syncOverlay").addEventListener("click",function(ev){if(ev.target===_$("syncOverlay"))_$("syncOverlay").className="sync-popup";});
+
+  function _updateSyncSub(){}
+
+  function _startSync(){
+    if(!FB_UID)return;
+    var _sn=_now();var todayDate=_sn.getFullYear()+"-"+String(_sn.getMonth()+1).padStart(2,"0")+"-"+String(_sn.getDate()).padStart(2,"0");
+    var contexts=[];
+    // Personal
+    var pKey="75hard_u_"+FB_UID;
+    var pData={};try{var pr=localStorage.getItem(pKey);if(pr)pData=JSON.parse(pr);}catch(e){}
+    if(pData.startDate){
+      var ps=new Date(pData.startDate+"T00:00:00");
+      var pDiff=Math.floor((_sn-new Date(ps.getFullYear(),ps.getMonth(),ps.getDate()))/86400000)+1;
+      if(pDiff>=1&&pDiff<=75){
+        if(!pData.days)pData.days={};
+        if(!pData.days[pDiff])pData.days[pDiff]={tasks:{},notes:"",foods:[],waterOz:0};
+        contexts.push({id:"personal",name:"Personal 75 Hard",type:"personal",skey:pKey,config:null,dayNum:pDiff,dayData:pData.days[pDiff],fullData:pData,goals:{workouts:2,workoutDurations:[45,45],waterOz:128,readPages:10,diet:true,photo:true}});
+      }
+    }
+    // Groups
+    for(var k=0;k<localStorage.length;k++){
+      var key=localStorage.key(k);
+      if(key&&key.indexOf("75hard_gc_")===0&&key.indexOf("_"+FB_UID)>0){
+        var gid=key.replace("75hard_gc_","").replace("_"+FB_UID,"");
+        try{
+          var gd=JSON.parse(localStorage.getItem(key)||"{}");
+          if(!gd.startDate)continue;
+          var gs2=new Date(gd.startDate+"T00:00:00");
+          var gDiff=Math.floor((_sn-new Date(gs2.getFullYear(),gs2.getMonth(),gs2.getDate()))/86400000)+1;
+          if(gDiff<1)continue;
+          if(!gd.days)gd.days={};
+          if(!gd.days[gDiff])gd.days[gDiff]={tasks:{},notes:"",foods:[],waterOz:0};
+          contexts.push({id:gid,name:gid,type:"group",skey:key,config:null,dayNum:gDiff,dayData:gd.days[gDiff],fullData:gd,goals:{workouts:2,workoutDurations:[45,45],waterOz:128,readPages:10,diet:true,photo:true}});
+        }catch(e2){}
+      }
+    }
+    if(contexts.length<2){_toast("Need at least 2 active challenges to sync");return;}
+    // Fetch group configs
+    var loaded2=0;var grpCtxs=contexts.filter(function(c){return c.type==="group";});
+    if(grpCtxs.length===0){_buildSyncPreview(contexts);return;}
+    grpCtxs.forEach(function(c){
+      FB_DB.collection("groups").doc(c.id).get().then(function(gDoc){
+        loaded2++;
+        if(gDoc.exists){var gdd=gDoc.data();c.name=gdd.name;c.config=gdd.config;var gc2=gdd.config.dailyGoals||{};c.goals={workouts:gc2.workouts||2,workoutDurations:gc2.workoutDurations||[45,45,30],waterOz:gc2.waterOz||128,readPages:gc2.readPages||10,diet:gc2.diet,photo:gc2.photo};}
+        if(loaded2>=grpCtxs.length)_buildSyncPreview(contexts);
+      }).catch(function(){loaded2++;if(loaded2>=grpCtxs.length)_buildSyncPreview(contexts);});
+    });
+  }
+
+  function _buildSyncPreview(contexts){
+    var changes=[];var questions=[];
+    // Collect max states
+    var maxWater=0;var anyDiet=false;var anyRead=false;var workoutDone={};
+    contexts.forEach(function(ctx){
+      var t=ctx.dayData.tasks||{};
+      maxWater=Math.max(maxWater,ctx.dayData.waterOz||0);
+      if(t.diet)anyDiet=true;
+      if(t.read)anyRead=true;
+      for(var wi=1;wi<=3;wi++){
+        var wid="w"+wi;
+        if(t[wid]){var dur=(ctx.goals.workoutDurations||[])[wi-1]||45;if(!workoutDone[wid])workoutDone[wid]={done:true,maxDurDone:dur,fromCtx:ctx.name};else if(dur>workoutDone[wid].maxDurDone){workoutDone[wid].maxDurDone=dur;workoutDone[wid].fromCtx=ctx.name;}}
+      }
+    });
+    // Apply to each context
+    contexts.forEach(function(ctx){
+      var t=ctx.dayData.tasks||{};
+      if(anyDiet&&!t.diet&&ctx.goals.diet!==false)changes.push({ctx:ctx,task:"diet",label:"Follow Your Diet",to:"Done"});
+      if(anyRead&&!t.read)changes.push({ctx:ctx,task:"read",label:"Read "+(ctx.goals.readPages||10)+" pages",to:"Done"});
+      if(maxWater>(ctx.dayData.waterOz||0)){
+        var nw=Math.min(maxWater,ctx.goals.waterOz||128);
+        if(nw>(ctx.dayData.waterOz||0))changes.push({ctx:ctx,task:"water",label:"Water",to:nw+"/"+(ctx.goals.waterOz||128)+" oz",waterVal:nw});
+      }
+      for(var wi2=1;wi2<=(ctx.goals.workouts||2);wi2++){
+        var wid2="w"+wi2;if(t[wid2])continue;if(!workoutDone[wid2])continue;
+        var thisDur=(ctx.goals.workoutDurations||[])[wi2-1]||45;
+        if(workoutDone[wid2].maxDurDone>=thisDur)changes.push({ctx:ctx,task:wid2,label:"Workout #"+wi2+" ("+thisDur+"m)",to:"Done"});
+        else questions.push({ctx:ctx,task:wid2,label:"Workout #"+wi2+" ("+thisDur+"m)",thisDur:thisDur,doneDur:workoutDone[wid2].maxDurDone,fromCtx:workoutDone[wid2].fromCtx,answer:null});
+      }
+    });
+    _showSyncPreview(contexts,changes,questions);
+  }
+
+  var SYNC_EMOJI={w1:"🏋️",w2:"🏃",w3:"🧗",diet:"🥗",water:"💧",read:"📚"};
+  var SYNC_ORDER={w1:1,w2:2,w3:3,diet:4,water:5,read:6};
+  function _ctxLabel(ctx){return(ctx.type==="personal"?"🏠":"🏆")+" "+ctx.name;}
+  function _ctxDays(ctx){
+    if(ctx.config)return ctx.config.days+"d";
+    if(ctx.type==="personal")return "75d";return "";
+  }
+  function _syncTaskRow(emoji,label,checked,idx,type,extra){
+    var bg=checked?'background:var(--gg);border:1px solid rgba(0,230,118,.2)':'background:rgba(255,255,255,.02);border:1px solid transparent';
+    var chk=checked?'background:var(--green);color:#fff':'background:transparent;border:2px solid var(--border);color:transparent';
+    var h='<div class="sync-trow" data-sidx="'+idx+'" data-stype="'+type+'" style="display:flex;align-items:center;gap:.5rem;padding:.4rem .5rem;border-radius:10px;margin:.2rem 0;cursor:pointer;-webkit-user-select:none;user-select:none;-webkit-transition:all .2s;transition:all .2s;'+bg+'">';
+    h+='<div class="sync-chk" style="width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.65rem;flex-shrink:0;-webkit-transition:all .2s;transition:all .2s;'+chk+'">'+(checked?'\u2713':'')+'</div>';
+    h+='<span style="font-size:1rem;flex-shrink:0">'+emoji+'</span>';
+    h+='<div style="flex:1;min-width:0"><div style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.3px">'+label+'</div>';
+    if(extra)h+='<div style="font-size:.65rem;color:var(--dim)">'+extra+'</div>';
+    h+='</div></div>';
+    return h;
+  }
+
+  function _showSyncPreview(contexts,changes,questions){
+    // Mark all changes as enabled by default
+    changes.forEach(function(c,i){c._idx=i;c._enabled=true;});
+    questions.forEach(function(q,i){q._idx=i;q.answer=null;});
+
+    function _render(){
+      var h='<div style="text-align:center;margin-bottom:.8rem"><div style="font-size:2rem;margin-bottom:.2rem">\u26a1</div><div style="font-size:1rem;font-weight:700">Sync Preview</div><div style="font-size:.75rem;color:var(--dim)">'+contexts.length+' challenges</div><div style="font-size:.65rem;color:var(--dim);margin-top:.3rem">Tap any change to unselect it</div></div>';
+      // Group ALL items (changes + answered questions) by challenge
+      var grouped={};
+      changes.forEach(function(c){var k=c.ctx.id;if(!grouped[k])grouped[k]={ctx:c.ctx,rows:[]};grouped[k].rows.push({type:"change",data:c});});
+      // Add answered questions to their challenge groups
+      questions.forEach(function(q){
+        if(q.answer!==null){
+          var k=q.ctx.id;if(!grouped[k])grouped[k]={ctx:q.ctx,rows:[]};
+          grouped[k].rows.push({type:"answered_q",data:q});
+        }
+      });
+      // Sort rows within each group
+      for(var gk in grouped){grouped[gk].rows.sort(function(a,b){return(SYNC_ORDER[a.data.task]||9)-(SYNC_ORDER[b.data.task]||9);});}
+      // Render grouped cards
+      var hasCards=false;
+      for(var gk2 in grouped){
+        hasCards=true;
+        var grp=grouped[gk2];
+        h+='<div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:.6rem;margin-bottom:.4rem">';
+        h+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.3rem"><span style="font-size:.78rem;font-weight:700">'+_ctxLabel(grp.ctx)+'</span><span style="font-size:.65rem;color:var(--dim)">'+_ctxDays(grp.ctx)+'</span></div>';
+        for(var ri=0;ri<grp.rows.length;ri++){
+          var row=grp.rows[ri];
+          if(row.type==="change"){
+            var c=row.data;
+            var extra=c.task==="water"?c.to:null;
+            h+=_syncTaskRow(SYNC_EMOJI[c.task]||"\u2713",c.label,c._enabled,c._idx,"change",extra);
+          }else{
+            var q=row.data;
+            var isYes=q.answer==="yes";
+            h+=_syncTaskRow(SYNC_EMOJI[q.task]||"",q.label,isYes,q._idx,"question",null);
+          }
+        }
+        h+='</div>';
+      }
+      // Unanswered questions
+      var unanswered=questions.filter(function(q){return q.answer===null;});
+      if(unanswered.length>0){
+        h+='<div style="font-size:.78rem;font-weight:700;color:var(--accent);margin:.4rem 0 .3rem">Needs your input:</div>';
+        for(var qi=0;qi<unanswered.length;qi++){
+          var q2=unanswered[qi];
+          h+='<div class="sync-q" data-qi="'+q2._idx+'">';
+          h+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.3rem"><span style="font-size:.78rem;font-weight:700">'+_ctxLabel(q2.ctx)+'</span><span style="font-size:.65rem;color:var(--dim)">'+_ctxDays(q2.ctx)+'</span></div>';
+          h+='<div class="sq-title">'+(SYNC_EMOJI[q2.task]||"")+' '+q2.label+'</div>';
+          h+='<div class="sq-desc">You completed '+q2.doneDur+'m in '+q2.fromCtx+' challenge. Did you actually do '+q2.thisDur+'m?</div>';
+          h+='<div class="sq-btns"><button class="sq-btn" data-qi="'+q2._idx+'" data-a="yes">Yes \u2713</button><button class="sq-btn" data-qi="'+q2._idx+'" data-a="no">No \u2717</button></div></div>';
+        }
+      }
+      if(!hasCards&&!unanswered.length){
+        h+='<div style="text-align:center;padding:1.2rem;font-size:.88rem;color:var(--green)">\u2728 Everything is in sync!</div>';
+        h+='<button class="sync-apply" id="syncApply">Close</button>';
+      }else{
+        h+='<button class="sync-apply" id="syncApply">\u26a1 Apply Sync</button>';
+        h+='<button class="sync-cancel" id="syncCancelBtn">Cancel</button>';
+      }
+      _$("syncContent").innerHTML=h;
+      // Wire toggle on change rows
+      _$("syncContent").querySelectorAll(".sync-trow[data-stype=change]").forEach(function(row){
+        row.addEventListener("click",function(){
+          var idx2=parseInt(this.getAttribute("data-sidx"),10);
+          changes[idx2]._enabled=!changes[idx2]._enabled;
+          _render();
+        });
+      });
+      // Wire answered question rows (toggle answer between yes/no)
+      _$("syncContent").querySelectorAll(".sync-trow[data-stype=question]").forEach(function(row){
+        row.addEventListener("click",function(){
+          var idx2=parseInt(this.getAttribute("data-sidx"),10);
+          questions[idx2].answer=questions[idx2].answer==="yes"?"no":"yes";
+          _render();
+        });
+      });
+      // Wire question Yes/No buttons
+      _$("syncContent").querySelectorAll(".sq-btn").forEach(function(btn){
+        btn.addEventListener("click",function(){
+          var qi2=parseInt(this.getAttribute("data-qi"),10);
+          questions[qi2].answer=this.getAttribute("data-a");
+          _render();
+        });
+      });
+      // Wire apply
+      var applyBtn=document.getElementById("syncApply");
+      if(applyBtn)applyBtn.addEventListener("click",function(){
+        var unan=questions.filter(function(q){return q.answer===null;});
+        if(unan.length>0){_toast("Answer all questions first");return;}
+        if(!changes.some(function(c){return c._enabled;})&&!questions.some(function(q){return q.answer==="yes";})){
+          _$("syncOverlay").className="sync-popup";return;
+        }
+        _applySyncChanges(contexts,changes,questions);
+      });
+      var cancelBtn=document.getElementById("syncCancelBtn");
+      if(cancelBtn)cancelBtn.addEventListener("click",function(){_$("syncOverlay").className="sync-popup";});
+    }
+    _render();
+    _$("syncOverlay").className="sync-popup show";
+  }
+
+  function _applySyncChanges(contexts,changes,questions){
+    for(var ci2=0;ci2<changes.length;ci2++){
+      var c2=changes[ci2];
+      if(!c2._enabled)continue; // user opted out
+      if(!c2.ctx.dayData.tasks)c2.ctx.dayData.tasks={};
+      if(c2.task==="water"){c2.ctx.dayData.waterOz=c2.waterVal;if(c2.waterVal>=(c2.ctx.goals.waterOz||128))c2.ctx.dayData.tasks.water=true;}
+      else{c2.ctx.dayData.tasks[c2.task]=true;}
+    }
+    for(var qi4=0;qi4<questions.length;qi4++){
+      if(questions[qi4].answer==="yes"){if(!questions[qi4].ctx.dayData.tasks)questions[qi4].ctx.dayData.tasks={};questions[qi4].ctx.dayData.tasks[questions[qi4].task]=true;}
+    }
+    contexts.forEach(function(ctx){
+      ctx.fullData.days[ctx.dayNum]=ctx.dayData;
+      try{localStorage.setItem(ctx.skey,JSON.stringify(ctx.fullData));}catch(e){}
+    });
+    // Post-processing
+    var sd=APP_DATA,sc=APP_CTX,sk=APP_SKEY,sdy=APP_DAY;
+    contexts.forEach(function(ctx){
+      APP_SKEY=ctx.skey;APP_DATA=ctx.fullData;APP_DAY=ctx.dayNum;
+      if(ctx.type==="group"&&ctx.config){APP_CTX={gid:ctx.id,config:ctx.config,name:ctx.name};_checkBadges();_checkChallengeCompletion();_syncSingleGroup(ctx.id);}
+      else if(ctx.type==="personal"){APP_CTX=null;_checkBadges();_syncPublicProfile();}
+    });
+    APP_DATA=sd;APP_CTX=sc;APP_SKEY=sk;APP_DAY=sdy;
+    var _sn2=_now();localStorage.setItem("75h_lastsync_"+FB_UID,_sn2.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"}));
+    _$("syncOverlay").className="sync-popup";
+    _$("mpSyncIcon").classList.add("spinning");
+    setTimeout(function(){_$("mpSyncIcon").classList.remove("spinning");_toast("\u26a1 Synced "+contexts.length+" challenges!");},800);
+    _load();if(APP_DAY){_selectDay(APP_DAY);}_updateStats();_colorGrid();
+  }
 
   /* ── BADGES ── */
   function _awardBadge(badgeId,challengeName,challengeType,meta){
